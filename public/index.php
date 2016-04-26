@@ -15,121 +15,24 @@ $app = new \Slim\App($settings);
 require __DIR__ . '/../src/dependencies.php';
 require __DIR__ . '/../src/middleware.php';
 require __DIR__ . '/../src/routes.php';
+require_once("LogIn.php");
+
+require_once "Roles.php";
+require_once "PrivilegiosUsuario.php";
 
 $app->post('/usuario/login', function (ServerRequestInterface $request, ResponseInterface $response, $args){
-        return logIn($request,$response,$args);
+    
+        return logIn::logIn($request,$response,$args);
     }); 
+$app->post('/usuario/obtenerpermisos/{id}', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+        $route = $request->getAttribute('route');
 
-$app->run();
-
-function logIn($request,$response,$args){
-	$usuario = json_decode($request->getBody());
-	$correo = $usuario->usuario;
-	$contrasena = $usuario->contrasena;
-try {
-	$autenticar = autenticar($correo,$contrasena);
-	if ($autenticar['estado']=='200') {
-		
-		$_SESSION['id_usuario']= 'id_usuario';
-		$_SESSION['usuario'] = 'usuario';
-		$_SESSION['rol'] = 'rol';
-		$resArray['success'] = 'Se ha logueado correctamente';
-                $codigo=200;
-        }else{
-            $codigo=401;
-	}
-                $newResponse = $response->withJson($autenticar,$codigo);
+      $courseId = $route->getArgument('id');
+       $newResponse = PrivilegiosUsuario::obtenerPorUsuario($courseId);
 		return $newResponse;
-	
-        
-	/*
-		$db = getConnection();
-		$stmt = $db->prepare($sql);
-		$stmt->bindParam("usuario", $usuario->usuario);
-		$stmt->bindParam("contrasena", $usuario->contrasena);
-		$stmt->execute();
-		$wine = $stmt->fetchObject();
-		$db = null;
-		echo json_encode($wine);*/
-	} catch(PDOException $e) {
-		//error_log($e->getMessage(), 3, '/var/tmp/php.log');
-		echo '{"error":{"text":'. $e->getMessage() .'}}';
-	}
-}
-function actualizarSesion($usuario){
-	$comando2 = "UPDATE ms_usuario SET fechaSesion=NOW(),claveAPI=:claveApi WHERE usuario=:usuario";
-
-	try {
-		$db = getConnection();
-		$claveApi = generarClaveApi();
-		$sentencia2 = $db->prepare($comando2);
-		$sentencia2->bindParam("usuario",$usuario);
-		$sentencia2->bindParam("claveApi",$claveApi);
-		if ($sentencia2->execute()) {
-			return true;
-		} else
-			return false;
-	} catch (PDOException $e) {
-		throw new ExcepcionApi(401, $e->getMessage(),401);
-	}
-}
-function generarClaveApi()
-{
-	return md5(microtime() . rand());
-}
-function validarContrasena($contrasenaPlana, $contrasenaHash)
-{
-	//        return var_dump(password_verify($contrasenaPlana, $contrasenaHash));
-	return password_verify($contrasenaPlana, $contrasenaHash);
-}
-
-function autenticar($usuario, $contrasena)
-{
-	$comando = "SELECT idUsuario,password,IDESTADO,idNivelAutorizacion FROM ms_usuario WHERE usuario=:usuario ";
-
-	try {
-		$db = getConnection();
-		$sentencia = $db->prepare($comando);
-		$sentencia->bindParam("usuario", $usuario);
-		$sentencia->execute();
-
-		//$db = null;
-		if ($sentencia) {
-			$resultado = $sentencia->fetchObject();
-				if(($resultado)&&validarContrasena($contrasena, $resultado->password)){
-					actualizarSesion($usuario);
-			try {
-					//if ($sentencia->execute()) {
-						
-						return
-								[
-										"estado" => 200,
-                                                                                "mensaje"=>"OK",
-										"datos" => $resultado
-								];
-					//} else
-					//	throw new ExcepcionApi("", "Se ha producido un error");
-
-				} catch (PDOException $e) {
-					throw new ExcepcionApi(2, $e->getMessage());
-				}
-			}else {
-				
-					return
-							[
-									"estado" => 101,
-									"mensaje"=>"usuario inexistente"
-							];
-			}
-
-		} else {
-			return false;
-		}
-	} catch (PDOException $e) {
-		throw new ExcepcionApi(1, $e->getMessage(),401);
-	}
-
-}
+       // return PrivilegiosUsuario::obtenerPorUsuario($courseId);
+    }); 
+$app->run();
 
 
 
