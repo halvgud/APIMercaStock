@@ -1,7 +1,7 @@
 <?php
 class PrivilegiosUsuario
 {
-    private $roles;
+    private static $roles;
 
     public function __construct() {
 
@@ -11,16 +11,16 @@ class PrivilegiosUsuario
     public static function obtenerPorUsuario($username) {
         if (!empty($username)) {
             $privUser = new PrivilegiosUsuario();
-            $privUser->InicializarRoles($username);
-            return $privUser;
+            self::InicializarRoles($username);
+            return (self::$roles);
         } else {
             return false;
         }
     }
 
     // Llenar roles con los permisos que tienen asociados
-    protected function InicializarRoles($usuario) {
-        $this->roles = array();
+    protected static function InicializarRoles($usuario) {
+        self::$roles = array();
         
         $comando = "SELECT mna.idNivelAutorizacion,mna.descripcion from ms_nivelAutorizacion mna inner join ms_usuario mu on (mu.idUsuario =:idUsuario) order by mna.idNivelAutorizacion asc";
         $db = getConnection();
@@ -28,12 +28,10 @@ class PrivilegiosUsuario
 		$sentencia->bindParam("idUsuario", $usuario);
 		$sentencia->execute();
                 $resultado = $sentencia->fetchAll(PDO::FETCH_OBJ);
-                //var_dump($resultado);
-      //  $resultado = $db->obtenerResultado();
-        foreach($resultado as &$rol) {
-            $this->roles[$rol->descripcion] = Roles::obtenerPermisosDelRol($rol->idNivelAutorizacion);
+        foreach($resultado as $rol) {
+            self::$roles[$rol->descripcion] = Roles::obtenerPermisosDelRol($rol->idNivelAutorizacion);
         }
-        return $this->roles;
+        return self::$roles;
     }
 
     // check if user has a specific privilege

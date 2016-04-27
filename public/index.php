@@ -28,8 +28,9 @@ $app->post('/usuario/obtenerpermisos/{id}', function (ServerRequestInterface $re
         $route = $request->getAttribute('route');
 
       $courseId = $route->getArgument('id');
-       $newResponse = PrivilegiosUsuario::obtenerPorUsuario($courseId);
-		return $newResponse;
+    $newResponse = $response->withJson(PrivilegiosUsuario::obtenerPorUsuario($courseId),200);
+
+		return ($newResponse);
        // return PrivilegiosUsuario::obtenerPorUsuario($courseId);
     }); 
 $app->run();

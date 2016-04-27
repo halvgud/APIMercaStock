@@ -2,10 +2,10 @@
 
 class Roles
 {
-    protected $permissions;
+    protected $permisos;
 
     protected function __construct() {
-        $this->permissions = array();
+        $this->permisos = array();
     }
 
     // return a role object with associated permissions
@@ -19,14 +19,14 @@ class Roles
                  $permisos = $sentencia->fetchAll(PDO::FETCH_OBJ);
                  //var_dump($permisos);
        // $permisos =  $db->obtenerResultado();
-        foreach($permisos as &$permiso) {
-            $role->permissions[$permiso->valor] = true;
+        foreach($permisos as $permiso) {
+            $role->permisos[$permiso->valor] = true;
         }
-        return $role;
+        return $role->permisos;
     }
 
     // check if a permission is set
-    public function tienePermiso($permission) {
-        return isset($this->permissions[$permission]);
+    public function tienePermiso($permisos) {
+        return isset($this->permisos[$permisos]);
     }
 }
