@@ -10,7 +10,6 @@ class PrivilegiosUsuario
     // Metodo para obtener permisos del usuario
     public static function obtenerPorUsuario($username) {
         if (!empty($username)) {
-            $privUser = new PrivilegiosUsuario();
             self::InicializarRoles($username);
             return (self::$roles);
         } else {
@@ -37,7 +36,7 @@ class PrivilegiosUsuario
     // check if user has a specific privilege
     public function tienePrivilegio($perm) {
         foreach ($this->roles as $role) {
-            if ($role->tienePermiso($perm)) {
+            if (roles::tienePermiso($perm,$role)) {
                 return true;
             }
         }
