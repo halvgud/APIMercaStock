@@ -16,7 +16,7 @@ require __DIR__ . '/../src/dependencies.php';
 require __DIR__ . '/../src/middleware.php';
 require __DIR__ . '/../src/routes.php';
 require_once("LogIn.php");
-
+require_once ("usuario2.php");
 require_once "Roles.php";
 require_once "PrivilegiosUsuario.php";
 require_once "permisos.php";
@@ -29,17 +29,22 @@ $app->post('/usuario/obtenerpermisos/{id}', function (ServerRequestInterface $re
     $route = $request->getAttribute('route');
     $courseId = $route->getArgument('id');
     $newResponse = $response->withJson(PrivilegiosUsuario::obtenerPorUsuario($courseId),200);
+		return ($newResponse);
+    });
 
-    return ($newResponse);
 
-});
+$app->post('/usuario/insertar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+
+  return logIn::registrarUsuario($request,$response,$args);
+
+    });     
 $app->post('/permisos/obtener', function (ServerRequestInterface $request, ResponseInterface $response, $args){
     return $response->withJson(permisos::Obtener($request,$response,$args),200);
 });
+
 $app->post('/permisos/actualizar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
     return $response->withJson(permisos::Actualiza($request,$response,$args),200);
 });
-
 
 $app->run();
 
