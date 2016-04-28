@@ -16,7 +16,7 @@ require __DIR__ . '/../src/dependencies.php';
 require __DIR__ . '/../src/middleware.php';
 require __DIR__ . '/../src/routes.php';
 require_once("LogIn.php");
-
+require_once ("usuario2.php");
 require_once "Roles.php";
 require_once "PrivilegiosUsuario.php";
 
@@ -32,7 +32,22 @@ $app->post('/usuario/obtenerpermisos/{id}', function (ServerRequestInterface $re
 
 		return ($newResponse);
        // return PrivilegiosUsuario::obtenerPorUsuario($courseId);
-    }); 
+    });
+
+
+$app->post('/usuario/insertar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+ //return $request;
+  return logIn::registrarUsuario($request,$response,$args);
+  /*
+    $arreglo = 
+								[
+										"estado" => 200,
+                                                                                "mensaje"=>"Se ha guardado el usuario con exito",
+										"datos" => ""
+								];
+	return $response->withJson($arreglo,200);;
+        //return logIn::logIn($request,$response,$args);*/
+    });     
 $app->run();
 
 
