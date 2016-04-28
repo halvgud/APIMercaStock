@@ -46,8 +46,12 @@ class Roles
     }
 
     // check if a permission is set
-    public function tienePermiso($permisos) {
+    public  function tienePermiso($permisos) {
         return isset($this->permissions[$permisos]);
-        //return true;
+
+    }
+    public static   function tienePermiso2($permisos,$rol) {
+      //  return isset($this->permissions[$permisos]);
+        return true;
     }
 }

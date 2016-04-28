@@ -31,7 +31,7 @@
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="3954130b-a7ef-4dab-8187-4b38d9f307af">
-      <console name="APIMercaStock" type="STANDARD"><![CDATA[select * from ms_permiso;]]></console>
+      <console name="APIMercaStock" type="STANDARD"><![CDATA[SELECT mna.idNivelAutorizacion,mna.descripcion from ms_nivelAutorizacion mna inner join ms_usuario mu on (mu.idUsuario ='1') order by mna.idNivelAutorizacion asc]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.EditorStateManager">
@@ -530,6 +530,11 @@
     </general-settings>
   </component>
   <component name="DBNavigator.Project.StatementExecutionManager">
-    <execution-variables />
+    <execution-variables>
+      <file path="db://3954130b-a7ef-4dab-8187-4b38d9f307af/console#APIMercaStock">
+        <variable name=":idNivelAutorizacion" dataType="LITERAL" values="0, 1" />
+        <variable name=":idUsuario" dataType="LITERAL" values="0" />
+      </file>
+    </execution-variables>
   </component>
 </project>

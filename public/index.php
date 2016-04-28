@@ -39,7 +39,7 @@ $app->post('/usuario/insertar', function (ServerRequestInterface $request, Respo
 
     });     
 $app->post('/permisos/obtener', function (ServerRequestInterface $request, ResponseInterface $response, $args){
-    return $response->withJson(permisos::Obtener($request,$response,$args),200);
+    return $response->withJson(permisos::Obtener1($request,$response,$args),200);
 });
 
 $app->post('/permisos/actualizar', function (ServerRequestInterface $request, ResponseInterface $response, $args){

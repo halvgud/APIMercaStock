@@ -11,7 +11,8 @@ class PrivilegiosUsuario
     public static function obtenerPorUsuario($username) {
         if (!empty($username)) {
             self::InicializarRoles($username);
-            return (self::$roles);
+           return (self::$roles);
+
         } else {
             return false;
         }
@@ -21,7 +22,7 @@ class PrivilegiosUsuario
     protected static function InicializarRoles($usuario) {
         self::$roles = array();
         
-        $comando = "SELECT mna.idNivelAutorizacion,mna.descripcion from ms_nivelAutorizacion mna inner join ms_usuario mu on (mu.idUsuario =:idUsuario) order by mna.idNivelAutorizacion asc";
+        $comando = "SELECT mna.idNivelAutorizacion,mna.descripcion from ms_nivelAutorizacion mna inner join ms_usuario mu on (mu.idUsuario =:idUsuario and mu.idNivelAutorizacion = mna.idNivelAutorizacion) order by mna.idNivelAutorizacion asc";
         $db = getConnection();
 		$sentencia = $db->prepare($comando);
 		$sentencia->bindParam("idUsuario", $usuario);
