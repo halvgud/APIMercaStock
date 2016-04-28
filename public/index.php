@@ -19,35 +19,29 @@ require_once("LogIn.php");
 require_once ("usuario2.php");
 require_once "Roles.php";
 require_once "PrivilegiosUsuario.php";
+require_once "permisos.php";
 
 $app->post('/usuario/login', function (ServerRequestInterface $request, ResponseInterface $response, $args){
     
         return logIn::logIn($request,$response,$args);
-    }); 
+    });
 $app->post('/usuario/obtenerpermisos/{id}', function (ServerRequestInterface $request, ResponseInterface $response, $args){
-        $route = $request->getAttribute('route');
-
-      $courseId = $route->getArgument('id');
+    $route = $request->getAttribute('route');
+    $courseId = $route->getArgument('id');
     $newResponse = $response->withJson(PrivilegiosUsuario::obtenerPorUsuario($courseId),200);
-
 		return ($newResponse);
-       // return PrivilegiosUsuario::obtenerPorUsuario($courseId);
     });
 
 
 $app->post('/usuario/insertar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
- //return $request;
+
   return logIn::registrarUsuario($request,$response,$args);
-  /*
-    $arreglo = 
-								[
-										"estado" => 200,
-                                                                                "mensaje"=>"Se ha guardado el usuario con exito",
-										"datos" => ""
-								];
-	return $response->withJson($arreglo,200);;
-        //return logIn::logIn($request,$response,$args);*/
+
     });     
+$app->post('/permisos/obtener', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+    return permisos::Obtener($request,$response,$args);
+});
+
 $app->run();
 
 
