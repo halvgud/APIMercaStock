@@ -115,4 +115,3 @@ private static function autenticar($usuario, $contrasena)
 }
 
 }
-?>

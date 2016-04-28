@@ -34,8 +34,13 @@ $app->post('/usuario/obtenerpermisos/{id}', function (ServerRequestInterface $re
 
 });
 $app->post('/permisos/obtener', function (ServerRequestInterface $request, ResponseInterface $response, $args){
-    return permisos::Obtener($request,$response,$args);
+    return $response->withJson(permisos::Obtener($request,$response,$args),200);
 });
+$app->post('/permisos/actualizar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+    return $response->withJson(permisos::Actualiza($request,$response,$args),200);
+});
+
+
 $app->run();
 
 
