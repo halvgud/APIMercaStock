@@ -60,17 +60,19 @@ class Permisos
         }
         if ($bandera) {
             $db->commit();
-            return $arreglo = [
+            $arreglo = [
                 "estado" => 200,
-                "mensaje" => "OK",
+                "success" => "La información de los permisos fue guardada con éxito",
                 "datos" => ""
             ];
+            return $response->withJson($arreglo,200);
         } else {
-            return $arreglo = [
+            $arreglo = [
                 "estado" => 400,
-                "mensaje" => "OK",
+                "error" => "Error de transacción, favor de reportarlo.",
                 "datos" => ""
             ];
+            return $response->withJson($arreglo,400);
         }
     }
 
@@ -84,7 +86,7 @@ class Permisos
         try {
             $stmt = $db->prepare($sql);
             $stmt->bindParam("idNivelAutorizacion", $idNivelAutorizacion);
-            $stmt->bindParam("idOpcion", $wine->idOpcion);
+            $stmt->bindParam("idOpcion", $wine->idopcion);
             $stmt->bindParam("idEstado", $estado);
             $stmt->execute();
            // $db = null;

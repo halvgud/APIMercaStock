@@ -225,6 +225,33 @@ public static function registrarUsuario($request,$response,$args)//$datosUsuario
 			];
 			return $response->withJson($arreglo,400);//json_encode($wine);
 		}
-
+	}
+	public static function seleccionarUsuarios($request,$response,$args){
+        $comando = "SELECT mu.idUsuario,mu.usuario,mn.descripcion from ms_usuario mu inner join ms_nivelAutorizacion mn on (mn.idNivelAutorizacion = mu.idNivelAutorizacion)
+        where mu.idNivelAutorizacion>0";// mayor que superadmin
+        try {
+            $db = getConnection();
+            $sentencia = $db->prepare($comando);
+            //$sentencia->bindParam("idUsuario",$idUsuario, PDO::PARAM_STR);
+            $sentencia->execute();
+            $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+            if ($resultado){
+                return $response->withJson($resultado,200);
+            }else{
+                $arreglo = [
+                    "estado" => 400,
+                    "error"=>"Error al traer listado",
+                    "datos" => $resultado
+                ];;
+                return $response->withJson($arreglo,400);
+            }
+        }catch(PDOException $e){
+            $arreglo = [
+                "estado" => 400,
+                "error"=>"Error al traer listado de Sexo",
+                "datos" => $e
+            ];
+            return $response->withJson($arreglo,400);//json_encode($wine);
+        }
 	}
 }

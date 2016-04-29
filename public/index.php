@@ -42,10 +42,14 @@ $app->post('/permisos/obtener', function (ServerRequestInterface $request, Respo
     return $response->withJson(permisos::Obtener($request,$response,$args),200);
 });
 
+$app->post('/usuario/seleccionar',function(ServerRequestInterface $request,ResponseInterface $response,$args){
+    return logIn::seleccionarUsuarios($request,$response,$args);
+});
+
 $app->post('/permisos/actualizar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
     //return 'kek';
     //return $response=$request;
-    return $response->withJson(permisos::Actualizar($request,$response,$args),400);
+    return permisos::Actualizar($request,$response,$args);
 });
 
 
