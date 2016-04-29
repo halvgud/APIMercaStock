@@ -22,7 +22,7 @@ require_once "PrivilegiosUsuario.php";
 require_once "permisos.php";
 
 $app->post('/usuario/login', function (ServerRequestInterface $request, ResponseInterface $response, $args){
-    
+
         return logIn::logIn($request,$response,$args);
     });
 $app->post('/usuario/obtenerpermisos/{id}', function (ServerRequestInterface $request, ResponseInterface $response, $args){
@@ -39,11 +39,13 @@ $app->post('/usuario/insertar', function (ServerRequestInterface $request, Respo
 
     });     
 $app->post('/permisos/obtener', function (ServerRequestInterface $request, ResponseInterface $response, $args){
-    return $response->withJson(permisos::Obtener1($request,$response,$args),200);
+    return $response->withJson(permisos::Obtener($request,$response,$args),200);
 });
 
 $app->post('/permisos/actualizar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
-    return $response->withJson(permisos::Actualiza($request,$response,$args),200);
+    //return 'kek';
+    //return $response=$request;
+    return $response->withJson(permisos::Actualizar($request,$response,$args),400);
 });
 
 $app->run();
