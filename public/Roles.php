@@ -31,7 +31,7 @@ class Roles
     public static function obtenerPermisosDelRol($role_id) {
         $role = new Roles();
         $db = getConnection();
-       $comando = "SELECT mo.valor from ms_permiso mp inner join ms_opcion mo on (mo.idOpcion = mp.idOpcion) where mp.idNivelAutorizacion=:idNivelAutorizacion and mp.idEstado='A' order by mo.idOpcion";
+       $comando = "SELECT mo.descripcion from ms_permiso mp inner join ms_opcion mo on (mo.idOpcion = mp.idOpcion) where mp.idNivelAutorizacion=:idNivelAutorizacion and mp.idEstado='A' order by mo.idOpcion";
          //$comando = "SELECT mp.valor from ms_opcion mp inner join ms_permiso mo on (mo.idOpcion = mp.idOpcion) where mo.idNivelAutorizacion=:idNivelAutorizacion and mp.idEstado='A' order by mo.idOpcion";
         $sentencia = $db->prepare($comando);
 		$sentencia->bindParam("idNivelAutorizacion", $role_id);
@@ -40,7 +40,7 @@ class Roles
                  //var_dump($permisos);
        // $permisos =  $db->obtenerResultado();
         foreach($permisos as $permiso) {
-            $role->permisos[$permiso->valor] = true;
+            $role->permisos[$permiso->descripcion] = true;
         }
         return $role->permisos;
     }

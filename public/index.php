@@ -46,6 +46,21 @@ $app->post('/permisos/actualizar', function (ServerRequestInterface $request, Re
     return $response->withJson(permisos::Actualiza($request,$response,$args),200);
 });
 
+
+
+
+
+
+
+
+
+
+$app->post('/usuario/sexo/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+    return logIn::seleccionarSexo($request,$response,$args);
+});
+$app->post('/usuario/nivel_autorizacion/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+    return logIn::seleccionarNivel($request,$response,$args);
+});
 $app->run();
 
 
