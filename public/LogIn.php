@@ -227,7 +227,7 @@ public static function registrarUsuario($request,$response,$args)//$datosUsuario
 		}
 	}
 	public static function seleccionarUsuarios($request,$response,$args){
-        $comando = "SELECT mu.idUsuario,mu.usuario,mn.descripcion from ms_usuario mu inner join ms_nivelAutorizacion mn on (mn.idNivelAutorizacion = mu.idNivelAutorizacion)
+        $comando = "SELECT mu.idUsuario,mu.usuario,mu.nombre,mu.apellido,mu.idNivelAutorizacion,mu.contacto,mu.sexo,mn.descripcion from ms_usuario mu inner join ms_nivelAutorizacion mn on (mn.idNivelAutorizacion = mu.idNivelAutorizacion)
         where mu.idNivelAutorizacion>0";// mayor que superadmin
         try {
             $db = getConnection();
