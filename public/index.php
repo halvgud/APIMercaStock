@@ -67,6 +67,9 @@ $app->post('/usuario/sexo/seleccionar', function (ServerRequestInterface $reques
 $app->post('/usuario/nivel_autorizacion/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
     return logIn::seleccionarNivel($request,$response,$args);
 });
+$app->post('/sucursal/insertar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+    return logIn::registrarSucursal($request,$response,$args);
+});
 $app->run();
 
 
