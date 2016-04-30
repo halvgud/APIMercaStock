@@ -115,21 +115,41 @@ private static function autenticar($usuario, $contrasena)
 
 }
 
+    private static function obtenerIdUsuario(){
+        $sql = "select max(idusuario)+1 as idUsuario from ms_usuario";
+        try{
+            $db = getConnection();
+            $query = $db->prepare($sql);
+            $query->execute();
+            $resultado = $query->fetchObject();
+            return $resultado->idUsuario;
+        }catch(PDOException $e){
+
+        }
+
+    }
 
 public static function registrarUsuario($request,$response,$args)//$datosUsuario
      {
 	  //$request = Slim::getInstance()->request();
 	  $wine = json_decode($request->getBody());
+
 	  $claveApi="";
 	  $idEstado="A";
 	  $claveGCM='0';
-	  
+	  $idUsuario = self::obtenerIdUsuario();
+         $autenticar = [
+             "idUsuario"=>$idUsuario,
+             "json"=>$wine
+         ];
+       //return  $response->withJson($autenticar,400);
 	 //return  $response->withJson($wine,400);
-	  $sql = "INSERT INTO ms_usuario (usuario,password,nombre,apellido,sexo,contacto,idSucursal,claveAPI,idEstado,fechaEstado,fechaSesion,claveGCM,idNivelAutorizacion) VALUES
-	  (:usuario,:password,:nombre,:apellido,:sexo,:contacto,:idSucursal,:claveAPI,:idEstado,now(),now(),:claveGCM,:idNivelAutorizacion)";
+	  $sql = "INSERT INTO ms_usuario (idUsuario,usuario,password,nombre,apellido,sexo,contacto,idSucursal,claveAPI,idEstado,fechaEstado,fechaSesion,claveGCM,idNivelAutorizacion) VALUES
+	  (:idUsuario,:usuario,:password,:nombre,:apellido,:sexo,:contacto,:idSucursal,:claveAPI,:idEstado,now(),now(),:claveGCM,:idNivelAutorizacion)";
 	  try {/* , grapes, country, region, year, description) VALUES (:name, :grapes, :country, :region, :year, :description)";  */
 	       $db = getConnection();	
 	       $stmt = $db->prepare($sql);
+           $stmt->bindParam("idUsuario",$idUsuario,PDO::PARAM_INT);
 	       $stmt->bindParam(":usuario",$wine->usuario, PDO::PARAM_STR);
 	       $stmt->bindParam(":password",$wine->password, PDO::PARAM_STR);
 	       $stmt->bindParam(":nombre",$wine->nombre, PDO::PARAM_STR);
@@ -145,10 +165,10 @@ public static function registrarUsuario($request,$response,$args)//$datosUsuario
 	       $wine->id = $db->lastInsertId();
 	       $db = null;
 	       //var_dump($wine->id );
-	       if($wine->id >1){
+	       if($wine->idUsuario>0){
 		      $arreglo = [
 										"estado" => 200,
-                                                                                "success"=>"transaccion terminada",
+                                                                                "success"=>"Usuario ".$wine->usuario. " registrado correctamente",
 										"datos" => $wine
 								];
 	       return $response->withJson($arreglo,200);//json_encode($wine);
@@ -161,10 +181,26 @@ public static function registrarUsuario($request,$response,$args)//$datosUsuario
 		    return $response->withJson($arreglo,400);//json_encode($wine);
 	       }
           } catch(PDOException $e) {
-              // error_log($e->getMessage(), 3, '/var/tmp/php.log');
-	       echo '{"error":'. $e->getMessage() .'}';
+          $codigoDeError = $e->getCode();
+          $error = self::traducirMensaje($codigoDeError,$e);
+          $arreglo = [
+              "estado" => $e->getCode(),
+              "error"=>$error,
+              "datos" => json_encode($wine)
+          ];;
+          return $response->withJson($arreglo,400);//json_encode($wine);
 	  }
      }
+
+    private static function traducirMensaje($codigoDeError,$e){
+        if($codigoDeError=="23000"){
+            return "El usuario que intentó registrar ya existe, favor de validar la información";
+        }
+
+        else {
+            return $e->getMessage();
+        }
+    }
 
 	public static function seleccionarSexo($request,$response,$args){
 
@@ -239,11 +275,11 @@ public static function registrarUsuario($request,$response,$args)//$datosUsuario
                 return $response->withJson($resultado,200);
             }else{
                 $arreglo = [
-                    "estado" => 400,
-                    "error"=>"Error al traer listado",
+                    "estado" => "warning",
+                    "success"=>"Error al traer listado de usuarios ya que no existen",
                     "datos" => $resultado
                 ];;
-                return $response->withJson($arreglo,400);
+                return $response->withJson($arreglo,200);
             }
         }catch(PDOException $e){
             $arreglo = [
@@ -253,5 +289,47 @@ public static function registrarUsuario($request,$response,$args)//$datosUsuario
             ];
             return $response->withJson($arreglo,400);//json_encode($wine);
         }
+	}
+	public static function registrarSucursal($request,$response,$args)//$datosUsuario
+	{
+		//$request = Slim::getInstance()->request();
+		$wine = json_decode($request->getBody());
+        $claveApi="";
+
+		//return  $response->withJson($wine,400);
+		$sql = "INSERT INTO ms_sucursal (nombre,usuario,password,claveAPI,domicilio,contacto) VALUES
+	  (:nombre,:usuario,:password,:claveAPI,:direccion,:contacto)";
+		try {/* , grapes, country, region, year, description) VALUES (:name, :grapes, :country, :region, :year, :description)";  */
+			$db = getConnection();
+			$stmt = $db->prepare($sql);
+			$stmt->bindParam("nombre",$wine->nombre, PDO::PARAM_STR);
+            $stmt->bindParam("usuario",$wine->usuario, PDO::PARAM_STR);
+            $stmt->bindParam("password",$wine->password, PDO::PARAM_STR);
+			$stmt->bindParam("claveAPI",$claveApi);
+			$stmt->bindParam("domicilio",$wine->domicilio, PDO::PARAM_STR);
+            $stmt->bindParam("contacto",$wine->contacto, PDO::PARAM_STR);
+			$stmt->execute();
+			$wine->id = $db->lastInsertId();
+			$db = null;
+			//var_dump($wine->id );
+			if($wine->id >1){
+				$arreglo = [
+						"estado" => 200,
+						"success"=>"transaccion terminada",
+						"datos" => $wine
+				];
+				return $response->withJson($arreglo,200);//json_encode($wine);
+			}else{
+				$arreglo = [
+						"estado" => 400,
+						"error"=>"transaccion sin terminar",
+						"datos" => $wine
+				];;
+				return $response->withJson($arreglo,400);//json_encode($wine);
+			}
+		} catch(PDOException $e) {
+			// error_log($e->getMessage(), 3, '/var/tmp/php.log');
+			echo '{"error":'. $e->getMessage() .'}';
+		}
 	}
 }
