@@ -332,4 +332,37 @@ public static function registrarUsuario($request,$response,$args)//$datosUsuario
 			echo '{"error":'. $e->getMessage() .'}';
 		}
 	}
+	public static function seleccionarSucursal ($request,$response,$args){
+
+		$comando = "SELECT * from ms_sucursal";
+		try {
+			$db = getConnection();
+			$sentencia = $db->prepare($comando);
+			$sentencia->execute();
+			$resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+			if ($resultado){
+				$arreglo = [
+						"estado" => 200,
+						"success"=>"OK",
+						"datos" => $resultado
+				];
+				return $response->withJson($arreglo,200);
+			}else{
+				$arreglo = [
+						"estado" => 400,
+						"error"=>"Error al traer listado de Sucursal",
+						"datos" => $resultado
+				];;
+				return $response->withJson($arreglo,400);
+			}
+		}catch(PDOException $e){
+			$arreglo = [
+					"estado" => 400,
+					"error"=>"Error al traer listado de Sucursal",
+					"datos" => $e
+			];
+			return $response->withJson($arreglo,400);//json_encode($wine);
+		}
+
+	}
 }

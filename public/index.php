@@ -16,6 +16,7 @@ require __DIR__ . '/../src/dependencies.php';
 require __DIR__ . '/../src/middleware.php';
 require __DIR__ . '/../src/routes.php';
 require_once("LogIn.php");
+require_once("MercaStock.php");
 require_once ("usuario2.php");
 require_once "Roles.php";
 require_once "PrivilegiosUsuario.php";
@@ -69,6 +70,24 @@ $app->post('/usuario/nivel_autorizacion/seleccionar', function (ServerRequestInt
 });
 $app->post('/sucursal/insertar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
     return logIn::registrarSucursal($request,$response,$args);
+});
+$app->post('/sucursal/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+    return logIn::seleccionarSucursal($request,$response,$args);
+});
+$app->post('/categoria/departamento/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+    return mercaStock::seleccionarDepartamento($request,$response,$args);
+});
+$app->post('/categoria/categoria/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+    return mercaStock::seleccionarCategoria($request,$response,$args);
+});
+$app->post('/categoria/inventario/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+    return mercaStock::seleccionarInventario($request,$response,$args);
+});
+$app->post('/categoria/articulo/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+    return mercaStock::seleccionarArticulo($request,$response,$args);
+});
+$app->post('/reporte/bitacora/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+    return mercaStock::seleccionarBitacora($request,$response,$args);
 });
 $app->run();
 
