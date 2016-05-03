@@ -137,7 +137,7 @@ class mercaStock
                 $arreglo = [
                     "estado" => 200,
                     "success"=>"OK",
-                    "datos" => $resultado[0]
+                    "data" => [$resultado[0]]
                 ];
                 return $response->withJson($arreglo,200);
             }else{
