@@ -119,20 +119,20 @@ class mercaStock
 
     }
     public static function seleccionarBitacora ($request,$response,$args){
-       /* $postrequest = json_decode($request->getBody());
-        //return $response->withJson(var_dump($postrequest),400);;
-        $fechaI = $postrequest->hora_inicio;
-        $fechaF = $postrequest->hora_fin;
+        $postrequest = json_decode($request->getBody());
+        $fechaI = (isset($postrequest)?$postrequest->hora_inicio:'2000/01/01');
+        $fechaF = (isset($postrequest)?$postrequest->hora_fin:'2000/01/01');
         $fechaI = $fechaI.' 00:00:00';
-        $fechaF = $fechaF.' 23:59:59';*/
-        $comando = "SELECT * from ms_bitacora";
+        $fechaF = $fechaF.' 23:59:59';
+        $comando = "SELECT * from ms_bitacora where fecha>=:fechaIni and fecha<=:fechaFin";
         try {
             $db = getConnection();
             $sentencia = $db->prepare($comando);
-        //    $sentencia->bindParam("fechaIni",$fechaI);
-        //    $sentencia->bindParam("fechaFin",$fechaF);
+            $sentencia->bindParam("fechaIni",$fechaI);
+            $sentencia->bindParam("fechaFin",$fechaF);
             $sentencia->execute();
             $resultado = $sentencia->fetchAll(PDO::FETCH_OBJ);
+            //var_dump($resultado);
             if ($resultado){
                 $arreglo = [
                     "estado" => 200,
@@ -144,15 +144,15 @@ class mercaStock
                 $arreglo = [
                     "estado" => "warning",
                     "success"=>"No se encontraron registros en el rango solicitado",
-                    "datos" => $resultado
-                ];;
+                    "data" => [json_decode($request->getBody())]
+                ];
                 return $response->withJson($arreglo,200);
             }
         }catch(PDOException $e){
             $arreglo = [
                 "estado" => 400,
-                "error"=>"Error al traer la Bitácora",
-                "datos" => $e
+                "error"=>"Error en la solicitud al traer la Bitácora",
+                "data" => $e
             ];
             return $response->withJson($arreglo,400);//json_encode($wine);
         }

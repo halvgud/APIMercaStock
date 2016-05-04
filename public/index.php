@@ -16,8 +16,7 @@ require __DIR__ . '/../src/dependencies.php';
 require __DIR__ . '/../src/middleware.php';
 require __DIR__ . '/../src/routes.php';
 require_once("LogIn.php");
-require_once("MercaStock.php");
-require_once ("usuario2.php");
+require_once "MercaStock.php";
 require_once "Roles.php";
 require_once "PrivilegiosUsuario.php";
 require_once "permisos.php";
@@ -87,6 +86,8 @@ $app->post('/categoria/articulo/seleccionar', function (ServerRequestInterface $
     return mercaStock::seleccionarArticulo($request,$response,$args);
 });
 $app->post('/reporte/bitacora/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+    //var_dump($request);
+    //return $response->withJson(($request),200);
     return mercaStock::seleccionarBitacora($request,$response,$args);
 });
 $app->run();
