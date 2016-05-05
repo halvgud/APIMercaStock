@@ -209,14 +209,19 @@ public static function registrarUsuario($request,$response,$args)//$datosUsuario
 			$db = getConnection();
 			$sentencia = $db->prepare($comando);
 			$sentencia->execute();
-			$resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+			$resultado = $sentencia->fetchAll(PDO::FETCH_OBJ);
 			if ($resultado){
-				return $response->withJson($resultado,200);
+				$arreglo = [
+						"estado" => 200,
+						"success"=>"OK",
+						"data" => [$resultado]
+				];
+				return $response->withJson($arreglo,200);
 			}else{
 				$arreglo = [
 						"estado" => 400,
 						"error"=>"Error al traer listado",
-						"datos" => $resultado
+						"data" => $resultado
 				];;
 				return $response->withJson($arreglo,400);
 			}
@@ -242,9 +247,14 @@ public static function registrarUsuario($request,$response,$args)//$datosUsuario
 			$sentencia = $db->prepare($comando);
 			$sentencia->bindParam("idUsuario",$idUsuario, PDO::PARAM_STR);
 			$sentencia->execute();
-			$resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+			$resultado = $sentencia->fetchAll(PDO::FETCH_OBJ);
 			if ($resultado){
-				return $response->withJson($resultado,200);
+				$arreglo = [
+						"estado" => 200,
+						"success"=>"OK",
+						"data" => [$resultado]
+				];
+				return $response->withJson($arreglo,200);
 			}else{
 				$arreglo = [
 						"estado" => 400,
@@ -334,24 +344,24 @@ public static function registrarUsuario($request,$response,$args)//$datosUsuario
 	}
 	public static function seleccionarSucursal ($request,$response,$args){
 
-		$comando = "SELECT * from ms_sucursal";
+		$comando = "SELECT idSucursal,nombre from ms_sucursal";
 		try {
 			$db = getConnection();
 			$sentencia = $db->prepare($comando);
 			$sentencia->execute();
-			$resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+			$resultado = $sentencia->fetchAll(PDO::FETCH_OBJ);
 			if ($resultado){
 				$arreglo = [
 						"estado" => 200,
 						"success"=>"OK",
-						"datos" => $resultado
+						"data" => [$resultado]
 				];
 				return $response->withJson($arreglo,200);
 			}else{
 				$arreglo = [
 						"estado" => 400,
 						"error"=>"Error al traer listado de Sucursal",
-						"datos" => $resultado
+						"data" => $resultado
 				];;
 				return $response->withJson($arreglo,400);
 			}
@@ -359,7 +369,7 @@ public static function registrarUsuario($request,$response,$args)//$datosUsuario
 			$arreglo = [
 					"estado" => 400,
 					"error"=>"Error al traer listado de Sucursal",
-					"datos" => $e
+					"data" => $e
 			];
 			return $response->withJson($arreglo,400);//json_encode($wine);
 		}

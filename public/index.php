@@ -17,6 +17,11 @@ require __DIR__ . '/../src/middleware.php';
 require __DIR__ . '/../src/routes.php';
 require_once("LogIn.php");
 require_once("MercaStock.php");
+require_once("departamento.php");
+require_once("categoria.php");
+require_once("articulo.php");
+require_once("bitacora.php");
+require_once("inventario.php");
 require_once ("usuario2.php");
 require_once "Roles.php";
 require_once "PrivilegiosUsuario.php";
@@ -75,19 +80,22 @@ $app->post('/sucursal/seleccionar', function (ServerRequestInterface $request, R
     return logIn::seleccionarSucursal($request,$response,$args);
 });
 $app->post('/categoria/departamento/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
-    return mercaStock::seleccionarDepartamento($request,$response,$args);
+    return departamento::seleccionarDepartamento($request,$response,$args);
+});
+$app->post('/categoria/departamento/seleccionar2', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+    return departamento::seleccionarDepartamento2($request,$response,$args);
 });
 $app->post('/categoria/categoria/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
-    return mercaStock::seleccionarCategoria($request,$response,$args);
+    return categoria::seleccionarCategoria($request,$response,$args);
 });
 $app->post('/categoria/inventario/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
-    return mercaStock::seleccionarInventario($request,$response,$args);
+    return inventario::seleccionarInventario($request,$response,$args);
 });
 $app->post('/categoria/articulo/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
-    return mercaStock::seleccionarArticulo($request,$response,$args);
+    return articulo::seleccionarArticulo($request,$response,$args);
 });
 $app->post('/reporte/bitacora/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
-    return mercaStock::seleccionarBitacora($request,$response,$args);
+    return bitacora::seleccionarBitacora($request,$response,$args);
 });
 $app->run();
 
