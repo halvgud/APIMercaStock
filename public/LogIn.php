@@ -94,7 +94,6 @@ class logIn
     }
 
 
-
     private static function validarContrasena($contrasenaPlana, $contrasenaHash)
     {
         //        return var_dump(password_verify($contrasenaPlana, $contrasenaHash));
@@ -119,57 +118,67 @@ class logIn
             throw new ExcepcionApi(401, $e->getMessage(), 401);
         }
     }
-    public static function actualizarUsuario($request,$response,$args){
-        $postrequest = json_decode($request->getBody());
 
-        $query = "Update ms_usuario set password=:password,nombre=:nombre,apellido=:apellido,sexo=:sexo,contacto=:contacto,".
-            "idSucursal=:idSucursal,idEstado=:idEstado,idNivelAutorizacion=:idNivelAutorizacion where usuario=:usuario";
-       try{
-        $db=getConnection();
-        $password = self::encriptarContrasena($postrequest->password);
-        $sentencia = $db->prepare($query);
-           $sentencia->bindParam("usuario",$postrequest->usuario);
-        $sentencia->bindParam("password", $password);
-           $sentencia->bindParam("nombre", $postrequest->nombre);
-           $sentencia->bindParam("apellido", $postrequest->nombre);
-        $sentencia->bindParam("sexo", $postrequest->sexo);
-        $sentencia->bindParam("contacto", $postrequest->contacto);
-        $sentencia->bindParam("idSucursal", $postrequest->idSucursal);
-        $sentencia->bindParam("idEstado", $postrequest->idEstado);
-        $sentencia->bindParam("idNivelAutorizacion", $postrequest->idNivelAutorizacion);
-        $resultado=$sentencia->execute();
-        if($resultado) {
-            $arreglo =
-                [
-                    "estado" => 200,
-                    "mensaje" => "OK",
-                    "data" => $resultado
-                ];
-            return $response->withJson($arreglo,200,JSON_UNESCAPED_UNICODE);
+    public static function actualizarUsuario($request, $response, $args)
+    {
+        $postrequest = json_decode($request->getBody());
+        if($postrequest->password!='DEFAULTMERCASTOCK'){
+            $query = "UPDATE ms_usuario SET password=:password,nombre=:nombre,apellido=:apellido,sexo=:sexo,contacto=:contacto," .
+                "idSucursal=:idSucursal,idEstado=:idEstado,idNivelAutorizacion=:idNivelAutorizacion WHERE usuario=:usuario";
         }else{
-            $arreglo =
-                [
-                    "estado" => "warning",
-                    "mensaje" => "No se cambió ningún dato",
-                    "data" => $resultado
-                ];
-            return $response->withJson($arreglo,400,JSON_UNESCAPED_UNICODE);
+            $query = "UPDATE ms_usuario SET nombre=:nombre,apellido=:apellido,sexo=:sexo,contacto=:contacto," .
+                "idSucursal=:idSucursal,idEstado=:idEstado,idNivelAutorizacion=:idNivelAutorizacion WHERE usuario=:usuario";
         }
-       }catch (PDOException $e) {
-           $codigoDeError = $e->getCode();
-           $error = self::traducirMensaje($codigoDeError, $e);
-           $arreglo = [
-               "estado" => $e->getCode(),
-               "data" => $error,
-               "datos" => json_encode($postrequest)
-           ];;
-           return $response->withJson($arreglo, 400);//json_encode($wine);
-       }
+        try {
+            $db = getConnection();
+            $password = self::encriptarContrasena($postrequest->password);
+            $sentencia = $db->prepare($query);
+            $sentencia->bindParam("usuario", $postrequest->usuario);
+            if($postrequest->password!='DEFAULTMERCASTOCK'){
+                $sentencia->bindParam("password", $password);
+            }
+            $sentencia->bindParam("nombre", $postrequest->nombre);
+            $sentencia->bindParam("apellido", $postrequest->apellido);
+            $sentencia->bindParam("sexo", $postrequest->sexo);
+            $sentencia->bindParam("contacto", $postrequest->contacto);
+            $sentencia->bindParam("idSucursal", $postrequest->idSucursal);
+            $sentencia->bindParam("idEstado", $postrequest->idEstado);
+            $sentencia->bindParam("idNivelAutorizacion", $postrequest->idNivelAutorizacion);
+            $resultado = $sentencia->execute();
+            if ($resultado) {
+                $arreglo =
+                    [
+                        "estado" => 200,
+                        "success" => "Se a actualizado el usuario con éxito",
+                        "data" => $resultado
+                    ];
+                return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
+            } else {
+                $arreglo =
+                    [
+                        "estado" => "warning",
+                        "mensaje" => "No se cambió ningún dato",
+                        "data" => $resultado
+                    ];
+                return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
+            }
+        } catch (PDOException $e) {
+            $codigoDeError = $e->getCode();
+            $error = self::traducirMensaje($codigoDeError, $e);
+            $arreglo = [
+                "estado" => $e->getCode(),
+                "error" => $error,
+                "data" => json_encode($postrequest)
+            ];;
+            return $response->withJson($arreglo, 400);//json_encode($wine);
+        }
     }
+
     private static function generarClaveApi()
     {
         return md5(microtime() . rand());
     }
+
     public static function encriptarContrasena($contrasenaPlana)
     {
         if ($contrasenaPlana)
@@ -259,49 +268,13 @@ class logIn
     {
         if ($codigoDeError == "23000") {
             return "El usuario que intentó registrar ya existe, favor de validar la información";
-        }else if($codigoDeError=="HY093"){
+        } else if ($codigoDeError == "HY093") {
             return 'El número de parámetros enviados es incorrecto, favor de contactar a Sistemas';
-        }
-
-        else {
+        } else {
             return $e->getMessage();
         }
     }
 
-    public static function seleccionarSexo($request, $response, $args)
-    {
-
-        $comando = "SELECT idSexo, descripcion FROM ms_Sexo";
-        try {
-            $db = getConnection();
-            $sentencia = $db->prepare($comando);
-            $sentencia->execute();
-            $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
-            if ($resultado) {
-                $arreglo = [
-                    "estado" => 200,
-                    "success" => "Lista de sexo",
-                    "data" => $resultado
-                ];;
-                return $response->withJson($arreglo, 200);
-            } else {
-                $arreglo = [
-                    "estado" => 400,
-                    "error" => "Error al traer listado",
-                    "data" => $resultado
-                ];;
-                return $response->withJson($arreglo, 400);
-            }
-        } catch (PDOException $e) {
-            $arreglo = [
-                "estado" => 400,
-                "error" => "Error al traer listado de Sexo",
-                "data" => $e
-            ];
-            return $response->withJson($arreglo, 400);//json_encode($wine);
-        }
-
-    }
 
     public static function seleccionarNivel($request, $response, $args)
     {
@@ -342,9 +315,47 @@ class logIn
         }
     }
 
+    public static function seleccionarSexo($request, $response, $args)
+    {
+
+        $comando = "SELECT idSexo, descripcion FROM ms_Sexo";
+        try {
+            $db = getConnection();
+            $sentencia = $db->prepare($comando);
+            $sentencia->execute();
+            $resultado = $sentencia->fetchAll(PDO::FETCH_OBJ);
+            if ($resultado) {
+                $arreglo = [
+                    "estado" => 200,
+                    "success" => "OK",
+                    "data" => $resultado
+                ];
+                return $response->withJson($arreglo, 200);
+            } else {
+                $arreglo = [
+                    "estado" => 400,
+                    "error" => "Error al traer listado",
+                    "data" => $resultado
+                ];;
+                return $response->withJson($arreglo, 400);
+            }
+        } catch (PDOException $e) {
+            $arreglo = [
+                "estado" => 400,
+                "error" => "Error al traer listado de Sexo",
+                "datos" => $e
+            ];
+            return $response->withJson($arreglo, 400);//json_encode($wine);
+        }
+
+    }
+
+
+
+
     public static function seleccionarUsuarios($request, $response, $args)
     {
-        $comando = "SELECT mu.idUsuario,mu.usuario,mu.nombre,mu.apellido,mu.idNivelAutorizacion,mu.contacto,mu.sexo,mu.idEstado,mn.descripcion FROM ms_usuario mu INNER JOIN ms_nivelAutorizacion mn ON (mn.idNivelAutorizacion = mu.idNivelAutorizacion)
+        $comando = "SELECT mu.idUsuario,mu.usuario,'DEFAULTMERCASTOCK' as password,mu.nombre,mu.apellido,mu.idNivelAutorizacion,mu.idSucursal,mu.sexo,mu.idEstado,mu.contacto,mn.descripcion FROM ms_usuario mu INNER JOIN ms_nivelAutorizacion mn ON (mn.idNivelAutorizacion = mu.idNivelAutorizacion)
         WHERE mu.idNivelAutorizacion>0";// mayor que superadmin
         try {
             $db = getConnection();
@@ -381,6 +392,7 @@ class logIn
         //return  $response->withJson($wine,400);
         $sql = "INSERT INTO ms_sucursal (nombre,usuario,password,claveAPI,domicilio,contacto) VALUES
 	  (:nombre,:usuario,:password,:claveAPI,:direccion,:contacto)";
+
         try {/* , grapes, country, region, year, description) VALUES (:name, :grapes, :country, :region, :year, :description)";  */
             $db = getConnection();
             $stmt = $db->prepare($sql);
@@ -450,3 +462,4 @@ class logIn
 
     }
 }
+
