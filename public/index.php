@@ -46,6 +46,10 @@ $app->post('/usuario/seleccionar',function(ServerRequestInterface $request,Respo
     return logIn::seleccionarUsuarios($request,$response,$args);
 });
 
+$app->post('/usuario/actualizar',function(ServerRequestInterface $request,ResponseInterface $response,$args){
+    return logIn::actualizarUsuario($request,$response,$args);
+});
+
 $app->post('/permisos/actualizar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
     //return 'kek';
     //return $response=$request;
