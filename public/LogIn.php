@@ -264,8 +264,7 @@ class logIn
 
     }
 
-<<<<<<< HEAD
-public static function registrarUsuario($request,$response,$args)//$datosUsuario
+/*public static function registrarUsuario($request,$response,$args)//$datosUsuario
      {
 	  //$request = Slim::getInstance()->request();
 	  $wine = json_decode($request->getBody());
@@ -283,7 +282,7 @@ public static function registrarUsuario($request,$response,$args)//$datosUsuario
 	  $sql = "INSERT INTO ms_usuario (idUsuario,usuario,password,nombre,apellido,sexo,contacto,idSucursal,claveAPI,idEstado,fechaEstado,fechaSesion,claveGCM,idNivelAutorizacion) VALUES
 	  (:idUsuario,:usuario,:password,:nombre,:apellido,:sexo,:contacto,:idSucursal,:claveAPI,:idEstado,now(),now(),:claveGCM,:idNivelAutorizacion)";
 	  try {/* , grapes, country, region, year, description) VALUES (:name, :grapes, :country, :region, :year, :description)";  */
-	       $db = getConnection();	
+	      /* $db = getConnection();
 	       $stmt = $db->prepare($sql);
            $stmt->bindParam("idUsuario",$idUsuario,PDO::PARAM_INT);
 	       $stmt->bindParam(":usuario",$wine->usuario, PDO::PARAM_STR);
@@ -326,29 +325,22 @@ public static function registrarUsuario($request,$response,$args)//$datosUsuario
           ];;
           return $response->withJson($arreglo,400);//json_encode($wine);
 	  }
-     }
+     }*/
 
-    public static function traducirMensaje($codigoDeError,$e){
-        if($codigoDeError=="23000"){
-=======
-    private static function traducirMensaje($codigoDeError, $e)
+    public static function traducirMensaje($codigoDeError,$e)
     {
+
         if ($codigoDeError == "23000") {
->>>>>>> origin/master
             return "El usuario que intentó registrar ya existe, favor de validar la información";
         } else if ($codigoDeError == "HY093") {
             return 'El número de parámetros enviados es incorrecto, favor de contactar a Sistemas';
+        } else if ($codigoDeError == '42S02') {
+            return "Tabla inexistente, favor de contactar a Sistemas";
         } else {
             return $e->getMessage();
         }
-<<<<<<< HEAD
-else if($codigoDeError=='42S02'){
-	return "Tabla inexistente, favor de contactar a Sistemas";
-}
-        else {
-            return $e->getMessage();
-=======
     }
+
 
 
     public static function seleccionarNivel($request, $response, $args)
@@ -387,7 +379,6 @@ else if($codigoDeError=='42S02'){
                 "data" => $e
             ];
             return $response->withJson($arreglo, 400);//json_encode($wine);
->>>>>>> origin/master
         }
     }
 
@@ -516,7 +507,7 @@ else if($codigoDeError=='42S02'){
                 $arreglo = [
                     "estado" => 200,
                     "success" => "OK",
-                    "data" => $resultado
+                    "data" => [$resultado]
                 ];
                 return $response->withJson($arreglo, 200);
             } else {
