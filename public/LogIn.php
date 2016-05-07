@@ -192,11 +192,13 @@ public static function registrarUsuario($request,$response,$args)//$datosUsuario
 	  }
      }
 
-    private static function traducirMensaje($codigoDeError,$e){
+    public static function traducirMensaje($codigoDeError,$e){
         if($codigoDeError=="23000"){
             return "El usuario que intentó registrar ya existe, favor de validar la información";
         }
-
+else if($codigoDeError=='42S02'){
+	return "Tabla inexistente, favor de contactar a Sistemas";
+}
         else {
             return $e->getMessage();
         }

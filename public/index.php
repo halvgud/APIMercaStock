@@ -84,7 +84,7 @@ $app->post('/categoria/departamento/seleccionar', function (ServerRequestInterfa
 	return departamento::seleccionarDepartamento($request,$response,$args);
 });
 $app->post('/categoria/departamento/seleccionar2', function (ServerRequestInterface $request, ResponseInterface $response, $args){
-	return departamento::seleccionarDepartamento2($request,$response,$args);
+	return departamento::seleccionarDepartamento($request,$response,$args);
 });
 $app->post('/categoria/categoria/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
 	return categoria::seleccionarCategoria($request,$response,$args);
@@ -97,12 +97,15 @@ $app->post('/categoria/articulo/seleccionar', function (ServerRequestInterface $
 });
 $app->post('/reporte/bitacora/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
 
-	return bitacora::seleccionarBitacora($request,$response,$args);
+	//return bitacora::seleccionarBitacora($request,$response,$args);
 
 	//var_dump($request);
 	//return $response->withJson(($request),200);
 	return mercaStock::seleccionarBitacora($request,$response,$args);
 
+});
+$app->post('/categoria/categoria/seleccionar2', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+	return categoria::seleccionarCategoria($request,$response,$args);
 });
 $app->run();
 
