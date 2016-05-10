@@ -361,7 +361,7 @@ class logIn
                 $arreglo = [
                     "estado" => 200,
                     "success" => "Lista de niveles",
-                    "data" => $resultado
+                    "data" => [$resultado]
                 ];;
                 return $response->withJson($arreglo, 200);
             } else {
@@ -395,7 +395,7 @@ class logIn
                 $arreglo = [
                     "estado" => 200,
                     "success" => "OK",
-                    "data" => $resultado
+                    "data" => [$resultado]
                 ];
                 return $response->withJson($arreglo, 200);
             } else {
@@ -454,21 +454,24 @@ class logIn
     {
         //$request = Slim::getInstance()->request();
         $wine = json_decode($request->getBody());
-        $claveApi = "";
-
+        //$claveApi = "";
+        //return var_dump($wine->usuario);
         //return  $response->withJson($wine,400);
-        $sql = "INSERT INTO ms_sucursal (nombre,usuario,password,claveAPI,domicilio,contacto) VALUES
-	  (:nombre,:usuario,:password,:claveAPI,:direccion,:contacto)";
+        $password = self::encriptarContrasena($wine->password);
+        $sql = "INSERT INTO ms_sucursal (idSucursal, nombre, usuario, password, claveAPI, domicilio, contacto, idEstado) VALUES
+	  (:idSucursal,:nombre,:usuario,:password,:claveAPI,:domicilio,:contacto,:idEstado)";
 
         try {/* , grapes, country, region, year, description) VALUES (:name, :grapes, :country, :region, :year, :description)";  */
             $db = getConnection();
             $stmt = $db->prepare($sql);
+            $stmt->bindParam("idSucursal", $wine->idSucursal, PDO::PARAM_STR);
             $stmt->bindParam("nombre", $wine->nombre, PDO::PARAM_STR);
             $stmt->bindParam("usuario", $wine->usuario, PDO::PARAM_STR);
-            $stmt->bindParam("password", $wine->password, PDO::PARAM_STR);
-            $stmt->bindParam("claveAPI", $claveApi);
+            $stmt->bindParam("password", $password, PDO::PARAM_STR);
+            $stmt->bindParam("claveAPI", $wine->claveAPI,PDO::PARAM_STR);
             $stmt->bindParam("domicilio", $wine->domicilio, PDO::PARAM_STR);
             $stmt->bindParam("contacto", $wine->contacto, PDO::PARAM_STR);
+            $stmt->bindParam("idEstado", $wine->idEstado, PDO::PARAM_STR);
             $stmt->execute();
             $wine->id = $db->lastInsertId();
             $db = null;
@@ -497,7 +500,7 @@ class logIn
     public static function seleccionarSucursal($request, $response, $args)
     {
 
-        $comando = "SELECT idSucursal,nombre FROM ms_sucursal";
+        $comando = "SELECT idSucursal,nombre,usuario, domicilio, contacto, idEstado,'DEFAULTMERCASTOCK' as password FROM ms_sucursal";
         try {
             $db = getConnection();
             $sentencia = $db->prepare($comando);
@@ -507,7 +510,7 @@ class logIn
                 $arreglo = [
                     "estado" => 200,
                     "success" => "OK",
-                    "data" => [$resultado]
+                    "data" => $resultado
                 ];
                 return $response->withJson($arreglo, 200);
             } else {
@@ -527,6 +530,58 @@ class logIn
             return $response->withJson($arreglo, 400);//json_encode($wine);
         }
 
+    }
+
+    public static function actualizarSucursal($request, $response, $args)
+    {
+        $postrequest = json_decode($request->getBody());
+        if($postrequest->password!='DEFAULTMERCASTOCK') {
+            $query = "UPDATE ms_sucursal SET nombre=:nombre,usuario=:usuario,password=:password,domicilio=:domicilio,contacto=:contacto,idEstado=:idEstado WHERE idSucursal=:idSucursal";
+        }else{
+            $query = "UPDATE ms_sucursal SET nombre=:nombre,usuario=:usuario,domicilio=:domicilio,contacto=:contacto,idEstado=:idEstado WHERE idSucursal=:idSucursal";
+        }
+//return var_dump($postrequest);
+        try {
+            $db = getConnection();
+            $password = self::encriptarContrasena($postrequest->password,PDO::PARAM_STR);
+            $sentencia = $db->prepare($query);
+            $sentencia ->bindParam("idSucursal",$postrequest->idSucursal,PDO::PARAM_INT);
+            $sentencia->bindParam("usuario", $postrequest->usuario,PDO::PARAM_STR);
+            if($postrequest->password!='DEFAULTMERCASTOCK'){
+                $sentencia->bindParam("password", $password);
+            }
+            $sentencia->bindParam("nombre", $postrequest->nombre,PDO::PARAM_STR);
+            $sentencia->bindParam("domicilio", $postrequest->domicilio,PDO::PARAM_STR);
+            $sentencia->bindParam("contacto", $postrequest->contacto,PDO::PARAM_STR);
+            $sentencia->bindParam("idEstado", $postrequest->idEstado,PDO::PARAM_INT);
+            $resultado = $sentencia->execute();
+            if ($resultado) {
+                $arreglo =
+                    [
+                        "estado" => 200,
+                        "success" => "Se a actualizado el usuario con éxito",
+                        "data" => $resultado
+                    ];
+                return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
+            } else {
+                $arreglo =
+                    [
+                        "estado" => "warning",
+                        "mensaje" => "No se cambió ningún dato",
+                        "data" => $resultado
+                    ];
+                return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
+            }
+        } catch (PDOException $e) {
+            $codigoDeError = $e->getCode();
+            $error = self::traducirMensaje($codigoDeError, $e);
+            $arreglo = [
+                "estado" => $e->getCode(),
+                "error" => $error,
+                "data" => json_encode($postrequest)
+            ];;
+            return $response->withJson($arreglo, 400);//json_encode($wine);
+        }
     }
 }
 

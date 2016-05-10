@@ -15,6 +15,8 @@ $app = new \Slim\App($settings);
 require __DIR__ . '/../src/dependencies.php';
 require __DIR__ . '/../src/middleware.php';
 require __DIR__ . '/../src/routes.php';
+require_once("usuario.php");
+require_once("sucursal.php");
 require_once("LogIn.php");
 require_once("MercaStock.php");
 require_once("departamento.php");
@@ -27,7 +29,8 @@ require_once "MercaStock.php";
 require_once "Roles.php";
 require_once "PrivilegiosUsuario.php";
 require_once "permisos.php";
-
+require_once("parametros.php");
+//Falta
 $app->post('/usuario/login', function (ServerRequestInterface $request, ResponseInterface $response, $args){
 
 	return logIn::logIn($request,$response,$args);
@@ -39,23 +42,34 @@ $app->post('/usuario/obtenerpermisos/{id}', function (ServerRequestInterface $re
 	return ($newResponse);
 });
 
-
-$app->post('/usuario/insertar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
-
-	return logIn::registrarUsuario($request,$response,$args);
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Usuario
+$app->post('/usuario/seleccionar',function(ServerRequestInterface $request,ResponseInterface $response,$args){
+	return usuario::seleccionar($request,$response,$args);
 });
+$app->post('/usuario/insertar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+	return usuario::insertar($request,$response,$args);
+});
+$app->post('/usuario/actualizar',function(ServerRequestInterface $request,ResponseInterface $response,$args){
+	return usuario::actualizar($request,$response,$args);
+});
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Sucursal
+$app->post('/sucursal/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+	return sucursal::seleccionar($request,$response,$args);
+});
+$app->post('/sucursal/insertar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+	return sucursal::registrar($request,$response,$args);
+});
+$app->post('/sucursal/actualizar',function(ServerRequestInterface $request,ResponseInterface $response,$args){
+	return sucursal::actualizar($request,$response,$args);
+});
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 $app->post('/permisos/obtener', function (ServerRequestInterface $request, ResponseInterface $response, $args){
 	return $response->withJson(permisos::Obtener($request,$response,$args),200);
 });
 
-$app->post('/usuario/seleccionar',function(ServerRequestInterface $request,ResponseInterface $response,$args){
-	return logIn::seleccionarUsuarios($request,$response,$args);
-});
 
-$app->post('/usuario/actualizar',function(ServerRequestInterface $request,ResponseInterface $response,$args){
-    return logIn::actualizarUsuario($request,$response,$args);
-});
+
+
 
 $app->post('/permisos/actualizar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
 	//return 'kek';
@@ -78,12 +92,7 @@ $app->post('/usuario/sexo/seleccionar', function (ServerRequestInterface $reques
 $app->post('/usuario/nivel_autorizacion/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
 	return logIn::seleccionarNivel($request,$response,$args);
 });
-$app->post('/sucursal/insertar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
-	return logIn::registrarSucursal($request,$response,$args);
-});
-$app->post('/sucursal/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
-	return logIn::seleccionarSucursal($request,$response,$args);
-});
+
 $app->post('/categoria/departamento/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
 	return departamento::seleccionarDepartamento($request,$response,$args);
 });
@@ -110,6 +119,13 @@ $app->post('/reporte/bitacora/seleccionar', function (ServerRequestInterface $re
 });
 $app->post('/categoria/categoria/seleccionar2', function (ServerRequestInterface $request, ResponseInterface $response, $args){
 	return categoria::seleccionarCategoria($request,$response,$args);
+});
+
+$app->post('/categoria/parametros/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+	return parametros::seleccionarParametros($request,$response,$args);
+});
+$app->post('/categoria/parametros/actualizar',function(ServerRequestInterface $request,ResponseInterface $response,$args){
+	return parametros::actualizarParametros($request,$response,$args);
 });
 $app->run();
 
