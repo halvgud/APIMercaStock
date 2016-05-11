@@ -5,10 +5,11 @@ class articulo
     {
 
     }
-    public static function seleccionarArticulo($request, $response, $args)
+
+    public static function seleccionar($request, $response, $args)
     {
         $postrequest = json_decode($request->getBody());
-        $comando = "SELECT *  FROM articulo a inner join categoria c on (c.cat_id=a.cat_id) inner join departamento dp on (dp.dep_id=c.dep_id ) where a.idSucursal=:idSucursal and dp.dep_id=:dep_id and c.cat_id=:cat_id ";
+        $comando = "SELECT a.clave, a.descripcion, a.margen1, a.precio1, a.existencia  FROM articulo a inner join categoria c on (c.cat_id=a.cat_id) inner join departamento dp on (dp.dep_id=c.dep_id ) where a.idSucursal=:idSucursal and dp.dep_id=:dep_id and c.cat_id=:cat_id ";
         try {
             $db = getConnection();
             $db->query("SET NAMES 'utf8'");
@@ -39,8 +40,7 @@ class articulo
                 "error" => "Error al traer listado de Articulos",
                 "datos" => $e
             ];
-            return $response->withJson($arreglo, 400);//json_encode($wine);
+            return $response->withJson($arreglo, 400);
         }
-
     }
 }

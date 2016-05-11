@@ -48,11 +48,12 @@ class usuario
         $sql = "INSERT INTO ms_usuario (idUsuario,usuario,password,nombre,apellido,sexo,contacto,idSucursal,claveAPI,idEstado,fechaEstado,fechaSesion,claveGCM,idNivelAutorizacion) VALUES
 	            (:idUsuario,:usuario,:password,:nombre,:apellido,:sexo,:contacto,:idSucursal,:claveAPI,:idEstado,now(),now(),:claveGCM,:idNivelAutorizacion)";
         try {
+            $password = self::encriptarContrasena($wine->password);
             $db = getConnection();
             $stmt = $db->prepare($sql);
             $stmt->bindParam("idUsuario", $idUsuario, PDO::PARAM_INT);
             $stmt->bindParam(":usuario", $wine->usuario, PDO::PARAM_STR);
-            $stmt->bindParam(":password", $wine->password, PDO::PARAM_STR);
+            $stmt->bindParam(":password", $password);
             $stmt->bindParam(":nombre", $wine->nombre, PDO::PARAM_STR);
             $stmt->bindParam(":apellido", $wine->apellido, PDO::PARAM_STR);
             $stmt->bindParam(":sexo", $wine->sexo, PDO::PARAM_STR);
@@ -161,4 +162,132 @@ class usuario
             return $response->withJson($arreglo, 400);//json_encode($wine);
         }
     }
+
+    public static function encriptarContrasena($contrasenaPlana)
+    {
+        if ($contrasenaPlana)
+            return password_hash($contrasenaPlana, PASSWORD_DEFAULT);
+        else return null;
+    }
+
+    public static function logIn($request, $response, $args)
+    {
+        $usuario = json_decode($request->getBody());
+        $correo = $usuario->usuario;
+        $contrasena = $usuario->contrasena;
+        try {
+            $autenticar = self::autenticar($correo, $contrasena);
+            if ($autenticar['estado'] == '200') {
+                $datos = $autenticar['datos'];
+                $_SESSION['idUsuario'] = $datos->idUsuario;
+                $_SESSION['usuario'] = $datos->Usuario;
+                $_SESSION['idNivelAutorizacion'] = $datos->idNivelAutorizacion;
+                $resArray['success'] = 'Se ha logueado correctamente';
+                $codigo = 200;
+
+            } else {
+                $codigo = 401;
+            }
+            $newResponse = $response->withJson($autenticar, $codigo);
+            return $newResponse;
+        } catch (PDOException $e) {
+            echo '{"error":{"text":' . $e->getMessage() . '}}';
+        }
+    }
+
+    private static function autenticar($usuario, $contrasena)
+    {
+        $comando = "SELECT idUsuario,Usuario,password,IDESTADO,idNivelAutorizacion FROM ms_usuario WHERE usuario=:usuario ";
+        try {
+            $db = getConnection();
+            $sentencia = $db->prepare($comando);
+            $sentencia->bindParam("usuario", $usuario);
+            $sentencia->execute();
+
+            if ($sentencia) {
+                $resultado = $sentencia->fetchObject();
+                if (($resultado) && self::validarContrasena($contrasena, $resultado->password)) {
+                    self::actualizarSesion($usuario);
+                    try {
+                        return
+                            [
+                                "estado" => 200,
+                                "mensaje" => "OK",
+                                "datos" => $resultado
+                            ];
+                    } catch (PDOException $e) {
+                        throw new ExcepcionApi(2, $e->getMessage());
+                    }
+                } else {
+
+                    return
+                        [
+                            "estado" => 101,
+                            "mensaje" => "usuario inexistente"
+                        ];
+                }
+
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            throw new ExcepcionApi(1, $e->getMessage(), 401);
+        }
+
+    }
+
+    private static function validarContrasena($contrasenaPlana, $contrasenaHash)
+    {
+        return password_verify($contrasenaPlana, $contrasenaHash);
+    }
+
+    private static function actualizarSesion($usuario)
+    {
+        $comando2 = "UPDATE ms_usuario SET fechaSesion=NOW(),claveAPI=:claveApi WHERE usuario=:usuario";
+        try {
+            $db = getConnection();
+            $claveApi = self::generarClaveApi();
+            $sentencia2 = $db->prepare($comando2);
+            $sentencia2->bindParam("usuario", $usuario);
+            $sentencia2->bindParam("claveApi", $claveApi);
+            if ($sentencia2->execute()) {
+                return true;
+            } else
+                return false;
+        } catch (PDOException $e) {
+            throw new ExcepcionApi(401, $e->getMessage(), 401);
+        }
+    }
+
+    private static function generarClaveApi()
+    {
+        return md5(microtime() . rand());
+    }
+
+
+    public static function obtener($username) {
+        if (!empty($username)) {
+            self::InicializarRoles($username);
+            return (self::$roles);
+
+        } else {
+            return false;
+        }
+    }
+
+    protected static function InicializarRoles($usuario) {
+        self::$roles = array();
+
+        $comando = "SELECT mna.idNivelAutorizacion,mna.descripcion from ms_nivelAutorizacion mna inner join ms_usuario mu on (mu.idUsuario =:idUsuario and mu.idNivelAutorizacion = mna.idNivelAutorizacion) order by mna.idNivelAutorizacion asc";
+        $db = getConnection();
+        $sentencia = $db->prepare($comando);
+        $sentencia->bindParam("idUsuario", $usuario);
+        $sentencia->execute();
+        $resultado = $sentencia->fetchAll(PDO::FETCH_OBJ);
+        foreach($resultado as $rol) {
+            self::$roles[$rol->descripcion] = Roles::obtenerPermisosDelRol($rol->idNivelAutorizacion);
+        }
+        return self::$roles;
+    }
+
 }
