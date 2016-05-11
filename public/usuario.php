@@ -161,4 +161,43 @@ class usuario
             return $response->withJson($arreglo, 400);//json_encode($wine);
         }
     }
+
+    public static function obtener($request,$response,$args){
+        $postrequest = json_decode($request->getBody());
+        $query = "select idUsuario,usuario,password,nombre,apellido,sexo,contacto,idNivelAutorizacion,idEstado,fechaEstado,fechaSesion,claveGCM from ms_usuario";
+        try{
+            $db=getConnection();
+            $sentencia = $db->prepare($query);
+            //sentencia->bindParam("",$postrequest->algunargumento);
+            $sentencia->execute();
+            $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+            if($resultado){
+                 $arreglo =
+                            [
+                                "estado" => 200,
+                                "success" => "",
+                                "data" => $resultado
+                            ];
+                        return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
+                    } else {
+                        $arreglo =
+                            [
+                                "estado" => "warning",
+                                "mensaje" => "",
+                                "data" => $resultado
+                            ];
+                        return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
+                      }//else
+        }catch(PDOException $e){
+            $codigoDeError=$e->getCode();
+            $error =LogIn::traducirMensaje($codigoDeError,$e);
+            $arreglo = [
+                "estado" =>$e -> getCode(),
+                "error" =>$error,
+                "data" => json_encode($postrequest)
+            ];
+            return $response->withJson($arreglo,400);
+        }
+
+    }
 }

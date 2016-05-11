@@ -52,6 +52,9 @@ $app->post('/usuario/insertar', function (ServerRequestInterface $request, Respo
 $app->post('/usuario/actualizar',function(ServerRequestInterface $request,ResponseInterface $response,$args){
 	return usuario::actualizar($request,$response,$args);
 });
+$app->post('/usuario/obtener',function(ServerRequestInterface $request,ResponseInterface $response,$args){
+	return usuario::obtener($request,$response,$args);
+});
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Sucursal
 $app->post('/sucursal/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
 	return sucursal::seleccionar($request,$response,$args);
