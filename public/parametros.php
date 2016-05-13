@@ -6,22 +6,16 @@ class parametros
 
     }
 
-    public static function seleccionarParametros($request, $response, $args)
+    public static function seleccionar($request, $response, $args)
     {
         $postrequest = json_decode($request->getBody());
-       // if((isset($postrequest->idSucursal)&&$postrequest->idSucursal!='TODOS'&&$postrequest->idSucursal!=null)){
-            $comando = "SELECT idSucursal, accion, parametro, valor, comentario, usuario, fechaActualizacion FROM ms_parametro WHERE idSucursal=:idSucursal";
-
-        //}
+        $comando = "SELECT idSucursal, accion, parametro, valor, comentario, usuario, fechaActualizacion FROM ms_parametro WHERE idSucursal=:idSucursal";
 
         try {
             $idSucursal=$postrequest->idSucursal;
-//var_dump($idSucursal);
             $db = getConnection();
             $sentencia = $db->prepare($comando);
-            //if($postrequest!='todo') {
             $sentencia->bindParam('idSucursal',$idSucursal );
-            //}
             $sentencia->execute();
             $resultado = $sentencia->fetchAll(PDO::FETCH_OBJ);
             if ($resultado) {
@@ -31,7 +25,6 @@ class parametros
                     "data" => $resultado
                 ];
                 return $response->withJson($arreglo,200);
-                //return $response->withJson($resultado, 200);
             } else {
                 $arreglo = [
                     "estado" => 400,
@@ -50,17 +43,12 @@ class parametros
         }
 
     }
-    public static function actualizarParametros($request, $response, $args)
+    public static function actualizar($request, $response, $args)
     {
         $postrequest = json_decode($request->getBody());
-        //if($postrequest->password!='DEFAULTMERCASTOCK') {
-            $query = "UPDATE ms_parametro SET valor=:valor,comentario=:comentario,usuario=:usuario,fechaActualizacion=NOW() WHERE idSucursal=:idSucursal AND accion=:accion AND parametro=:parametro";
-        ////  $query = "UPDATE ms_sucursal SET nombre=:nombre,usuario=:usuario,domicilio=:domicilio,contacto=:contacto,idEstado=:idEstado WHERE idSucursal=:idSucursal";
-        //}
-//return var_dump($postrequest);
+        $query = "UPDATE ms_parametro SET valor=:valor,comentario=:comentario,usuario=:usuario,fechaActualizacion=NOW() WHERE idSucursal=:idSucursal AND accion=:accion AND parametro=:parametro";
         try {
             $db = getConnection();
-
             $sentencia = $db->prepare($query);
             $sentencia ->bindParam("idSucursal",$postrequest->idSucursal,PDO::PARAM_INT);
             $sentencia->bindParam("accion", $postrequest->accion,PDO::PARAM_STR);
@@ -94,7 +82,7 @@ class parametros
                 "error" => $error,
                 "data" => json_encode($postrequest)
             ];;
-            return $response->withJson($arreglo, 400);//json_encode($wine);
+            return $response->withJson($arreglo, 400);
         }
     }
 

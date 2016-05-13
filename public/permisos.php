@@ -6,7 +6,7 @@ class Permisos
 
     }
 
-    public static function Obtener($request, $response, $args)
+    public static function seleccionar($request, $response, $args)
     {
         try {
             $comando = "SELECT idNivelAutorizacion,descripcion FROM ms_nivelAutorizacion";
@@ -32,17 +32,11 @@ class Permisos
             }
             return ($roles);
         } catch (PDOException $e) {
-            //error_log($e->getMessage(), 3, '/var/tmp/php.log');
             echo '{"error":{"text":' . $e->getMessage() . '}}';
         }
     }
 
-    /**
-     * @param $request
-     * @param $response
-     * @param $args
-     */
-    public static function Actualizar($request, $response, $args)
+    public static function actualizar($request, $response, $args)
     {
         $bandera = false;
         $db = getConnection();
@@ -75,10 +69,6 @@ class Permisos
             return $response->withJson($arreglo,400);
         }
     }
-
-
-
-
 
    private static function Bdactualizar($request, $idNivelAutorizacion, $estado, $db)    {
         $wine = $request;

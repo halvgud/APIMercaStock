@@ -130,4 +130,11 @@ class sucursal
             return $response->withJson($arreglo, 400);
         }
     }
+
+    public static function encriptarContrasena($contrasenaPlana)
+    {
+        if ($contrasenaPlana)
+            return password_hash($contrasenaPlana, PASSWORD_DEFAULT);
+        else return null;
+    }
 }

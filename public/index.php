@@ -25,22 +25,14 @@ require_once("articulo.php");
 require_once("bitacora.php");
 require_once("inventario.php");
 require_once ("usuario2.php");
-require_once "MercaStock.php";
+//require_once "MercaStock.php";
 require_once "Roles.php";
 require_once "PrivilegiosUsuario.php";
 require_once "permisos.php";
 require_once("parametros.php");
-//Falta
-$app->post('/usuario/login', function (ServerRequestInterface $request, ResponseInterface $response, $args){
-
-	return logIn::logIn($request,$response,$args);
-});
-$app->post('/usuario/obtenerpermisos/{id}', function (ServerRequestInterface $request, ResponseInterface $response, $args){
-	$route = $request->getAttribute('route');
-	$courseId = $route->getArgument('id');
-	$newResponse = $response->withJson(PrivilegiosUsuario::obtenerPorUsuario($courseId),200);
-	return ($newResponse);
-});
+require_once("nivel_autorizacion.php");
+require_once("sexo.php");
+require_once("importar.php");
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Usuario
 $app->post('/usuario/seleccionar',function(ServerRequestInterface $request,ResponseInterface $response,$args){
@@ -52,8 +44,19 @@ $app->post('/usuario/insertar', function (ServerRequestInterface $request, Respo
 $app->post('/usuario/actualizar',function(ServerRequestInterface $request,ResponseInterface $response,$args){
 	return usuario::actualizar($request,$response,$args);
 });
-$app->post('/usuario/obtener',function(ServerRequestInterface $request,ResponseInterface $response,$args){
-	return usuario::obtener($request,$response,$args);
+
+$app->post('/usuario/obtenerNuevo',function(ServerRequestInterface $request,ResponseInterface $response,$args){
+	return usuario::obtenerNuevo($request,$response,$args);
+});
+$app->post('/usuario/login', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+	return usuario::logIn($request,$response,$args);
+});
+$app->post('/usuario/permisos/obtener/{id}', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+	$route = $request->getAttribute('route');
+	$courseId = $route->getArgument('id');
+	$newResponse = $response->withJson(PrivilegiosUsuario::obtenerPorUsuario($courseId),200);
+	return ($newResponse);
+
 });
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Sucursal
 $app->post('/sucursal/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
@@ -65,71 +68,57 @@ $app->post('/sucursal/insertar', function (ServerRequestInterface $request, Resp
 $app->post('/sucursal/actualizar',function(ServerRequestInterface $request,ResponseInterface $response,$args){
 	return sucursal::actualizar($request,$response,$args);
 });
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-$app->post('/permisos/obtener', function (ServerRequestInterface $request, ResponseInterface $response, $args){
-	return $response->withJson(permisos::Obtener($request,$response,$args),200);
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Permisos
+$app->post('/permisos/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+	return $response->withJson(permisos::seleccionar($request,$response,$args),200);
 });
-
-
-
-
-
 $app->post('/permisos/actualizar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
-	//return 'kek';
-	//return $response=$request;
-	return permisos::Actualizar($request,$response,$args);
+	return permisos::actualizar($request,$response,$args);
+});
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Departamento
+$app->post('/departamento/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+	return departamento::seleccionar($request,$response,$args);
+});
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Categoria
+$app->post('/categoria/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+	return categoria::seleccionar($request,$response,$args);
+});
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Artículo
+$app->post('/articulo/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+	return articulo::seleccionar($request,$response,$args);
+});
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Inventario
+$app->post('/inventario/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+	return inventario::seleccionar($request,$response,$args);
+});
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Bitacora
+$app->post('/bitacora/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+	return bitacora::seleccionar($request,$response,$args);
+});
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Parámetros
+$app->post('/parametros/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+	return parametros::seleccionar($request,$response,$args);
+});
+$app->post('/parametros/actualizar',function(ServerRequestInterface $request,ResponseInterface $response,$args){
+	return parametros::actualizar($request,$response,$args);
+});
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Sexo
+$app->post('/sexo/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+	return sexo::seleccionar($request,$response,$args);
+});
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Nivel de Autorización
+$app->post('/nivel_autorizacion/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+	return nivel_autorizacion::seleccionar($request,$response,$args);
+});
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Batch
+$app->post('/importar/modificar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+	return importar::modificarEnBatch($request,$response,$args);
 });
 
 
 
 
 
-
-
-
-
-
-$app->post('/usuario/sexo/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
-	return logIn::seleccionarSexo($request,$response,$args);
-});
-$app->post('/usuario/nivel_autorizacion/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
-	return logIn::seleccionarNivel($request,$response,$args);
-});
-
-$app->post('/categoria/departamento/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
-	return departamento::seleccionarDepartamento($request,$response,$args);
-});
-$app->post('/categoria/departamento/seleccionar2', function (ServerRequestInterface $request, ResponseInterface $response, $args){
-	return departamento::seleccionarDepartamento($request,$response,$args);
-});
-$app->post('/categoria/categoria/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
-	return categoria::seleccionarCategoria($request,$response,$args);
-});
-$app->post('/categoria/inventario/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
-	return inventario::seleccionarInventario($request,$response,$args);
-});
-$app->post('/categoria/articulo/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
-	return articulo::seleccionarArticulo($request,$response,$args);
-});
-$app->post('/reporte/bitacora/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
-
-	//return bitacora::seleccionarBitacora($request,$response,$args);
-
-	//var_dump($request);
-	//return $response->withJson(($request),200);
-	return mercaStock::seleccionarBitacora($request,$response,$args);
-
-});
-$app->post('/categoria/categoria/seleccionar2', function (ServerRequestInterface $request, ResponseInterface $response, $args){
-	return categoria::seleccionarCategoria($request,$response,$args);
-});
-
-$app->post('/categoria/parametros/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
-	return parametros::seleccionarParametros($request,$response,$args);
-});
-$app->post('/categoria/parametros/actualizar',function(ServerRequestInterface $request,ResponseInterface $response,$args){
-	return parametros::actualizarParametros($request,$response,$args);
-});
 $app->run();
 
 
@@ -248,3 +237,4 @@ function getConnection() {
 	$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	return $dbh;
 }
+

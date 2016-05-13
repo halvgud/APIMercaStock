@@ -6,16 +6,12 @@ class categoria
 
     }
 
-    public static function seleccionarCategoria($request, $response, $args)
+    public static function seleccionar($request, $response, $args)
     {
         $postrequest = json_decode($request->getBody());
-        //echo($postrequest);
-        // console.log($postrequest);
-
         if((isset($postrequest->idGenerico[0])&&$postrequest->idGenerico[0]!='TODOS'&&$postrequest->idGenerico[0]!=null)
             ||(isset($postrequest->idGenerico[1])&&$postrequest->idGenerico[1]!='TODOS'&&$postrequest->idGenerico[1]!=null)){
             $comando = "SELECT cat_id, nombre FROM categoria WHERE idSucursal=:idSucursal and dep_id=:dep_id";
-
         }
         else if($postrequest->idSucursal=='TODOS'){
             $comando = "SELECT cat_id, cat_id_Local, idSucursal, nombre, dep_id FROM categoria";

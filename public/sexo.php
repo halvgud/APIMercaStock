@@ -1,5 +1,5 @@
 <?php
-class inventario
+class sexo
 {
     protected function __construct()
     {
@@ -8,26 +8,31 @@ class inventario
 
     public static function seleccionar($request, $response, $args)
     {
-        $comando = "SELECT * FROM ms_inventario";
+        $comando = "SELECT idSexo, descripcion FROM ms_Sexo";
         try {
             $db = getConnection();
             $sentencia = $db->prepare($comando);
             $sentencia->execute();
-            $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+            $resultado = $sentencia->fetchAll(PDO::FETCH_OBJ);
             if ($resultado) {
-                return $response->withJson($resultado, 200);
+                $arreglo = [
+                    "estado" => 200,
+                    "success" => "OK",
+                    "data" => [$resultado]
+                ];
+                return $response->withJson($arreglo, 200);
             } else {
                 $arreglo = [
                     "estado" => 400,
-                    "error" => "Error al traer listado de Inventario",
-                    "datos" => $resultado
+                    "error" => "Error al traer listado",
+                    "data" => $resultado
                 ];;
                 return $response->withJson($arreglo, 400);
             }
         } catch (PDOException $e) {
             $arreglo = [
                 "estado" => 400,
-                "error" => "Error al traer listado de Inventario",
+                "error" => "Error al traer listado de Sexo",
                 "datos" => $e
             ];
             return $response->withJson($arreglo, 400);
