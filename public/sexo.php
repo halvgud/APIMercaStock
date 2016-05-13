@@ -37,5 +37,8 @@ class sexo
             ];
             return $response->withJson($arreglo, 400);
         }
+        finally{
+            $db=null;
+        }
     }
 }

@@ -16,6 +16,7 @@ class departamento
         else {
             $comando = "SELECT * FROM departamento";
         }
+      //  $db=null;
         try {
             $idSucursal=isset($postrequest->idSucursal)?$postrequest->idSucursal:(isset($postrequest->idGenerico)?$postrequest->idGenerico:0);
             $db = getConnection();
@@ -29,7 +30,9 @@ class departamento
                     "success"=>"OK",
                     "data" => isset($postrequest->idGenerico)?[$resultado]:$resultado
                 ];
+
                 return $response->withJson($arreglo,200);
+
             } else {
                 $arreglo = [
                     "estado" => 400,
@@ -38,6 +41,7 @@ class departamento
                 ];;
                 return $response->withJson($arreglo, 400);
             }
+
         } catch (PDOException $e) {
             $arreglo = [
                 "estado" => 400,
@@ -45,6 +49,9 @@ class departamento
                 "datos" => $e
             ];
             return $response->withJson($arreglo, 400);
+        }
+        finally{
+            $db=null;
         }
     }
 

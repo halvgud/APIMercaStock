@@ -33,6 +33,7 @@ require_once("parametros.php");
 require_once("nivel_autorizacion.php");
 require_once("sexo.php");
 require_once("importar.php");
+require_once("concepto.php");
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Usuario
 $app->post('/usuario/seleccionar',function(ServerRequestInterface $request,ResponseInterface $response,$args){
@@ -111,10 +112,19 @@ $app->post('/nivel_autorizacion/seleccionar', function (ServerRequestInterface $
 	return nivel_autorizacion::seleccionar($request,$response,$args);
 });
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Batch
-$app->post('/importar/modificar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+$app->post('/importar/departamento', function (ServerRequestInterface $request, ResponseInterface $response, $args){
 	return importar::modificarEnBatch($request,$response,$args);
 });
-
+$app->post('/importar/categoria', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+	return importar::modificarEnBatch2($request,$response,$args);
+});
+$app->post('/importar/articulo', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+	return importar::modificarEnBatch3($request,$response,$args);
+});
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Concepto
+$app->post('/concepto/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+	return concepto::seleccionar($request,$response,$args);
+});
 
 
 

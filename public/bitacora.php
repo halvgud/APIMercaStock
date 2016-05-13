@@ -36,6 +36,9 @@ class bitacora
             ];
             return $response->withJson($arreglo,400);
         }
+        finally{
+            $db=null;
+        }
 
     }
 }

@@ -34,6 +34,9 @@ class usuario
             ];
             return $response->withJson($arreglo, 400);
         }
+        finally{
+            $db=null;
+        }
     }
 
     public static function insertar($request, $response, $args)
@@ -90,6 +93,9 @@ class usuario
                 "datos" => json_encode($wine)
             ];;
             return $response->withJson($arreglo, 400);
+        }
+        finally{
+            $db=null;
         }
     }
 
@@ -160,6 +166,9 @@ class usuario
                 "data" => json_encode($postrequest)
             ];;
             return $response->withJson($arreglo, 400);//json_encode($wine);
+        }
+        finally{
+            $db=null;
         }
     }
 
@@ -232,6 +241,9 @@ class usuario
             return $newResponse;
         } catch (PDOException $e) {
             echo '{"error":{"text":' . $e->getMessage() . '}}';
+        }
+        finally{
+            $db=null;
         }
     }
 
