@@ -31,7 +31,9 @@ class PrivilegiosUsuario
         foreach($resultado as $rol) {
             self::$roles[$rol->descripcion] = Roles::obtenerPermisosDelRol($rol->idNivelAutorizacion);
         }
+
         return self::$roles;
+
     }
 
     // check if user has a specific privilege

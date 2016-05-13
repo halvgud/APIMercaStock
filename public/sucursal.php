@@ -37,6 +37,9 @@ class sucursal
             ];
             return $response->withJson($arreglo, 400);
         }
+        finally{
+            $db=null;
+        }
     }
 
     public static function registrar($request, $response, $args)
@@ -77,6 +80,9 @@ class sucursal
             }
         } catch (PDOException $e) {
             echo '{"error":' . $e->getMessage() . '}';
+        }
+        finally{
+            $db=null;
         }
     }
 
@@ -128,6 +134,9 @@ class sucursal
                 "data" => json_encode($postrequest)
             ];;
             return $response->withJson($arreglo, 400);
+        }
+        finally{
+            $db=null;
         }
     }
 

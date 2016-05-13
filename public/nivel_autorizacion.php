@@ -41,5 +41,8 @@ class nivel_autorizacion
             ];
             return $response->withJson($arreglo, 400);
         }
+        finally{
+            $db=null;
+        }
     }
 }

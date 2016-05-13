@@ -41,7 +41,9 @@ class parametros
             ];
             return $response->withJson($arreglo, 400);
         }
-
+        finally{
+            $db=null;
+        }
     }
     public static function actualizar($request, $response, $args)
     {
@@ -83,6 +85,9 @@ class parametros
                 "data" => json_encode($postrequest)
             ];;
             return $response->withJson($arreglo, 400);
+        }
+        finally{
+            $db=null;
         }
     }
 

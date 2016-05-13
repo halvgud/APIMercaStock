@@ -8,28 +8,44 @@ class categoria
 
     public static function seleccionar($request, $response, $args)
     {
+        $banderaquery=0;
         $postrequest = json_decode($request->getBody());
-        if((isset($postrequest->idGenerico[0])&&$postrequest->idGenerico[0]!='TODOS'&&$postrequest->idGenerico[0]!=null)
-            ||(isset($postrequest->idGenerico[1])&&$postrequest->idGenerico[1]!='TODOS'&&$postrequest->idGenerico[1]!=null)){
+        if((isset($postrequest->idGenerico[0]->idSucursal)&&$postrequest->idGenerico[0]->idSucursal!='TODOS'&&$postrequest->idGenerico[0]!=null)
+            &&(isset($postrequest->idGenerico[1]->idGenerico)&&$postrequest->idGenerico[1]->idGenerico!='TODOS'&&$postrequest->idGenerico[1]!=null)){
             $comando = "SELECT cat_id, nombre FROM categoria WHERE idSucursal=:idSucursal and dep_id=:dep_id";
+            $wef="este";
+            $banderaquery=1;
         }
-        else if($postrequest->idSucursal=='TODOS'){
-            $comando = "SELECT cat_id, cat_id_Local, idSucursal, nombre, dep_id FROM categoria";
+        else if($postrequest->idGenerico[0]->idSucursal!='TODOS'||$postrequest->idGenerico[1]->idGenerico=='TODOS'){
+            $comando = "SELECT cat_id, cat_id_Local, idSucursal, nombre, dep_id FROM categoria where idSucursal=:idSucursal";
+            $banderaquery=2;
+
+        }else if ($postrequest->idGenerico[0]->idSucursal=='TODOS'||$postrequest->idGenerico[1]->idGenerico!='TODOS'){
+            $banderaquery=3;
+            $comando = "SELECT cat_id, cat_id_Local, idSucursal, nombre, dep_id FROM categoria where dep_id=:dep_id";
         }
         else {
+            $banderaquery=4;
             $comando = "SELECT cat_id, cat_id_Local, idSucursal, nombre, dep_id FROM categoria WHERE idSucursal=:idSucursal and dep_id=:dep_id";
         }
         try {
             $db = getConnection();
             $sentencia = $db->prepare($comando);
-            if(isset($postrequest->idGenerico[0])){
-                $sentencia->bindParam('idSucursal', $postrequest->idGenerico[0]);
-                $sentencia->bindParam('dep_id', $postrequest->idGenerico[1]);
+            /*if(isset($postrequest->idGenerico[0])){
+                $sentencia->bindParam('idSucursal', $postrequest->idGenerico[0]->idSucursal);
+                $sentencia->bindParam('dep_id', $postrequest->idGenerico[1]->idGenerico);
             }else{
             $sentencia->bindParam('idSucursal', $postrequest->idSucursal);
                 $sentencia->bindParam('dep_id', $postrequest->dep_id);
+            }*/
+            if($banderaquery==1||$banderaquery==4){
+                $sentencia->bindParam('idSucursal', $postrequest->idGenerico[0]->idSucursal);
+                $sentencia->bindParam('dep_id', $postrequest->idGenerico[1]->idGenerico);
+            }else if($banderaquery==2){
+                $sentencia->bindParam('idSucursal', $postrequest->idGenerico[0]->idSucursal);
+            }else if($banderaquery==3){
+                $sentencia->bindParam('dep_id', $postrequest->idGenerico[1]->idGenerico);
             }
-
             $sentencia->execute();
             $resultado = $sentencia->fetchAll(PDO::FETCH_OBJ);
             if ($resultado) {
@@ -43,7 +59,7 @@ class categoria
                 $arreglo = [
                     "estado" => 'warning',
                     "success" => "No se encontraron registros con los parámetros de búsqueda",
-                    "data" => ""
+                    "data" => $wef
                 ];;
                 return $response->withJson($arreglo, 200);
             }
@@ -55,7 +71,9 @@ class categoria
             ];
             return $response->withJson($arreglo, 400);//json_encode($wine);
         }
-
+        finally{
+            $db=null;
+        }
     }
     public static function seleccionarCategoria2($request, $response, $args)
     {

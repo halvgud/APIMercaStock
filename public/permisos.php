@@ -34,6 +34,9 @@ class Permisos
         } catch (PDOException $e) {
             echo '{"error":{"text":' . $e->getMessage() . '}}';
         }
+        finally{
+            $db=null;
+        }
     }
 
     public static function actualizar($request, $response, $args)

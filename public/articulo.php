@@ -9,14 +9,21 @@ class articulo
     public static function seleccionar($request, $response, $args)
     {
         $postrequest = json_decode($request->getBody());
+        if($postrequest->dep_id!='TODOS'){
         $comando = "SELECT a.clave, a.descripcion, a.margen1, a.precio1, a.existencia  FROM articulo a inner join categoria c on (c.cat_id=a.cat_id) inner join departamento dp on (dp.dep_id=c.dep_id ) where a.idSucursal=:idSucursal and dp.dep_id=:dep_id and c.cat_id=:cat_id ";
-        try {
+        }else{
+            $comando = "SELECT a.clave, a.descripcion, a.margen1, a.precio1, a.existencia  FROM articulo a inner join categoria c on (c.cat_id=a.cat_id)  where a.idSucursal=:idSucursal and c.cat_id=:cat_id ";
+
+        }
+            try {
             $db = getConnection();
             $db->query("SET NAMES 'utf8'");
             $db->query("SET CHARACTER SET utf8");
             $sentencia = $db->prepare($comando);
             $sentencia->bindParam('idSucursal',$postrequest->idSucursal );
-            $sentencia->bindParam('dep_id',$postrequest->dep_id );
+                if($postrequest->dep_id!='TODOS') {
+                    $sentencia->bindParam('dep_id', $postrequest->dep_id);
+                }
             $sentencia->bindParam('cat_id',$postrequest->cat_id );
             $sentencia->execute();
             $resultado = $sentencia->fetchAll(PDO::FETCH_OBJ);
@@ -41,6 +48,9 @@ class articulo
                 "datos" => $e
             ];
             return $response->withJson($arreglo, 400);
+        }
+        finally{
+            $db=null;
         }
     }
 }
