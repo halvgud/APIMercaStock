@@ -92,6 +92,9 @@ $app->post('/articulo/seleccionar', function (ServerRequestInterface $request, R
 $app->post('/inventario/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
 	return inventario::seleccionar($request,$response,$args);
 });
+$app->post('/inventario/seleccionarAzar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+	return inventario::seleccionarAzar($request,$response,$args);
+});
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Bitacora
 $app->post('/bitacora/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
 	return bitacora::seleccionar($request,$response,$args);
