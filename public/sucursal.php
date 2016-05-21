@@ -152,4 +152,142 @@ class sucursal
             return password_hash($contrasenaPlana, PASSWORD_DEFAULT);
         else return null;
     }
+    private static function validarContrasena($contrasenaPlana, $contrasenaHash)
+    {
+        return password_verify($contrasenaPlana, $contrasenaHash);
+    }
+    private static function generarClaveApi()
+    {
+        return md5(microtime() . rand());
+    }
+    private static function actualizarSesion($usuario,$idSucursal)
+    {
+        $comando2 = "UPDATE ms_sucursal SET claveAPI=:claveApi WHERE usuario=:usuario and idSucursal=:idSucursal";
+        try {
+            $db = getConnection();
+            $claveApi = self::generarClaveApi();
+            $sentencia2 = $db->prepare($comando2);
+            $sentencia2->bindParam("usuario", $usuario);
+            $sentencia2->bindParam("idSucursal",$idSucursal);
+            $sentencia2->bindParam("claveApi", $claveApi);
+            if ($sentencia2->execute()) {
+                return true;
+            } else
+                return false;
+        } catch (PDOException $e) {
+            throw new ExcepcionApi(401, $e->getMessage(), 401);
+        }
+    }
+
+    public static function login2($request,$response,$args){
+        $postrequest = json_decode($request->getBody());
+        $query = "SELECT idSucursal,usuario, claveAPI FROM ms_sucursal where usuario=:usuario and password=:password
+        and idSucursal=:idSucursal";
+        try{
+            $db=getConnection();
+            $passwordn=$postrequest[0]->password;
+            $passwordn = self::encriptarContrasena($passwordn);
+            $sentencia = $db->prepare($query);
+            $sentencia->bindParam("usuario",$postrequest[0]->usuario);
+            $sentencia->bindParam("password",$passwordn);
+            $sentencia->bindParam("idSucursal",$postrequest[0]->idSucursal);
+
+            $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+            if($resultado){
+                 $arreglo =
+                            [
+                                "estado" => 200,
+                                "success" => "",
+                                "data" => $resultado
+                            ];
+                        return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
+                    } else {
+                        $arreglo =
+                            [
+                                "estado" => "warning",
+                                "mensaje" => "",
+                                "data" => $passwordn
+                            ];
+                        return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
+                      }//else
+        }catch(PDOException $e){
+            $codigoDeError=$e->getCode();
+            $error =self::traducirMensaje($codigoDeError,$e);
+            $arreglo = [
+                "estado" =>$e -> getCode(),
+                "error" =>$error,
+                "data" => json_encode($postrequest)
+            ];
+            return $response->withJson($arreglo,400);
+        }
+    }
+
+
+    public static function logIn($request, $response, $args)
+    {
+        $postrequest = json_decode($request->getBody());
+        $usuario = isset($postrequest->usuario)?$postrequest->usuario:"";
+        $password = isset($postrequest->usuario)?$postrequest->password:"";
+        $idSucursal = isset($postrequest->idSucursal)?$postrequest->idSucursal:"";
+        try {
+            $autenticar = self::autenticar($usuario, $password,$idSucursal);
+            if ($autenticar['estado'] == '200') {
+                $datos = $autenticar['datos'];
+                $codigo = 200;
+
+            } else {
+                $datos="No autorizado";
+                $codigo = 401;
+            }
+            return $response->withJson([$datos], $codigo);;
+        } catch (PDOException $e) {
+            echo '{"error":{"text":' . $e->getMessage() . '}}';
+        }
+        finally{
+            $db=null;
+        }
+    }
+
+    private static function autenticar($usuario, $contrasena,$idSucursal)
+    {
+        $comando = "SELECT idSucursal,password,usuario, claveAPI FROM ms_sucursal where usuario=:usuario and idSucursal=:idSucursal";
+        try {
+            $db = getConnection();
+            $sentencia = $db->prepare($comando);
+            $sentencia->bindParam("usuario", $usuario);
+            $sentencia->bindParam("idSucursal",$idSucursal);
+            $sentencia->execute();
+
+            if ($sentencia) {
+                $resultado = $sentencia->fetchObject();
+                if (($resultado) && self::validarContrasena($contrasena, $resultado->password)) {
+                    self::actualizarSesion($usuario,$resultado->idSucursal);
+                    try {
+                        return
+                            [
+                                "estado" => 200,
+                                "mensaje" => "OK",
+                                "datos" => $resultado
+                            ];
+                    } catch (PDOException $e) {
+                        throw new ExcepcionApi(2, $e->getMessage());
+                    }
+                } else {
+
+                    return
+                        [
+                            "estado" => 101,
+                            "mensaje" => "usuario inexistente"
+                        ];
+                }
+
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            throw new ExcepcionApi(1, $e->getMessage(), 401);
+        }
+
+    }
+
 }

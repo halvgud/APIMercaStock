@@ -6,13 +6,14 @@ class importar
 
     }
 
-    public static function modificarEnBatch($request, $response, $args)
+    public static function Departamento($request, $response, $args)
     {
-
         $postrequest = json_decode($request->getBody());
         $db=null;
         try {
-        foreach ($postrequest[0]->data as $renglon ) {
+            $db = getConnection();
+            $db->beginTransaction();
+        foreach ($postrequest->data as $renglon ) {
             $dep_idLocal=$renglon->dep_idLocal;
             $idSucursal = $renglon->idSucursal;
             $nombre = $renglon->nombre;
@@ -23,7 +24,7 @@ class importar
             $comandoUpdate="insert into departamento(dep_idLocal,idSucursal,nombre,restringido,porcentaje,status)
                             values (:dep_id, :idSucursal, :nombre, :restringido, :porcentaje, :status) on
                             duplicate key update idSucursal=:idSucursal,nombre=:nombre,restringido=:restringido,porcentaje=:porcentaje,status=:status";
-            $db = getConnection();
+
             $sentencia = $db->prepare($comandoUpdate);
 
             $sentencia->bindParam('dep_id', $dep_idLocal);
@@ -37,11 +38,11 @@ class importar
             $sentencia2=$db->prepare($comandoauto);
             $sentencia2->execute();
         }
-        $arreglo = [
-            "estado" => 200,
-            "error" => "Puede que funcione",
-            "datos" => ':('//$postrequest
-        ];
+            $arreglo = [
+                "estado" => 200,
+                "success" => "Se a importado la informacion",
+                "datos" => $db->rowCount()
+            ];
         $db->commit();
         return $response->withJson($arreglo, 200);
         } catch (PDOException $e) {
@@ -57,14 +58,15 @@ class importar
             $db=null;
         }
     }
-
-
-    public static function modificarEnBatch2($request, $response, $args)
+    public static function Categoria($request, $response, $args)
     {
         $postrequest = json_decode($request->getBody());
         $db=null;
+
         try {
-        foreach ($postrequest[0]->data as $renglon ) {
+            $db = getConnection();
+            $db->beginTransaction();
+        foreach ($postrequest->data as $renglon ) {
             $cat_id_Local=$renglon->cat_id_Local;
             $idSucursal = $renglon->idSucursal;
             $nombre= $renglon->nombre;
@@ -74,7 +76,7 @@ class importar
             $comandoUpdate="insert into categoria(cat_id_Local,idSucursal,nombre,status,dep_id)
                             values (:cat_id, :idSucursal, :nombre, :status, :dep_id) on
                             duplicate key update idSucursal=:idSucursal,nombre=:nombre,status=:status,dep_id=:dep_id;";
-            $db = getConnection();
+
             $sentencia = $db->prepare($comandoUpdate);
 
             $sentencia->bindParam('cat_id', $cat_id_Local);
@@ -87,11 +89,11 @@ class importar
             $sentencia2=$db->prepare($comandoauto);
             $sentencia2->execute();
         }
-        $arreglo = [
-            "estado" => 200,
-            "error" => "Puede que funcione",
-            "datos" => ':('//$postrequest
-        ];
+            $arreglo = [
+                "estado" => 200,
+                "success" => "Se a importado la informacion",
+                "datos" => $db->rowCount()
+            ];
         $db->commit();
         return $response->withJson($arreglo, 200);
     } catch (PDOException $e) {
@@ -101,22 +103,27 @@ class importar
                 "error" => "Error al Insertar o Actualizar un registro",
                 "datos" => $e->getMessage()
             ];
+
             return $response->withJson($arreglo, 400);
         }
         finally{
             $db=null;
         }
     }
-    public static function modificarEnBatch3($request, $response, $args)
+    public static function Articulo($request, $response, $args)
     {
+        set_time_limit(0);
         $postrequest = json_decode($request->getBody());
         $db=null;
+        $contador=0;
         try {
 
             $db = getConnection();
             $db->beginTransaction();
+            var_dump($postrequest);
+            return "";
             foreach ($postrequest[0]->data as $renglon) {
-
+                $contador++;
                 $art_idLocal = $renglon->art_idLocal!=''?$renglon->art_idLocal:null;
                 $idSucursal = $renglon->idSucursal;
                 $clave = $renglon->clave!=''?$renglon->clave:null;
@@ -181,8 +188,8 @@ class importar
             }
             $arreglo = [
                 "estado" => 200,
-                "error" => "Puede que funcione",
-                "datos" => ':('//$postrequest
+                "success" => "Se a importado la informacion: ".$contador,
+                "datos" => $contador
             ];
             $db->commit();
             return $response->withJson($arreglo, 200);
@@ -200,4 +207,50 @@ class importar
             $db=null;
         }
     }
+
+    public static function Parametro($request,$response,$args){
+
+
+
+      //  $token = $auth->Authorization;
+        return "";
+        $postrequest = json_decode($request->getBody());
+
+        $comando = "SELECT idSucursal, accion, parametro, valor, comentario, usuario, fechaActualizacion FROM ms_parametro WHERE idSucursal=:idSucursal";
+
+        try {
+            $idSucursal=$postrequest->idSucursal;
+            $db = getConnection();
+            $sentencia = $db->prepare($comando);
+            $sentencia->bindParam('idSucursal',$idSucursal );
+            $sentencia->execute();
+            $resultado = $sentencia->fetchAll(PDO::FETCH_OBJ);
+            if ($resultado) {
+                $arreglo = [
+                    "estado" => 200,
+                    "success"=>"OK",
+                    "data" => $resultado
+                ];
+                return $response->withJson($arreglo,200);
+            } else {
+                $arreglo = [
+                    "estado" => 400,
+                    "error" => "Error al traer listado de Parametros",
+                    "data" => $idSucursal
+                ];;
+                return $response->withJson($arreglo, 400);
+            }
+        } catch (PDOException $e) {
+            $arreglo = [
+                "estado" => 400,
+                "error" => "Error al traer listado de Parametros",
+                "datos" => $e
+            ];
+            return $response->withJson($arreglo, 400);
+        }
+        finally{
+            $db=null;
+        }
+    }
+
 }

@@ -23,7 +23,7 @@ use Slim\Interfaces\Http\HeadersInterface;
  *
  * This class represents an HTTP request. It manages
  * the request method, URI, headers, cookies, and body
- * according to the PRS-7 standard.
+ * according to the PSR-7 standard.
  *
  * @link https://github.com/php-fig/http-message/blob/master/src/MessageInterface.php
  * @link https://github.com/php-fig/http-message/blob/master/src/RequestInterface.php
@@ -92,7 +92,7 @@ class Request extends Message implements ServerRequestInterface
      *
      * @var null|array|object
      */
-    protected $bodyParsed;
+    protected $bodyParsed = false;
 
     /**
      * List of request body parsers (e.g., url-encoded, JSON, XML, multipart)
@@ -727,7 +727,7 @@ class Request extends Message implements ServerRequestInterface
      */
     public function getQueryParams()
     {
-        if ($this->queryParams) {
+        if (is_array($this->queryParams)) {
             return $this->queryParams;
         }
 
@@ -958,7 +958,7 @@ class Request extends Message implements ServerRequestInterface
      */
     public function getParsedBody()
     {
-        if ($this->bodyParsed) {
+        if ($this->bodyParsed !== false) {
             return $this->bodyParsed;
         }
 
@@ -967,9 +967,15 @@ class Request extends Message implements ServerRequestInterface
         }
 
         $mediaType = $this->getMediaType();
-        $body = (string)$this->getBody();
+
+        // look for a media type with a structured syntax suffix (RFC 6839)
+        $parts = explode('+', $mediaType);
+        if (count($parts) >= 2) {
+            $mediaType = 'application/' . $parts[count($parts)-1];
+        }
 
         if (isset($this->bodyParsers[$mediaType]) === true) {
+            $body = (string)$this->getBody();
             $parsed = $this->bodyParsers[$mediaType]($body);
 
             if (!is_null($parsed) && !is_object($parsed) && !is_array($parsed)) {
@@ -978,9 +984,10 @@ class Request extends Message implements ServerRequestInterface
                 );
             }
             $this->bodyParsed = $parsed;
+            return $this->bodyParsed;
         }
 
-        return $this->bodyParsed;
+        return null;
     }
 
     /**
@@ -1021,6 +1028,20 @@ class Request extends Message implements ServerRequestInterface
         $clone->bodyParsed = $data;
 
         return $clone;
+    }
+
+    /**
+     * Force Body to be parsed again.
+     *
+     * Note: This method is not part of the PSR-7 standard.
+     *
+     * @return self
+     */
+    public function reparseBody()
+    {
+        $this->bodyParsed = false;
+
+        return $this;
     }
 
     /**

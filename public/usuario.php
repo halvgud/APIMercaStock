@@ -1,7 +1,7 @@
 <?php
 class usuario
 {
-    protected function __construct()
+    public function __construct()
     {
 
     }
@@ -341,6 +341,29 @@ class usuario
         }
         return self::$roles;
     }
-
+    public static function revisarToken($token){
+        $query = "select claveAPI from ms_sucursal where claveAPI=:claveApi";
+        try{
+            $db=getConnection();
+            $sentencia = $db->prepare($query);
+            $sentencia->bindParam("claveApi",$token);
+            $sentencia->execute();
+            $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+            if($resultado){
+                        return true;
+                    } else {
+                        return false;
+                      }//else
+        }catch(PDOException $e){
+            $codigoDeError=$e->getCode();
+            $error =self::traducirMensaje($codigoDeError,$e);
+            $arreglo = [
+                "estado" =>$e -> getCode(),
+                "error" =>$error,
+                "data" => ""
+            ];
+            return false;
+        };
+    }
 
 }

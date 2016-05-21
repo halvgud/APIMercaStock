@@ -27,7 +27,7 @@
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="3954130b-a7ef-4dab-8187-4b38d9f307af">
-      <console name="APIMercaStock" type="STANDARD"><![CDATA[select * from ms_usuario]]></console>
+      <console name="APIMercaStock" type="STANDARD"><![CDATA[select * from articulo]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.EditorStateManager">

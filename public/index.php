@@ -14,6 +14,7 @@ $settings = require __DIR__ . '/../src/settings.php';
 $app = new \Slim\App($settings);
 require __DIR__ . '/../src/dependencies.php';
 require __DIR__ . '/../src/middleware.php';
+//$app->add(new \Slim\Middleware\ContentTypes());
 require __DIR__ . '/../src/routes.php';
 require_once("usuario.php");
 require_once("sucursal.php");
@@ -128,17 +129,35 @@ $app->post('/nivel_autorizacion/seleccionar', function (ServerRequestInterface $
 });
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Batch
 $app->post('/importar/departamento', function (ServerRequestInterface $request, ResponseInterface $response, $args){
-	return importar::modificarEnBatch($request,$response,$args);
+	return importar::Departamento($request,$response,$args);
 });
 $app->post('/importar/categoria', function (ServerRequestInterface $request, ResponseInterface $response, $args){
-	return importar::modificarEnBatch2($request,$response,$args);
+	return importar::Categoria($request,$response,$args);
 });
 $app->post('/importar/articulo', function (ServerRequestInterface $request, ResponseInterface $response, $args){
-	return importar::modificarEnBatch3($request,$response,$args);
+	return importar::Articulo($request,$response,$args);
+});
+$app->post('/exportar/parametro', function (ServerRequestInterface $request, ResponseInterface $response, $args)use ($app){
+	//$request->getHeader("Authorization");
+	//return $request->getHeaders();
+	$headers = getallheaders();
+	$Auth="";
+	foreach ($headers as $header => $value) {
+		if($header=='Authorization'){
+			$Auth = $value;
+		}
+	}
+
+	return $response->withJson($Auth,200);
+
+	return importar::Parametro($request,$response,$args);
 });
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Concepto
 $app->post('/concepto/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
 	return concepto::seleccionar($request,$response,$args);
+});
+$app->post('/sucursal/login', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+	return sucursal::login($request,$response,$args);
 });
 
 
