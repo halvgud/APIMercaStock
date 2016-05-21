@@ -8,7 +8,13 @@ class sucursal
 
     public static function seleccionar($request, $response, $args)
     {
-        $comando = "SELECT idSucursal,nombre,usuario, domicilio, contacto, idEstado,'DEFAULTMERCASTOCK' AS password FROM ms_sucursal";
+        $postrequest = json_decode($request->getBody());
+        $bandera = isset($postrequest->idGenerico->bandera)?true:false;
+        if($bandera){
+            $comando = "SELECT idSucursal,nombre,usuario, domicilio, contacto, idEstado,'DEFAULTMERCASTOCK' AS password FROM ms_sucursal";
+        }else{
+            $comando = "SELECT idSucursal,nombre,usuario, domicilio, contacto, idEstado,'DEFAULTMERCASTOCK' AS password FROM ms_sucursal where idEstado>0";
+        }
         try {
             $db = getConnection();
             $sentencia = $db->prepare($comando);

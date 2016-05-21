@@ -89,11 +89,20 @@ $app->post('/articulo/seleccionar', function (ServerRequestInterface $request, R
 	return articulo::seleccionar($request,$response,$args);
 });
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Inventario
-$app->post('/inventario/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
-	return inventario::seleccionar($request,$response,$args);
-});
 $app->post('/inventario/seleccionarAzar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
 	return inventario::seleccionarAzar($request,$response,$args);
+});
+$app->post('/inventario/seleccionarIndividual', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+	return inventario::seleccionarIndividual($request,$response,$args);
+});
+$app->post('/inventario/seleccionarMasConflictivos', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+	return inventario::seleccionarMasConflictivos($request,$response,$args);
+});
+$app->post('/inventario/seleccionarMasVendidos', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+	return inventario::seleccionarMasVendidos($request,$response,$args);
+});
+$app->post('/inventario/insertar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+	return inventario::insertar($request,$response,$args);
 });
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Bitacora
 $app->post('/bitacora/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
@@ -102,6 +111,9 @@ $app->post('/bitacora/seleccionar', function (ServerRequestInterface $request, R
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Parámetros
 $app->post('/parametros/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
 	return parametros::seleccionar($request,$response,$args);
+});
+$app->post('/parametros/seleccionarListaFija', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+	return parametros::seleccionarListaFija($request,$response,$args);
 });
 $app->post('/parametros/actualizar',function(ServerRequestInterface $request,ResponseInterface $response,$args){
 	return parametros::actualizar($request,$response,$args);
@@ -241,6 +253,16 @@ function findByName($query) {
 	}
 }
 */
+function getConnection1() {
+$dbhost="192.168.1.185";
+	$dbuser="root";
+	$dbpass="sysadmin";
+	$dbname="sicar";
+	$dbh = new PDO("mysql:host=$dbhost;dbname=$dbname", $dbuser, $dbpass);
+	$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	return $dbh;
+
+}
 function getConnection() {
 	$dbhost="50.62.209.162";
 	$dbuser="mercattoadmin";
@@ -249,5 +271,12 @@ function getConnection() {
 	$dbh = new PDO("mysql:host=$dbhost;dbname=$dbname", $dbuser, $dbpass);
 	$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	return $dbh;
-}
+	/*$dbhost="192.168.1.185";
+	$dbuser="root";
+	$dbpass="sysadmin";
+	$dbname="sicar";
+	$dbh = new PDO("mysql:host=$dbhost;dbname=$dbname", $dbuser, $dbpass);
+	$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	return $dbh;*/
 
+}

@@ -9,13 +9,8 @@ class departamento
     public static function seleccionar($request, $response, $args)
     {
         $postrequest = json_decode($request->getBody());
-        if((isset($postrequest->idSucursal)&&$postrequest->idSucursal!='TODOS'&&$postrequest->idSucursal!=null)
-            ||(isset($postrequest->idGenerico)&&$postrequest->idGenerico!='TODOS'&&$postrequest->idGenerico!=null)){
-            $comando = "SELECT * FROM departamento WHERE idSucursal=:idSucursal";
-        }
-        else {
-            $comando = "SELECT * FROM departamento";
-        }
+            $comando = "SELECT * FROM departamento WHERE idSucursal like :idSucursal";
+
       //  $db=null;
         try {
             $idSucursal=isset($postrequest->idSucursal)?$postrequest->idSucursal:(isset($postrequest->idGenerico)?$postrequest->idGenerico:0);
@@ -28,7 +23,7 @@ class departamento
                 $arreglo = [
                     "estado" => 200,
                     "success"=>"OK",
-                    "data" => isset($postrequest->idGenerico)?[$resultado]:$resultado
+                    "data" => isset($postrequest->dt)?$resultado:[$resultado]
                 ];
 
                 return $response->withJson($arreglo,200);
