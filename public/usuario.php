@@ -228,9 +228,9 @@ class usuario
             $autenticar = self::autenticar($correo, $contrasena);
             if ($autenticar['estado'] == '200') {
                 $datos = $autenticar['datos'];
-                $_SESSION['idUsuario'] = $datos->idUsuario;
-                $_SESSION['usuario'] = $datos->Usuario;
-                $_SESSION['idNivelAutorizacion'] = $datos->idNivelAutorizacion;
+                $_SESSION['idUsuario'] = $datos['idUsuario'];
+                $_SESSION['usuario'] = $datos['Usuario'];
+                $_SESSION['idNivelAutorizacion'] = $datos['idNivelAutorizacion'];
                 $resArray['success'] = 'Se ha logueado correctamente';
                 $codigo = 200;
 
@@ -249,7 +249,7 @@ class usuario
 
     private static function autenticar($usuario, $contrasena)
     {
-        $comando = "SELECT idUsuario,Usuario,password,IDESTADO,idNivelAutorizacion FROM ms_usuario WHERE usuario=:usuario ";
+        $comando = "SELECT idUsuario,Usuario,password,claveAPI,IDESTADO,idNivelAutorizacion FROM ms_usuario WHERE usuario=:usuario ";
         try {
             $db = getConnection();
             $sentencia = $db->prepare($comando);
@@ -265,7 +265,8 @@ class usuario
                             [
                                 "estado" => 200,
                                 "mensaje" => "OK",
-                                "datos" => $resultado
+                                "datos" => ["idUsuario"=>$resultado->idUsuario,"Usuario"=>$resultado->Usuario,"ClaveAPI"=>$resultado->claveAPI
+                                ,"IDESTADO"=>$resultado->IDESTADO,"idNivelAutorizacion"=>$resultado->idNivelAutorizacion]
                             ];
                     } catch (PDOException $e) {
                         throw new ExcepcionApi(2, $e->getMessage());
