@@ -48,12 +48,22 @@ class parametros
     public static function seleccionarListaFija($request, $response, $args)
     {
         $postrequest = json_decode($request->getBody());
-        $comando = "select art_id, clave, descripcion from articulo where art_id in (select msp3.valor as art_id from ms_parametro msp1
-                        inner join ms_parametro msp2 on (msp2.accion=msp1.accion and msp2.parametro='_COMPONENTE_LISTADO')
-                        inner join ms_parametro msp3 on (msp2.valor=msp3.accion and msp3.parametro=msp1.valor)
-                        where
-                            msp1.accion='CONFIG_GENERAR_INVENTARIO' and
-                            msp1.valor=:idSucursal);";
+        if(isset($postrequest->bandera)) {
+            $comando = "SELECT art_id, clave, descripcion, existencia FROM articulo WHERE art_id IN (SELECT msp3.valor AS art_id FROM ms_parametro msp1
+                        INNER JOIN ms_parametro msp2 ON (msp2.accion=msp1.accion AND msp2.parametro='_COMPONENTE_LISTADO')
+                        INNER JOIN ms_parametro msp3 ON (msp2.valor=msp3.accion AND msp3.parametro=msp1.valor)
+                        WHERE
+                            msp1.accion='CONFIG_GENERAR_INVENTARIO' AND
+                            msp1.valor=:idSucursal)";
+        }else{
+            $comando = "SELECT art_id, clave, descripcion, existencia FROM articulo WHERE art_id IN (SELECT msp3.valor AS art_id FROM ms_parametro msp1
+                        INNER JOIN ms_parametro msp2 ON (msp2.accion=msp1.accion AND msp2.parametro='_COMPONENTE_LISTADO')
+                        INNER JOIN ms_parametro msp3 ON (msp2.valor=msp3.accion AND msp3.parametro=msp1.valor)
+                        WHERE
+                            msp1.accion='CONFIG_GENERAR_INVENTARIO' AND
+                            msp1.valor=:idSucursal)
+                            AND art_id NOT IN (SELECT msi.art_id FROM ms_inventario msi WHERE fechaSolicitud>curdate() AND idEstado='A')";
+        }
 
         try {
             $idSucursal=$postrequest->idSucursal;
@@ -108,6 +118,88 @@ class parametros
                     [
                         "estado" => 200,
                         "success" => "Se a actualizado el usuario con éxito",
+                        "data" => $resultado
+                    ];
+                return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
+            } else {
+                $arreglo =
+                    [
+                        "estado" => "warning",
+                        "mensaje" => "No se cambió ningún dato",
+                        "data" => $resultado
+                    ];
+                return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
+            }
+        } catch (PDOException $e) {
+            $codigoDeError = $e->getCode();
+            $error = self::traducirMensaje($codigoDeError, $e);
+            $arreglo = [
+                "estado" => $e->getCode(),
+                "error" => $error,
+                "data" => json_encode($postrequest)
+            ];;
+            return $response->withJson($arreglo, 400);
+        }
+        finally{
+            $db=null;
+        }
+    }
+    public static function insertarListaFija($request, $response, $args)
+    {
+        $postrequest = json_decode($request->getBody());
+        $query = "INSERT INTO ms_parametro VALUES ('1','LISTA_RELACION_IDSUCURSAL_ARTID',:parametro,:valor,'',:usuario,NOW())";
+        try {
+            $db = getConnection();
+            $sentencia = $db->prepare($query);
+            $sentencia->bindParam("parametro", $postrequest->parametro,PDO::PARAM_STR);
+            $sentencia->bindParam("valor", $postrequest->valor,PDO::PARAM_STR);
+            $sentencia->bindParam("usuario", $postrequest->usuario,PDO::PARAM_STR);
+            $resultado = $sentencia->execute();
+            if ($resultado) {
+                $arreglo =
+                    [
+                        "estado" => 200,
+                        "success" => "Se a agregado con éxito",
+                        "data" => $resultado
+                    ];
+                return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
+            } else {
+                $arreglo =
+                    [
+                        "estado" => "warning",
+                        "mensaje" => "No se cambió ningún dato",
+                        "data" => $resultado
+                    ];
+                return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
+            }
+        } catch (PDOException $e) {
+
+            $arreglo = [
+                "estado" => $e->getCode(),
+                "error" => 'Error',
+                "data" => json_encode($postrequest)
+            ];;
+            return $response->withJson($arreglo, 400);
+        }
+        finally{
+            $db=null;
+        }
+    }
+    public static function eliminarListaFija($request, $response, $args)
+    {
+        $postrequest = json_decode($request->getBody());
+        $query = "DELETE FROM  ms_parametro WHERE accion='LISTA_RELACION_IDSUCURSAL_ARTID' AND parametro=:parametro AND valor=:valor";
+        try {
+            $db = getConnection();
+            $sentencia = $db->prepare($query);
+            $sentencia->bindParam("parametro", $postrequest->parametro,PDO::PARAM_STR);
+            $sentencia->bindParam("valor", $postrequest->valor,PDO::PARAM_STR);
+            $resultado = $sentencia->execute();
+            if ($resultado) {
+                $arreglo =
+                    [
+                        "estado" => 200,
+                        "success" => "Se ha borrado el artículo con éxito",
                         "data" => $resultado
                     ];
                 return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);

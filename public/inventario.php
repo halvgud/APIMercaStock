@@ -258,11 +258,11 @@ $resultado="";
                 return $response->withJson($arreglo, 200);
             } else {
                 $arreglo = [
-                    "estado" => 'warning',
-                    "success" => "Error al inserar Registro",
-                    "data" => $resultado
+                    "estado" => 401,
+                    "error" => "Error al insertar Registros, asegurese que la lista no este vacia",
+                    "datos" => $resultado
                 ];;
-                return $response->withJson($arreglo, 200);
+                return $response->withJson($arreglo, 401);
             }
         } catch (PDOException $e) {
             $arreglo = [

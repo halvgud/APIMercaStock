@@ -53,4 +53,46 @@ class articulo
             $db=null;
         }
     }
+    public static function seleccionarListaFija($request, $response, $args)
+    {
+        $postrequest = json_decode($request->getBody());
+
+            $comando = "SELECT art_id,clave, descripcion FROM articulo where idSucursal=:idSucursal and art_id=:art_id
+                          and :art_id not in (select valor from ms_parametro) ";
+
+        try {
+            $db = getConnection();
+            $db->query("SET NAMES 'utf8'");
+            $db->query("SET CHARACTER SET utf8");
+            $sentencia = $db->prepare($comando);
+            $sentencia->bindParam('idSucursal',$postrequest->idSucursal );
+            $sentencia->bindParam('art_id',$postrequest->art_id );
+            $sentencia->execute();
+            $resultado = $sentencia->fetchAll(PDO::FETCH_OBJ);
+            if ($resultado) {
+                $arreglo = [
+                    "estado" => 200,
+                    "success"=>"OK",
+                    "data" =>$resultado];
+                return $response->withJson($arreglo,200);
+            } else {
+                $arreglo = [
+                    "estado" => 'warning',
+                    "success" => "No se encontraron artículos con los parámetros de búsqueda o ya se encuentra en la Lista Fija",
+                    "datos" => $resultado
+                ];;
+                return $response->withJson($arreglo, 200);
+            }
+        } catch (PDOException $e) {
+            $arreglo = [
+                "estado" => 400,
+                "error" => "Error al traer listado de Articulos",
+                "datos" => $e
+            ];
+            return $response->withJson($arreglo, 400);
+        }
+        finally{
+            $db=null;
+        }
+    }
 }

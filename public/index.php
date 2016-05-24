@@ -25,7 +25,6 @@ require_once("categoria.php");
 require_once("articulo.php");
 require_once("bitacora.php");
 require_once("inventario.php");
-require_once ("usuario2.php");
 //require_once "MercaStock.php";
 require_once "Roles.php";
 require_once "PrivilegiosUsuario.php";
@@ -89,6 +88,9 @@ $app->post('/categoria/seleccionar', function (ServerRequestInterface $request, 
 $app->post('/articulo/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
 	return articulo::seleccionar($request,$response,$args);
 });
+$app->post('/articulo/seleccionarListaFija', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+	return articulo::seleccionarListaFija($request,$response,$args);
+});
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Inventario
 $app->post('/inventario/seleccionarAzar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
 	return inventario::seleccionarAzar($request,$response,$args);
@@ -115,6 +117,12 @@ $app->post('/parametros/seleccionar', function (ServerRequestInterface $request,
 });
 $app->post('/parametros/seleccionarListaFija', function (ServerRequestInterface $request, ResponseInterface $response, $args){
 	return parametros::seleccionarListaFija($request,$response,$args);
+});
+$app->post('/parametros/insertarListaFija', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+	return parametros::insertarListaFija($request,$response,$args);
+});
+$app->post('/parametros/eliminarListaFija', function (ServerRequestInterface $request, ResponseInterface $response, $args){
+	return parametros::eliminarListaFija($request,$response,$args);
 });
 $app->post('/parametros/actualizar',function(ServerRequestInterface $request,ResponseInterface $response,$args){
 	return parametros::actualizar($request,$response,$args);
