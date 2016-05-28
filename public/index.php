@@ -33,6 +33,7 @@ require_once("parametros.php");
 require_once("nivel_autorizacion.php");
 require_once("sexo.php");
 require_once("importar.php");
+require_once('exportar.php');
 require_once("concepto.php");
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Usuario
@@ -146,19 +147,7 @@ $app->post('/importar/articulo', function (ServerRequestInterface $request, Resp
 	return importar::Articulo($request,$response,$args);
 });
 $app->post('/exportar/parametro', function (ServerRequestInterface $request, ResponseInterface $response, $args)use ($app){
-	//$request->getHeader("Authorization");
-	//return $request->getHeaders();
-	$headers = getallheaders();
-	$Auth="";
-	foreach ($headers as $header => $value) {
-		if($header=='Authorization'){
-			$Auth = $value;
-		}
-	}
-
-	return $response->withJson($Auth,200);
-
-	return importar::Parametro($request,$response,$args);
+	return exportar::Parametro($request,$response,$args);
 });
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Concepto
 $app->post('/concepto/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response, $args){
@@ -166,6 +155,17 @@ $app->post('/concepto/seleccionar', function (ServerRequestInterface $request, R
 });
 $app->post('/sucursal/login', function (ServerRequestInterface $request, ResponseInterface $response, $args){
 	return sucursal::login($request,$response,$args);
+});
+$app->post('/exportar/venta/obtener/ultima',function(ServerRequestInterface $request,ResponseInterface $response,$args){
+	return exportar::ultimaVenta($request,$response,$args);
+});
+
+$app->post('/importar/venta',function(ServerRequestInterface $request,ResponseInterface $response,$args){
+	return importar::venta($request,$response,$args);
+});
+
+$app->post('/importar/venta/detalle',function(ServerRequestInterface $request,ResponseInterface $response,$args){
+	return importar::detalleventa($request,$response,$args);
 });
 
 

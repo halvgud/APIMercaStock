@@ -227,20 +227,19 @@ class usuario
         try {
             $autenticar = self::autenticar($correo, $contrasena);
             if ($autenticar['estado'] == '200') {
-                $datos = $autenticar['datos'];
-                $_SESSION['idUsuario'] = $datos['idUsuario'];
-                $_SESSION['usuario'] = $datos['Usuario'];
-                $_SESSION['idNivelAutorizacion'] = $datos['idNivelAutorizacion'];
-                $resArray['success'] = 'Se ha logueado correctamente';
                 $codigo = 200;
 
             } else {
                 $codigo = 401;
             }
-            $newResponse = $response->withJson($autenticar, $codigo);
-            return $newResponse;
+            return $response->withJson($autenticar, $codigo);;
         } catch (PDOException $e) {
-            echo '{"error":{"text":' . $e->getMessage() . '}}';
+            $arreglo = [
+                "estado" => 401,
+                "error" => "Error al autenticar",
+                "datos" => $e->getMessage()
+            ];
+            return $response->withJson($arreglo, 400);
         }
         finally{
             $db=null;
@@ -343,7 +342,7 @@ class usuario
         return self::$roles;
     }
     public static function revisarToken($token){
-        $query = "select claveAPI from ms_sucursal where claveAPI=:claveApi";
+        $query = "select claveAPI from ms_sucursal where claveAPI=:claveApi union all select claveAPI from ms_usuario";
         try{
             $db=getConnection();
             $sentencia = $db->prepare($query);
