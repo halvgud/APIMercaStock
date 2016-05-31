@@ -32,6 +32,7 @@ require_once("parametros.php");
 require_once("nivel_autorizacion.php");
 require_once("sexo.php");
 require_once("importar.php");
+require_once('exportar.php');
 require_once("concepto.php");
 require_once("importar2.php");
 require_once("exportar2.php");
@@ -160,18 +161,10 @@ $app->post('/importar/categoria', function (ServerRequestInterface $request, Res
 $app->post('/importar/articulo', function (ServerRequestInterface $request, ResponseInterface $response){
 	return importar::Articulo($request,$response);
 });
-$app->post('/exportar/parametro', function (ServerRequestInterface $request, ResponseInterface $response)use ($app){
-	//$request->getHeader("Authorization");
-	//return $request->getHeaders();
-	$headers = getallheaders();
-	$Auth="";
-	foreach ($headers as $header => $value) {
-		if($header=='Authorization'){
-			$Auth = $value;
-		}
-	}
-	return $response->withJson($Auth,200);
-	return importar::Parametro($request,$response);
+
+$app->post('/exportar/parametro', function (ServerRequestInterface $request, ResponseInterface $response, $args)use ($app){
+	return exportar::Parametro($request,$response,$args);
+
 });
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Concepto
 $app->post('/concepto/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response){
@@ -187,6 +180,20 @@ $app->post('/exportar/inventario', function (ServerRequestInterface $request, Re
 $app->post('/importar/inventario', function (ServerRequestInterface $request, ResponseInterface $response){
 	return importar2::importarInventarioAPI($request,$response);
 });
+
+$app->post('/exportar/venta/obtener/ultima',function(ServerRequestInterface $request,ResponseInterface $response){
+	return exportar::ultimaVenta($request,$response);
+});
+
+$app->post('/importar/venta',function(ServerRequestInterface $request,ResponseInterface $response){
+	return importar::venta($request,$response);
+});
+
+$app->post('/importar/venta/detalle',function(ServerRequestInterface $request,ResponseInterface $response){
+	return importar::detalleventa($request,$response);
+});
+
+
 $app->run();
 
 function getConnection1() {

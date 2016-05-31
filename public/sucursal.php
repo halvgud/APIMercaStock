@@ -240,7 +240,7 @@ class sucursal
                 $datos="No autorizado";
                 $codigo = 401;
             }
-            return $response->withJson([$datos], $codigo);;
+            return $response->withJson($datos, $codigo);;
         } catch (PDOException $e) {
             echo '{"error":{"text":' . $e->getMessage() . '}}';
         }
