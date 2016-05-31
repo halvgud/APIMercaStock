@@ -1,12 +1,11 @@
 <?php
+
 class sexo
 {
-    protected function __construct()
-    {
-
+    protected function __construct(){
     }
 
-    public static function seleccionar($request, $response, $args)
+    public static function seleccionar($request, $response)
     {
         $comando = "SELECT idSexo, descripcion FROM ms_Sexo";
         try {
@@ -33,7 +32,7 @@ class sexo
             $arreglo = [
                 "estado" => 400,
                 "error" => "Error al traer listado de Sexo",
-                "datos" => $e
+                "datos" => $e->getMessage()
             ];
             return $response->withJson($arreglo, 400);
         }

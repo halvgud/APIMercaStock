@@ -4,7 +4,6 @@ class PrivilegiosUsuario
     private static $roles;
 
     public function __construct() {
-
     }
 
     // Metodo para obtener permisos del usuario
@@ -12,7 +11,6 @@ class PrivilegiosUsuario
         if (!empty($username)) {
             self::InicializarRoles($username);
            return (self::$roles);
-
         } else {
             return false;
         }
@@ -21,7 +19,6 @@ class PrivilegiosUsuario
     // Llenar roles con los permisos que tienen asociados
     protected static function InicializarRoles($usuario) {
         self::$roles = array();
-        
         $comando = "SELECT mna.idNivelAutorizacion,mna.descripcion from ms_nivelAutorizacion mna inner join ms_usuario mu on (mu.idUsuario =:idUsuario and mu.idNivelAutorizacion = mna.idNivelAutorizacion) order by mna.idNivelAutorizacion asc";
         $db = getConnection();
 		$sentencia = $db->prepare($comando);
@@ -31,9 +28,7 @@ class PrivilegiosUsuario
         foreach($resultado as $rol) {
             self::$roles[$rol->descripcion] = Roles::obtenerPermisosDelRol($rol->idNivelAutorizacion);
         }
-
         return self::$roles;
-
     }
 
     // check if user has a specific privilege

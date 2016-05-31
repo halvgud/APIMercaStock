@@ -1,15 +1,15 @@
 <?php
+
 class sucursal
 {
-    protected function __construct()
-    {
-
+    protected function __construct(){
     }
-
-    public static function seleccionar($request, $response, $args)
+    public static function seleccionar($request, $response)
     {
         $postrequest = json_decode($request->getBody());
         $bandera = isset($postrequest->idGenerico->bandera)?true:false;
+        $codigo=200;
+        $arreglo=[];
         if($bandera){
             $comando = "SELECT idSucursal,nombre,usuario, domicilio, contacto, idEstado,'DEFAULTMERCASTOCK' AS password FROM ms_sucursal";
         }else{
@@ -26,14 +26,14 @@ class sucursal
                     "success" => "OK",
                     "data" => $resultado
                 ];
-                return $response->withJson($arreglo, 200);
+               $codigo=200;
             } else {
                 $arreglo = [
                     "estado" => 400,
                     "error" => "Error al traer listado de Sucursal",
                     "data" => $resultado
                 ];;
-                return $response->withJson($arreglo, 400);
+               $codigo=400;
             }
         } catch (PDOException $e) {
             $arreglo = [
@@ -41,14 +41,15 @@ class sucursal
                 "error" => "Error al traer listado de Sucursal",
                 "data" => $e
             ];
-            return $response->withJson($arreglo, 400);
+            $codigo=400;
         }
         finally{
             $db=null;
+            return $response->withJson($arreglo, $codigo);
         }
     }
 
-    public static function registrar($request, $response, $args)
+    public static function registrar($request, $response)
     {
         $wine = json_decode($request->getBody());
         $password = self::encriptarContrasena($wine->password);
@@ -92,7 +93,7 @@ class sucursal
         }
     }
 
-    public static function actualizar($request, $response, $args)
+    public static function actualizar($request, $response)
     {
         $postrequest = json_decode($request->getBody());
         if($postrequest->password!='DEFAULTMERCASTOCK') {
@@ -179,7 +180,7 @@ class sucursal
         }
     }
 
-    public static function login2($request,$response,$args){
+    public static function login2($request,$response){
         $postrequest = json_decode($request->getBody());
         $query = "SELECT idSucursal,usuario, claveAPI FROM ms_sucursal where usuario=:usuario and password=:password
         and idSucursal=:idSucursal";
@@ -209,7 +210,7 @@ class sucursal
                                 "data" => $passwordn
                             ];
                         return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
-                      }//else
+                      }
         }catch(PDOException $e){
             $codigoDeError=$e->getCode();
             $error =self::traducirMensaje($codigoDeError,$e);
@@ -223,7 +224,7 @@ class sucursal
     }
 
 
-    public static function logIn($request, $response, $args)
+    public static function logIn($request, $response)
     {
         $postrequest = json_decode($request->getBody());
         $usuario = isset($postrequest->usuario)?$postrequest->usuario:"";
@@ -273,21 +274,17 @@ class sucursal
                         throw new ExcepcionApi(2, $e->getMessage());
                     }
                 } else {
-
                     return
                         [
                             "estado" => 101,
                             "mensaje" => "usuario inexistente"
                         ];
                 }
-
             } else {
                 return false;
             }
         } catch (PDOException $e) {
             throw new ExcepcionApi(1, $e->getMessage(), 401);
         }
-
     }
-
 }

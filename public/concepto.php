@@ -1,12 +1,11 @@
 <?php
+
 class concepto
 {
-    protected function __construct()
-    {
-
+    protected function __construct(){
     }
 
-    public static function seleccionar($request, $response, $args)
+    public static function seleccionar($request, $response)
     {
         $comando = "SELECT idConcepto,descripcion,idEstado FROM ms_concepto";
         try {
@@ -28,14 +27,14 @@ class concepto
                     "estado" => 400,
                     "error" => "Error al traer listado de Concepto",
                     "data" => $resultado
-                ];;
+                ];
                 return $response->withJson($arreglo, 400);
             }
         } catch (PDOException $e) {
             $arreglo = [
                 "estado" => 400,
                 "error" => "Error al traer listado de Concepto",
-                "data" => $e
+                "data" => $e->getMessage()
             ];
             return $response->withJson($arreglo, 400);
         } finally {

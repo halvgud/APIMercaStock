@@ -3,12 +3,10 @@
 class logIn
 {
 
-    protected function __construct()
-    {
-
+    protected function __construct(){
     }
 
-    public static function logIn($request, $response, $args)
+    public static function logIn($request, $response)
     {
         $usuario = json_decode($request->getBody());
         $correo = $usuario->usuario;
@@ -22,25 +20,12 @@ class logIn
                 $_SESSION['idNivelAutorizacion'] = $datos->idNivelAutorizacion;
                 $resArray['success'] = 'Se ha logueado correctamente';
                 $codigo = 200;
-
             } else {
                 $codigo = 401;
             }
             $newResponse = $response->withJson($autenticar, $codigo);
             return $newResponse;
-
-
-            /*
-                $db = getConnection();
-                $stmt = $db->prepare($sql);
-                $stmt->bindParam("usuario", $usuario->usuario);
-                $stmt->bindParam("contrasena", $usuario->contrasena);
-                $stmt->execute();
-                $wine = $stmt->fetchObject();
-                $db = null;
-                echo json_encode($wine);*/
         } catch (PDOException $e) {
-            //error_log($e->getMessage(), 3, '/var/tmp/php.log');
             echo '{"error":{"text":' . $e->getMessage() . '}}';
         }
     }
@@ -55,48 +40,36 @@ class logIn
             $sentencia->bindParam("usuario", $usuario);
             $sentencia->execute();
 
-            //$db = null;
             if ($sentencia) {
                 $resultado = $sentencia->fetchObject();
                 if (($resultado) && self::validarContrasena($contrasena, $resultado->password)) {
                     self::actualizarSesion($usuario);
                     try {
-                        //if ($sentencia->execute()) {
-
                         return
                             [
                                 "estado" => 200,
                                 "mensaje" => "OK",
                                 "datos" => $resultado
                             ];
-                        //} else
-                        //	throw new ExcepcionApi("", "Se ha producido un error");
-
                     } catch (PDOException $e) {
                         throw new ExcepcionApi(2, $e->getMessage());
                     }
                 } else {
-
                     return
                         [
                             "estado" => 101,
                             "mensaje" => "usuario inexistente"
                         ];
                 }
-
             } else {
                 return false;
             }
         } catch (PDOException $e) {
             throw new ExcepcionApi(1, $e->getMessage(), 401);
         }
-
     }
 
-
-    private static function validarContrasena($contrasenaPlana, $contrasenaHash)
-    {
-        //        return var_dump(password_verify($contrasenaPlana, $contrasenaHash));
+    private static function validarContrasena($contrasenaPlana, $contrasenaHash){
         return password_verify($contrasenaPlana, $contrasenaHash);
     }
 
@@ -119,7 +92,7 @@ class logIn
         }
     }
 
-    public static function actualizarUsuario($request, $response, $args)
+    public static function actualizarUsuario($request, $response)
     {
         $postrequest = json_decode($request->getBody());
         if($postrequest->password!='DEFAULTMERCASTOCK'){
@@ -169,13 +142,12 @@ class logIn
                 "estado" => $e->getCode(),
                 "error" => $error,
                 "data" => json_encode($postrequest)
-            ];;
+            ];
             return $response->withJson($arreglo, 400);//json_encode($wine);
         }
     }
 
-    private static function generarClaveApi()
-    {
+    private static function generarClaveApi(){
         return md5(microtime() . rand());
     }
 
@@ -186,9 +158,8 @@ class logIn
         else return null;
     }
 
-    public static function registrarUsuario($request, $response, $args)//$datosUsuario
+    public static function registrarUsuario($request, $response)//$datosUsuario
     {
-        //$request = Slim::getInstance()->request();
         $wine = json_decode($request->getBody());
 
         $claveApi = "";
@@ -199,11 +170,9 @@ class logIn
             "idUsuario" => $idUsuario,
             "json" => $wine
         ];
-        //return  $response->withJson($autenticar,400);
-        //return  $response->withJson($wine,400);
         $sql = "INSERT INTO ms_usuario (idUsuario,usuario,password,nombre,apellido,sexo,contacto,idSucursal,claveAPI,idEstado,fechaEstado,fechaSesion,claveGCM,idNivelAutorizacion) VALUES
-	  (:idUsuario,:usuario,:password,:nombre,:apellido,:sexo,:contacto,:idSucursal,:claveAPI,:idEstado,now(),now(),:claveGCM,:idNivelAutorizacion)";
-        try {/* , grapes, country, region, year, description) VALUES (:name, :grapes, :country, :region, :year, :description)";  */
+      (:idUsuario,:usuario,:password,:nombre,:apellido,:sexo,:contacto,:idSucursal,:claveAPI,:idEstado,now(),now(),:claveGCM,:idNivelAutorizacion)";
+        try {
             $db = getConnection();
             $stmt = $db->prepare($sql);
             $stmt->bindParam("idUsuario", $idUsuario, PDO::PARAM_INT);
@@ -221,21 +190,20 @@ class logIn
             $stmt->execute();
             $wine->id = $db->lastInsertId();
             $db = null;
-            //var_dump($wine->id );
             if ($wine->idUsuario > 0) {
                 $arreglo = [
                     "estado" => 200,
                     "success" => "Usuario " . $wine->usuario . " registrado correctamente",
                     "datos" => $wine
                 ];
-                return $response->withJson($arreglo, 200);//json_encode($wine);
+                return $response->withJson($arreglo, 200);
             } else {
                 $arreglo = [
                     "estado" => 400,
                     "error" => "transaccion sin terminar",
                     "datos" => $wine
                 ];;
-                return $response->withJson($arreglo, 400);//json_encode($wine);
+                return $response->withJson($arreglo, 400);
             }
         } catch (PDOException $e) {
             $codigoDeError = $e->getCode();
@@ -245,7 +213,7 @@ class logIn
                 "error" => $error,
                 "datos" => json_encode($wine)
             ];;
-            return $response->withJson($arreglo, 400);//json_encode($wine);
+            return $response->withJson($arreglo, 400);
         }
     }
 
@@ -264,72 +232,8 @@ class logIn
 
     }
 
-/*public static function registrarUsuario($request,$response,$args)//$datosUsuario
-     {
-	  //$request = Slim::getInstance()->request();
-	  $wine = json_decode($request->getBody());
-
-	  $claveApi="";
-	  $idEstado="A";
-	  $claveGCM='0';
-	  $idUsuario = self::obtenerIdUsuario();
-         $autenticar = [
-             "idUsuario"=>$idUsuario,
-             "json"=>$wine
-         ];
-       //return  $response->withJson($autenticar,400);
-	 //return  $response->withJson($wine,400);
-	  $sql = "INSERT INTO ms_usuario (idUsuario,usuario,password,nombre,apellido,sexo,contacto,idSucursal,claveAPI,idEstado,fechaEstado,fechaSesion,claveGCM,idNivelAutorizacion) VALUES
-	  (:idUsuario,:usuario,:password,:nombre,:apellido,:sexo,:contacto,:idSucursal,:claveAPI,:idEstado,now(),now(),:claveGCM,:idNivelAutorizacion)";
-	  try {/* , grapes, country, region, year, description) VALUES (:name, :grapes, :country, :region, :year, :description)";  */
-	      /* $db = getConnection();
-	       $stmt = $db->prepare($sql);
-           $stmt->bindParam("idUsuario",$idUsuario,PDO::PARAM_INT);
-	       $stmt->bindParam(":usuario",$wine->usuario, PDO::PARAM_STR);
-	       $stmt->bindParam(":password",$wine->password, PDO::PARAM_STR);
-	       $stmt->bindParam(":nombre",$wine->nombre, PDO::PARAM_STR);
-	       $stmt->bindParam(":apellido",$wine->apellido, PDO::PARAM_STR);
-	       $stmt->bindParam(":sexo",$wine->sexo, PDO::PARAM_STR);
-	       $stmt->bindParam(":contacto",$wine->contacto, PDO::PARAM_INT);
-	       $stmt->bindParam(":idSucursal",$claveGCM, PDO::PARAM_INT);
-	       $stmt->bindParam(":claveAPI",$claveApi);
-	       $stmt->bindParam(":idEstado",$idEstado);
-	       $stmt->bindParam(":claveGCM",$claveGCM);
-	       $stmt->bindParam(":idNivelAutorizacion",$wine->idNivelAutorizacion, PDO::PARAM_INT);
-	       $stmt->execute();
-	       $wine->id = $db->lastInsertId();
-	       $db = null;
-	       //var_dump($wine->id );
-	       if($wine->idUsuario>0){
-		      $arreglo = [
-										"estado" => 200,
-                                                                                "success"=>"Usuario ".$wine->usuario. " registrado correctamente",
-										"datos" => $wine
-								];
-	       return $response->withJson($arreglo,200);//json_encode($wine);
-	       }else{
-		    $arreglo = [
-										"estado" => 400,
-                                                                                "error"=>"transaccion sin terminar",
-										"datos" => $wine
-								];;
-		    return $response->withJson($arreglo,400);//json_encode($wine);
-	       }
-          } catch(PDOException $e) {
-          $codigoDeError = $e->getCode();
-          $error = self::traducirMensaje($codigoDeError,$e);
-          $arreglo = [
-              "estado" => $e->getCode(),
-              "error"=>$error,
-              "datos" => json_encode($wine)
-          ];;
-          return $response->withJson($arreglo,400);//json_encode($wine);
-	  }
-     }*/
-
     public static function traducirMensaje($codigoDeError,$e)
     {
-
         if ($codigoDeError == "23000") {
             return "El usuario que intentó registrar ya existe, favor de validar la información";
         } else if ($codigoDeError == "HY093") {
@@ -341,16 +245,12 @@ class logIn
         }
     }
 
-
-
-    public static function seleccionarNivel($request, $response, $args)
+    public static function seleccionarNivel($request, $response)
     {
         $postrequest = json_decode($request->getBody());
-        //return $response->withJson(var_dump($postrequest),400);;
         $idUsuario = $postrequest->idGenerico;
-        //var_dump($postrequest);
         $comando = "SELECT idNivelAutorizacion, descripcion FROM ms_nivelAutorizacion WHERE idNivelAutorizacion>(
-						SELECT idNivelAutorizacion FROM ms_usuario WHERE idUsuario=:idUsuario)";
+                        SELECT idNivelAutorizacion FROM ms_usuario WHERE idUsuario=:idUsuario)";
         try {
             $db = getConnection();
             $sentencia = $db->prepare($comando);
@@ -376,15 +276,14 @@ class logIn
             $arreglo = [
                 "estado" => 400,
                 "error" => "Error al traer listado de Sexo",
-                "data" => $e
+                "data" => $e->getMessage()
             ];
-            return $response->withJson($arreglo, 400);//json_encode($wine);
+            return $response->withJson($arreglo, 400);
         }
     }
 
-    public static function seleccionarSexo($request, $response, $args)
+    public static function seleccionarSexo($request, $response)
     {
-
         $comando = "SELECT idSexo, descripcion FROM ms_Sexo";
         try {
             $db = getConnection();
@@ -403,31 +302,27 @@ class logIn
                     "estado" => 400,
                     "error" => "Error al traer listado",
                     "data" => $resultado
-                ];;
+                ];
                 return $response->withJson($arreglo, 400);
             }
         } catch (PDOException $e) {
             $arreglo = [
                 "estado" => 400,
                 "error" => "Error al traer listado de Sexo",
-                "datos" => $e
+                "datos" => $e->getMessage()
             ];
             return $response->withJson($arreglo, 400);//json_encode($wine);
         }
 
     }
 
-
-
-
-    public static function seleccionarUsuarios($request, $response, $args)
+    public static function seleccionarUsuarios($request, $response)
     {
         $comando = "SELECT mu.idUsuario,mu.usuario,'DEFAULTMERCASTOCK' as password,mu.nombre,mu.apellido,mu.idNivelAutorizacion,mu.idSucursal,mu.sexo,mu.idEstado,mu.contacto,mn.descripcion FROM ms_usuario mu INNER JOIN ms_nivelAutorizacion mn ON (mn.idNivelAutorizacion = mu.idNivelAutorizacion)
-        WHERE mu.idNivelAutorizacion>0";// mayor que superadmin
+        WHERE mu.idNivelAutorizacion>0";
         try {
             $db = getConnection();
             $sentencia = $db->prepare($comando);
-            //$sentencia->bindParam("idUsuario",$idUsuario, PDO::PARAM_STR);
             $sentencia->execute();
             $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
             if ($resultado) {
@@ -444,24 +339,20 @@ class logIn
             $arreglo = [
                 "estado" => 400,
                 "error" => "Error al traer listado de Sexo",
-                "data" => $e
+                "data" => $e->getMessage()
             ];
-            return $response->withJson($arreglo, 400);//json_encode($wine);
+            return $response->withJson($arreglo, 400);
         }
     }
 
-    public static function registrarSucursal($request, $response, $args)//$datosUsuario
+    public static function registrarSucursal($request, $response)
     {
-        //$request = Slim::getInstance()->request();
         $wine = json_decode($request->getBody());
-        //$claveApi = "";
-        //return var_dump($wine->usuario);
-        //return  $response->withJson($wine,400);
         $password = self::encriptarContrasena($wine->password);
         $sql = "INSERT INTO ms_sucursal (idSucursal, nombre, usuario, password, claveAPI, domicilio, contacto, idEstado) VALUES
-	  (:idSucursal,:nombre,:usuario,:password,:claveAPI,:domicilio,:contacto,:idEstado)";
+      (:idSucursal,:nombre,:usuario,:password,:claveAPI,:domicilio,:contacto,:idEstado)";
 
-        try {/* , grapes, country, region, year, description) VALUES (:name, :grapes, :country, :region, :year, :description)";  */
+        try {
             $db = getConnection();
             $stmt = $db->prepare($sql);
             $stmt->bindParam("idSucursal", $wine->idSucursal, PDO::PARAM_STR);
@@ -475,31 +366,28 @@ class logIn
             $stmt->execute();
             $wine->id = $db->lastInsertId();
             $db = null;
-            //var_dump($wine->id );
             if ($wine->id > 1) {
                 $arreglo = [
                     "estado" => 200,
                     "success" => "transaccion terminada",
                     "data" => $wine
                 ];
-                return $response->withJson($arreglo, 200);//json_encode($wine);
+                return $response->withJson($arreglo, 200);
             } else {
                 $arreglo = [
                     "estado" => 400,
                     "error" => "transaccion sin terminar",
                     "data" => $wine
                 ];;
-                return $response->withJson($arreglo, 400);//json_encode($wine);
+                return $response->withJson($arreglo, 400);
             }
         } catch (PDOException $e) {
-            // error_log($e->getMessage(), 3, '/var/tmp/php.log');
             echo '{"error":' . $e->getMessage() . '}';
         }
     }
 
-    public static function seleccionarSucursal($request, $response, $args)
+    public static function seleccionarSucursal($request, $response)
     {
-
         $comando = "SELECT idSucursal,nombre,usuario, domicilio, contacto, idEstado,'DEFAULTMERCASTOCK' as password FROM ms_sucursal";
         try {
             $db = getConnection();
@@ -518,21 +406,20 @@ class logIn
                     "estado" => 400,
                     "error" => "Error al traer listado de Sucursal",
                     "data" => $resultado
-                ];;
+                ];
                 return $response->withJson($arreglo, 400);
             }
         } catch (PDOException $e) {
             $arreglo = [
                 "estado" => 400,
                 "error" => "Error al traer listado de Sucursal",
-                "data" => $e
+                "data" => $e->getMessage()
             ];
-            return $response->withJson($arreglo, 400);//json_encode($wine);
+            return $response->withJson($arreglo, 400);
         }
-
     }
 
-    public static function actualizarSucursal($request, $response, $args)
+    public static function actualizarSucursal($request, $response)
     {
         $postrequest = json_decode($request->getBody());
         if($postrequest->password!='DEFAULTMERCASTOCK') {
@@ -540,7 +427,6 @@ class logIn
         }else{
             $query = "UPDATE ms_sucursal SET nombre=:nombre,usuario=:usuario,domicilio=:domicilio,contacto=:contacto,idEstado=:idEstado WHERE idSucursal=:idSucursal";
         }
-//return var_dump($postrequest);
         try {
             $db = getConnection();
             $password = self::encriptarContrasena($postrequest->password,PDO::PARAM_STR);
@@ -579,9 +465,8 @@ class logIn
                 "estado" => $e->getCode(),
                 "error" => $error,
                 "data" => json_encode($postrequest)
-            ];;
+            ];
             return $response->withJson($arreglo, 400);//json_encode($wine);
         }
     }
 }
-

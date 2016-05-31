@@ -1,27 +1,22 @@
 <?php
+
 class categoria
 {
-    protected function __construct()
-    {
-
+    protected function __construct(){
     }
 
-    public static function seleccionar($request, $response, $args)
+    public static function seleccionar($request, $response)
     {
         $postrequest = json_decode($request->getBody());
-            $comando = "SELECT cat_id,
-                               cat_id_Local,
-                               idSucursal,
-                               nombre,
-                               dep_id
+        $comando = "SELECT cat_id, cat_id_Local,idSucursal,nombre,dep_id
                         FROM categoria
                         WHERE idSucursal LIKE :idSucursal
                           AND dep_id LIKE :dep_id";
         try {
             $db = getConnection();
             $sentencia = $db->prepare($comando);
-                $sentencia->bindParam('idSucursal', $postrequest->idGenerico->idSucursal);
-                $sentencia->bindParam('dep_id', $postrequest->idGenerico->dep_id);
+            $sentencia->bindParam('idSucursal', $postrequest->idGenerico->idSucursal);
+            $sentencia->bindParam('dep_id', $postrequest->idGenerico->dep_id);
             $sentencia->execute();
             $resultado = $sentencia->fetchAll(PDO::FETCH_OBJ);
             if ($resultado) {
@@ -45,13 +40,11 @@ class categoria
                 "error" => logIn::traducirMensaje($e->getCode(),$e),
                 "datos" =>"Error al traer listado de Categoria"
             ];
-            $respuesta= $response->withJson($arreglo, 400);//json_encode($wine);
+            $respuesta= $response->withJson($arreglo, 400);
         }
         finally{
             $db=null;
             return $respuesta;
         }
-
     }
-
 }

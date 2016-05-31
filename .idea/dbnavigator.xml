@@ -23,11 +23,15 @@
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
-    <loaded-nodes />
+    <loaded-nodes>
+      <connection connection-id="3954130b-a7ef-4dab-8187-4b38d9f307af">
+        <schema name="mercatto_mstock" object-types="table, view" />
+      </connection>
+    </loaded-nodes>
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="3954130b-a7ef-4dab-8187-4b38d9f307af">
-      <console name="APIMercaStock" type="STANDARD"><![CDATA[select * from articulo]]></console>
+      <console name="APIMercaStock" type="STANDARD"><![CDATA[select * from ms_inventario]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.EditorStateManager">

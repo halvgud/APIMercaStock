@@ -6,7 +6,7 @@ class mercaStock
 
     }
 
-    public static function seleccionarDepartamento ($request,$response,$args){
+    public static function seleccionarDepartamento ($request,$response){
 
         $comando = "SELECT * from departamento";
         try {
@@ -34,7 +34,7 @@ class mercaStock
         }
 
     }
-    public static function seleccionarCategoria ($request,$response,$args){
+    public static function seleccionarCategoria ($request,$response){
 
         $comando = "SELECT * from categoria";
         try {

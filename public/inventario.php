@@ -1,31 +1,51 @@
 <?php
 class inventario
 {
-    protected function __construct()
-    {
-
+    protected function __construct(){
     }
 
-    public static function seleccionarAzar($request, $response, $args)
+    public static function seleccionarAzar($request, $response)
     {
         $postrequest = json_decode($request->getBody());
-            foreach($postrequest->articulos as $category)
-            {
-                $new_arr[] = $category;
-            }
-            if(isset($new_arr)){
+        foreach($postrequest->articulos as $category){
+            $new_arr[] = $category;
+        }
+        if(isset($new_arr)){
             $res_arr = implode(',',$new_arr);
             $comando = "select art_id,clave,descripcion,existencia from articulo a
                       INNER JOIN categoria c on (a.cat_id=c.cat_id_Local)
                       INNER JOIN departamento d on (d.dep_idLocal=c.dep_id)
-                     where a.servicio!=1  and a.cat_id like :cat_id and a.idSucursal like :idSucursal and art_id not in (".$res_arr.") and art_id not in (select art_id from ms_inventario where fechaSolicitud>curdate())
+
+                     where a.servicio!=1  and a.cat_id like :cat_id and d.dep_idLocal like :dep_id and a.idSucursal like :idSucursal and art_id not in (".$res_arr.") and art_id not in (select art_id from ms_inventario where fechaSolicitud>curdate())
                       and a.existencia>0
+                      and a.art_id NOT IN (
+                            SELECT msp33.valor FROM ms_parametro msp11
+
+                        INNER JOIN ms_parametro msp22 ON (msp22.accion=msp11.accion AND msp22.parametro='_COMPONENTE_LISTADO_EXCLUYENTE')
+                        INNER JOIN ms_parametro msp33 ON (msp22.valor=msp33.accion AND msp33.parametro=msp11.valor)
+                        INNER JOIN articulo a ON (a.art_id = msp33.valor)
+                        WHERE
+                        msp11.accion = 'CONFIG_GENERAR_INVENTARIO' AND msp11.parametro='BANDERA_LISTA_EXCLUYENTE_SUC'
+                        AND msp33.accion='LISTA_RELACION_IDSUCURSAL_ARTID_EXCLUYENTE'
+                        and msp11.comentario='TRUE')
                      order by rand() limit :sta1;";
-            }else{
+        }else{
             $comando = "select art_id,clave,descripcion,existencia from articulo a
-                     where a.servicio!=1 and cat_id like :cat_id and idSucursal like :idSucursal
+                        INNER JOIN categoria c on (a.cat_id=c.cat_id_Local)
+                        INNER JOIN departamento d on (d.dep_idLocal=c.dep_id)
+                     where a.servicio!=1 and a.cat_id like :cat_id and d.dep_idLocal like :dep_id and  a.idSucursal like :idSucursal
                       and a.existencia>0
                       and art_id not in (select art_id from ms_inventario where fechaSolicitud>curdate())
+                      and a.art_id NOT IN (
+                            SELECT msp33.valor FROM ms_parametro msp11
+
+                        INNER JOIN ms_parametro msp22 ON (msp22.accion=msp11.accion AND msp22.parametro='_COMPONENTE_LISTADO_EXCLUYENTE')
+                        INNER JOIN ms_parametro msp33 ON (msp22.valor=msp33.accion AND msp33.parametro=msp11.valor)
+                        INNER JOIN articulo a ON (a.art_id = msp33.valor)
+                        WHERE
+                        msp11.accion = 'CONFIG_GENERAR_INVENTARIO' AND msp11.parametro='BANDERA_LISTA_EXCLUYENTE_SUC'
+                        AND msp33.accion='LISTA_RELACION_IDSUCURSAL_ARTID_EXCLUYENTE'
+                        and msp11.comentario='TRUE')
                      order by rand() limit :sta1;";
         }
         try {
@@ -35,6 +55,7 @@ class inventario
             $sentencia = $db->prepare($comando);
             $sentencia->bindParam("idSucursal", $postrequest->idSucursal);
             $sentencia->bindParam("cat_id", $postrequest->cat_id);
+            $sentencia->bindParam("dep_id", $postrequest->dep_id);
             $sentencia->bindValue(':sta1', (int) $postrequest->cantidad, PDO::PARAM_INT);
             $sentencia->execute();
             $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
@@ -57,7 +78,7 @@ class inventario
             $arreglo = [
                 "estado" => 400,
                 "error" => "Error al traer listado de Inventario",
-                "datos" => $e
+                "datos" => $e->getMessage()
             ];
             return $response->withJson($arreglo, 400);
         }
@@ -65,7 +86,8 @@ class inventario
             $db=null;
         }
     }
-    public static function seleccionarIndividual($request, $response, $args)
+
+    public static function seleccionarIndividual($request, $response)
     {
         $postrequest = json_decode($request->getBody());
         foreach($postrequest->articulos as $category)
@@ -74,29 +96,69 @@ class inventario
         }
         if(isset($new_arr)) {
             $res_arr = implode(',', $new_arr);
-            //echo var_dump($res_arr);
             $comando = "SELECT art_id,clave,descripcion,existencia FROM articulo a
-                     WHERE a.servicio!=1 AND a.existencia>0 and a.clave=:input and a.art_id not in (select art_id from ms_inventario where fechaSolicitud>curdate()) and art_id not in ($res_arr)";
+                     WHERE a.servicio!=1 AND a.existencia>0 and a.clave=:input
+                     and a.art_id not in (select art_id from ms_inventario where fechaSolicitud>curdate()) and art_id not in ($res_arr)
+                     and a.art_id NOT IN (
+                            SELECT msp33.valor FROM ms_parametro msp11
+
+                        INNER JOIN ms_parametro msp22 ON (msp22.accion=msp11.accion AND msp22.parametro='_COMPONENTE_LISTADO_EXCLUYENTE')
+                        INNER JOIN ms_parametro msp33 ON (msp22.valor=msp33.accion AND msp33.parametro=msp11.valor)
+                        INNER JOIN articulo a ON (a.art_id = msp33.valor)
+                        WHERE
+                        msp11.accion = 'CONFIG_GENERAR_INVENTARIO' AND msp11.parametro='BANDERA_LISTA_EXCLUYENTE_SUC'
+                        AND msp33.accion='LISTA_RELACION_IDSUCURSAL_ARTID_EXCLUYENTE'
+                        and msp11.comentario='TRUE')";
             $comando1 = "SELECT art_id,clave,descripcion,existencia FROM articulo a
-                     WHERE a.servicio!=1  and a.existencia>0 and art_id not in (select a.art_id from ms_inventario where fechaSolicitud>curdate()) AND  descripcion LIKE CONCAT('%',:input,'%')and a.art_id not in ($res_arr);";
+                     WHERE a.servicio!=1  and a.existencia>0 and art_id not in (select a.art_id from ms_inventario where fechaSolicitud>curdate())
+                     AND  descripcion LIKE CONCAT('%',:input,'%')and a.art_id not in ($res_arr)
+                     and a.art_id NOT IN (
+                            SELECT msp33.valor FROM ms_parametro msp11
+
+                        INNER JOIN ms_parametro msp22 ON (msp22.accion=msp11.accion AND msp22.parametro='_COMPONENTE_LISTADO_EXCLUYENTE')
+                        INNER JOIN ms_parametro msp33 ON (msp22.valor=msp33.accion AND msp33.parametro=msp11.valor)
+                        INNER JOIN articulo a ON (a.art_id = msp33.valor)
+                        WHERE
+                        msp11.accion = 'CONFIG_GENERAR_INVENTARIO' AND msp11.parametro='BANDERA_LISTA_EXCLUYENTE_SUC'
+                        AND msp33.accion='LISTA_RELACION_IDSUCURSAL_ARTID_EXCLUYENTE'
+                        and msp11.comentario='TRUE')";
 
         }else {
             $comando = "SELECT art_id,clave,descripcion,existencia FROM articulo a
-                     WHERE a.servicio!=1 and a.art_id not in (select art_id from ms_inventario where fechaSolicitud>curdate()) AND a.clave=:input;";
+                     WHERE a.servicio!=1 and a.art_id not in (select art_id from ms_inventario where fechaSolicitud>curdate()) AND a.clave=:input
+                     and a.art_id NOT IN (
+                            SELECT msp33.valor FROM ms_parametro msp11
+
+                        INNER JOIN ms_parametro msp22 ON (msp22.accion=msp11.accion AND msp22.parametro='_COMPONENTE_LISTADO_EXCLUYENTE')
+                        INNER JOIN ms_parametro msp33 ON (msp22.valor=msp33.accion AND msp33.parametro=msp11.valor)
+                        INNER JOIN articulo a ON (a.art_id = msp33.valor)
+                        WHERE
+                        msp11.accion = 'CONFIG_GENERAR_INVENTARIO' AND msp11.parametro='BANDERA_LISTA_EXCLUYENTE_SUC'
+                        AND msp33.accion='LISTA_RELACION_IDSUCURSAL_ARTID_EXCLUYENTE'
+                        and msp11.comentario='TRUE')";
             $comando1 = "SELECT art_id,clave,descripcion,existencia FROM articulo a
-                     WHERE a.servicio!=1 and a.art_id not in (select art_id from ms_inventario where fechaSolicitud>curdate())  AND descripcion LIKE CONCAT('%',:input,'%');";
+                     WHERE a.servicio!=1 and a.art_id not in (select art_id from ms_inventario where fechaSolicitud>curdate())  AND descripcion LIKE CONCAT('%',:input,'%')
+                     and a.art_id NOT IN (
+                            SELECT msp33.valor FROM ms_parametro msp11
+
+                        INNER JOIN ms_parametro msp22 ON (msp22.accion=msp11.accion AND msp22.parametro='_COMPONENTE_LISTADO_EXCLUYENTE')
+                        INNER JOIN ms_parametro msp33 ON (msp22.valor=msp33.accion AND msp33.parametro=msp11.valor)
+                        INNER JOIN articulo a ON (a.art_id = msp33.valor)
+                        WHERE
+                        msp11.accion = 'CONFIG_GENERAR_INVENTARIO' AND msp11.parametro='BANDERA_LISTA_EXCLUYENTE_SUC'
+                        AND msp33.accion='LISTA_RELACION_IDSUCURSAL_ARTID_EXCLUYENTE'
+                        and msp11.comentario='TRUE')";
         }
         try {
             $db = getConnection();
             $db->query("SET NAMES 'utf8'");
             $db->query("SET CHARACTER SET utf8");
             $sentencia = $db->prepare($comando);
+
             $sentencia->bindParam("input", $postrequest->input);
-           if($sentencia->execute()){
-               $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
-               //var_dump($resultado);
-           }if($resultado==null){
-                //echo ("oo");
+            if($sentencia->execute()){
+                $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+            }if($resultado==null){
                 $sentencia1 = $db->prepare($comando1);
                 $sentencia1->bindParam("input", $postrequest->input);
                 $sentencia1->execute();
@@ -113,7 +175,7 @@ class inventario
                 $arreglo = [
                     "estado" => 'warning',
                     "success" => "Error al traer listado de Inventario Individual",
-                    "data" => $resultado
+                    "data" => $postrequest
                 ];;
                 return $response->withJson($arreglo, 200);
             }
@@ -121,7 +183,7 @@ class inventario
             $arreglo = [
                 "estado" => 400,
                 "error" => "Error al traer listado de Inventario",
-                "datos" => $e
+                "datos" => $e->getMessage()
             ];
             return $response->withJson($arreglo, 400);
         }
@@ -129,25 +191,22 @@ class inventario
             $db=null;
         }
     }
-    public static function seleccionarMasVendidos($request, $response, $args)
+
+    public static function seleccionarMasVendidos($request, $response)
     {
         $postrequest = json_decode($request->getBody());
-      //  var_dump($postrequest);
         if(isset($postrequest->articulos)) {
             foreach ($postrequest->articulos as $category) {
                 $new_arr[] = $category;
-
-            }  
+            }
         }
         if(isset($new_arr)) {
             $res_arr = implode(',', $new_arr);
-            //echo var_dump($res_arr);
-            $comando = "select * from
-                            (select a.art_id,a.clave,a.descripcion,a.existencia from venta v
-                                inner join detallev dv on (dv.ven_id = v.ven_id)
+            $comando = "select a.art_id,a.clave,a.descripcion,a.existencia from venta v
+                                inner join detallev dv on (dv.ven_idLocal = v.ven_idLocal)
                                 inner join articulo a on (a.art_id = dv.art_id)
                                 inner join categoria c on (c.cat_id = a.cat_id)
-
+                      INNER JOIN departamento d on (d.dep_idLocal=c.dep_id)
                                 inner join ms_sucursal ms on (ms.idSucursal =:idSucursal)
                                 where
                                 v.fecha>=:fechaInicio
@@ -156,18 +215,26 @@ class inventario
                                 and a.existencia>0
                                 and a.art_id not in ($res_arr)
                                 and a.art_id not in (select art_id from ms_inventario where fechaSolicitud>curdate())
+                                 and a.art_id NOT IN (
+                            SELECT msp33.valor FROM ms_parametro msp11
+
+                        INNER JOIN ms_parametro msp22 ON (msp22.accion=msp11.accion AND msp22.parametro='_COMPONENTE_LISTADO_EXCLUYENTE')
+                        INNER JOIN ms_parametro msp33 ON (msp22.valor=msp33.accion AND msp33.parametro=msp11.valor)
+                        INNER JOIN articulo a ON (a.art_id = msp33.valor)
+                        WHERE
+                        msp11.accion = 'CONFIG_GENERAR_INVENTARIO' AND msp11.parametro='BANDERA_LISTA_EXCLUYENTE_SUC'
+                        AND msp33.accion='LISTA_RELACION_IDSUCURSAL_ARTID_EXCLUYENTE'
+                        and msp11.comentario='TRUE')
+                        and d.dep_idLocal like :dep_id
                                 group by a.art_id
                                 order by count(*) desc
-                            ) tt
                             limit :sta1;";
-
         }else {
-            $comando = "select * from
-                            (select a.art_id,a.clave,a.descripcion,a.existencia from venta v
-                                inner join detallev dv on (dv.ven_id = v.ven_id)
+            $comando = "select a.art_id,a.clave,a.descripcion,a.existencia from venta v
+                                inner join detallev dv on (dv.ven_idLocal = v.ven_idLocal)
                                 inner join articulo a on (a.art_id = dv.art_id)
                                 inner join categoria c on (c.cat_id = a.cat_id)
-
+                                INNER JOIN departamento d on (d.dep_idLocal=c.dep_id)
                                 inner join ms_sucursal ms on (ms.idSucursal =:idSucursal)
                                 where
                                 v.fecha>=:fechaInicio
@@ -175,27 +242,34 @@ class inventario
                                 and c.cat_id_Local like :cat_id
                                 and a.existencia>0
                                 and a.art_id not in (select art_id from ms_inventario where fechaSolicitud>curdate())
+                                 and a.art_id NOT IN (
+                            SELECT msp33.valor FROM ms_parametro msp11
+
+                        INNER JOIN ms_parametro msp22 ON (msp22.accion=msp11.accion AND msp22.parametro='_COMPONENTE_LISTADO_EXCLUYENTE')
+                        INNER JOIN ms_parametro msp33 ON (msp22.valor=msp33.accion AND msp33.parametro=msp11.valor)
+                        INNER JOIN articulo a ON (a.art_id = msp33.valor)
+                        WHERE
+                        msp11.accion = 'CONFIG_GENERAR_INVENTARIO' AND msp11.parametro='BANDERA_LISTA_EXCLUYENTE_SUC'
+                        AND msp33.accion='LISTA_RELACION_IDSUCURSAL_ARTID_EXCLUYENTE'
+                        and msp11.comentario='TRUE')
+                        and d.dep_idLocal like :dep_id
                                 group by a.art_id
                                 order by count(*) desc
-                            ) tt
                             limit :sta1;";
-
         }
         try {
             $db = getConnection();
             $db->query("SET NAMES 'utf8'");
             $db->query("SET CHARACTER SET utf8");
             $sentencia = $db->prepare($comando);
-            //$sentencia->bindParam("input", $postrequest->input);
             $sentencia->bindParam("fechaInicio", $postrequest->fechaInicio);
             $sentencia->bindParam("fechaFin", $postrequest->fechaFin);
             $sentencia->bindParam("idSucursal",$postrequest->idSucursal);
             $sentencia->bindParam("cat_id", $postrequest->cat_id);
-
+            $sentencia->bindParam("dep_id",$postrequest->dep_id);
             $sentencia->bindValue(':sta1', (int) $postrequest->cantidad, PDO::PARAM_INT);
             $sentencia->execute();
-                $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
-                //var_dump($resultado);
+            $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
 
             if ($resultado) {
                 $arreglo = [
@@ -224,13 +298,13 @@ class inventario
             $db=null;
         }
     }
-    public static function insertar($request, $response, $args)
+
+    public static function insertar($request, $response)
     {
         set_time_limit(0);
         $postrequest = json_decode($request->getBody());
-$resultado="";
+        $resultado="";
 
-         //return var_dump($comando);
         try {
             $db = getConnection();
             $db->query("SET NAMES 'utf8'");
@@ -238,9 +312,7 @@ $resultado="";
             foreach ($postrequest->art_id as $renglon ) {
                 $art_id = $renglon;
 
-
                 $comando = "insert into ms_inventario(idInventario, idInventarioLocal, idSucursal, art_id, existenciaSolicitud, existenciaRespuesta, idUsuario, fechaSolicitud, existenciaEjecucion, idEstado) values (0,0,:idSucursal,:art_id,0,0,:idUsuario,NOW(),3,'A')";
-
 
                 $sentencia = $db->prepare($comando);
                 $sentencia->bindParam("idSucursal", $postrequest->idSucursal);
@@ -272,30 +344,27 @@ $resultado="";
             ];
             return $response->withJson($arreglo, 400);
         }
-
         finally{
             $db=null;
         }
     }
-    public static function seleccionarMasConflictivos($request, $response, $args)
+
+    public static function seleccionarMasConflictivos($request, $response)
     {
         $postrequest = json_decode($request->getBody());
-        //  var_dump($postrequest);
         if(isset($postrequest->articulos)) {
             foreach ($postrequest->articulos as $category) {
                 $new_arr[] = $category;
-
             }
         }
         if(isset($new_arr)) {
             $res_arr = implode(',', $new_arr);
-            //echo var_dump($res_arr);
-            $comando = "select * from
-                            (select a.art_id,a.clave,a.descripcion,a.existencia,count(*) as repetido from
-								ms_inventario msi
+            $comando = "select a.art_id,a.clave,a.descripcion,a.existencia,count(*) as repetido from
+                                ms_inventario msi
                                 inner join articulo a on (a.art_id = msi.art_id)
                                 inner join categoria c on (c.cat_id = a.cat_id)
                                 inner join ms_sucursal ms on (ms.idSucursal =:idSucursal)
+                                INNER JOIN departamento d on (d.dep_idLocal=c.dep_id)
                                 where
                                 msi.fechaSolicitud>=:fechaInicio
                                 and msi.fechaSolicitud<=:fechaFin
@@ -304,20 +373,27 @@ $resultado="";
                                 and c.cat_id like :cat_id
                                 and a.art_id not in ($res_arr)
                                 and msi.art_id not in (select msi.art_id from ms_inventario msi where fechaSolicitud>curdate() and idEstado='A')
+                                 and a.art_id NOT IN (
+                            SELECT msp33.valor FROM ms_parametro msp11
+
+                        INNER JOIN ms_parametro msp22 ON (msp22.accion=msp11.accion AND msp22.parametro='_COMPONENTE_LISTADO_EXCLUYENTE')
+                        INNER JOIN ms_parametro msp33 ON (msp22.valor=msp33.accion AND msp33.parametro=msp11.valor)
+                        INNER JOIN articulo a ON (a.art_id = msp33.valor)
+                        WHERE
+                        msp11.accion = 'CONFIG_GENERAR_INVENTARIO' AND msp11.parametro='BANDERA_LISTA_EXCLUYENTE_SUC'
+                        AND msp33.accion='LISTA_RELACION_IDSUCURSAL_ARTID_EXCLUYENTE')
+                        and d.dep_idLocal like :dep_id
                                 group by a.art_id
                                having count(*)>=3
                                 order by count(*) desc
-
-                            ) tt
                             limit :sta1;";
-
         }else {
-            $comando = "select * from
-                            (select a.art_id,a.clave,a.descripcion,a.existencia,count(*) as repetido from
-								ms_inventario msi
+            $comando = "select a.art_id,a.clave,a.descripcion,a.existencia,count(*) as repetido from
+                                ms_inventario msi
                                 inner join articulo a on (a.art_id = msi.art_id)
                                 inner join categoria c on (c.cat_id = a.cat_id)
                                 inner join ms_sucursal ms on (ms.idSucursal =:idSucursal)
+                                INNER JOIN departamento d on (d.dep_idLocal=c.dep_id)
                                 where
                                 msi.fechaSolicitud>=:fechaInicio
                                 and msi.fechaSolicitud<=:fechaFin
@@ -325,29 +401,34 @@ $resultado="";
                                 and msi.existenciaRespuesta!=msi.existenciaEjecucion
                                 and c.cat_id like :cat_id
                                 and msi.art_id not in (select msi.art_id from ms_inventario msi where fechaSolicitud>curdate() and idEstado='A')
+                                 and a.art_id NOT IN (
+                            SELECT msp33.valor FROM ms_parametro msp11
+
+                        INNER JOIN ms_parametro msp22 ON (msp22.accion=msp11.accion AND msp22.parametro='_COMPONENTE_LISTADO_EXCLUYENTE')
+                        INNER JOIN ms_parametro msp33 ON (msp22.valor=msp33.accion AND msp33.parametro=msp11.valor)
+                        INNER JOIN articulo a ON (a.art_id = msp33.valor)
+                        WHERE
+                        msp11.accion = 'CONFIG_GENERAR_INVENTARIO' AND msp11.parametro='BANDERA_LISTA_EXCLUYENTE_SUC'
+                        AND msp33.accion='LISTA_RELACION_IDSUCURSAL_ARTID_EXCLUYENTE')
+                        and d.dep_idLocal like :dep_id
                                 group by a.art_id
                                having count(*)>=3
                                 order by count(*) desc
-
-                            ) tt
-                            limit :sta1;";
-
+                            limit :sta1";
         }
         try {
             $db = getConnection();
             $db->query("SET NAMES 'utf8'");
             $db->query("SET CHARACTER SET utf8");
             $sentencia = $db->prepare($comando);
-            //$sentencia->bindParam("input", $postrequest->input);
             $sentencia->bindParam("fechaInicio", $postrequest->fechaInicio);
             $sentencia->bindParam("fechaFin", $postrequest->fechaFin);
             $sentencia->bindParam("idSucursal",$postrequest->idSucursal);
             $sentencia->bindParam("cat_id", $postrequest->cat_id);
-
+            $sentencia->bindParam("dep_id",$postrequest->dep_id);
             $sentencia->bindValue(':sta1', (int) $postrequest->cantidad, PDO::PARAM_INT);
             $sentencia->execute();
             $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
-            //var_dump($resultado);
 
             if ($resultado) {
                 $arreglo = [

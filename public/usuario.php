@@ -1,19 +1,17 @@
 <?php
+
 class usuario
 {
-    public function __construct()
-    {
-
+    public function __construct(){
     }
 
-    public static function seleccionar($request, $response, $args)
+    public static function seleccionar($request, $response)
     {
         $comando = "SELECT mu.idUsuario,mu.usuario,'DEFAULTMERCASTOCK' as password,mu.nombre,mu.apellido,mu.idNivelAutorizacion,mu.idSucursal,mu.sexo,mu.idEstado,mu.contacto,mn.descripcion FROM ms_usuario mu INNER JOIN ms_nivelAutorizacion mn ON (mn.idNivelAutorizacion = mu.idNivelAutorizacion)
         WHERE mu.idNivelAutorizacion>0";// mayor que superadmin
         try {
             $db = getConnection();
             $sentencia = $db->prepare($comando);
-            //$sentencia->bindParam("idUsuario",$idUsuario, PDO::PARAM_STR);
             $sentencia->execute();
             $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
             if ($resultado) {
@@ -39,17 +37,16 @@ class usuario
         }
     }
 
-    public static function insertar($request, $response, $args)
+    public static function insertar($request, $response)
     {
         $wine = json_decode($request->getBody());
-
         $claveApi = "";
         $idEstado = "A";
         $claveGCM = '0';
         $idUsuario = self::obtenerIdUsuario();
 
         $sql = "INSERT INTO ms_usuario (idUsuario,usuario,password,nombre,apellido,sexo,contacto,idSucursal,claveAPI,idEstado,fechaEstado,fechaSesion,claveGCM,idNivelAutorizacion) VALUES
-	            (:idUsuario,:usuario,:password,:nombre,:apellido,:sexo,:contacto,:idSucursal,:claveAPI,:idEstado,now(),now(),:claveGCM,:idNivelAutorizacion)";
+                (:idUsuario,:usuario,:password,:nombre,:apellido,:sexo,:contacto,:idSucursal,:claveAPI,:idEstado,now(),now(),:claveGCM,:idNivelAutorizacion)";
         try {
             $password = self::encriptarContrasena($wine->password);
             $db = getConnection();
@@ -109,12 +106,10 @@ class usuario
             $resultado = $query->fetchObject();
             return $resultado->idUsuario;
         } catch (PDOException $e) {
-
         }
-
     }
 
-    public static function actualizar($request, $response, $args)
+    public static function actualizar($request, $response)
     {
         $postrequest = json_decode($request->getBody());
         if($postrequest->password!='DEFAULTMERCASTOCK'){
@@ -172,8 +167,7 @@ class usuario
         }
     }
 
-
-    public static function obtenerNuevo($request,$response,$args){
+    public static function obtenerNuevo($request,$response){
         $postrequest = json_decode($request->getBody());
         $query = "select idUsuario,usuario,password,nombre,apellido,sexo,contacto,idNivelAutorizacion,idEstado,fechaEstado,fechaSesion,idSucursal from ms_usuario";
         try{
@@ -183,22 +177,22 @@ class usuario
             $sentencia->execute();
             $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
             if($resultado){
-                 $arreglo =
-                            [
-                                "estado" => 200,
-                                "success" => "",
-                                "data" => $resultado
-                            ];
-                        return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
-                    } else {
-                        $arreglo =
-                            [
-                                "estado" => "warning",
-                                "mensaje" => "",
-                                "data" => $resultado
-                            ];
-                        return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
-                      }//else
+                $arreglo =
+                    [
+                        "estado" => 200,
+                        "success" => "",
+                        "data" => $resultado
+                    ];
+                return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
+            } else {
+                $arreglo =
+                    [
+                        "estado" => "warning",
+                        "mensaje" => "",
+                        "data" => $resultado
+                    ];
+                return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
+            }
         }catch(PDOException $e){
             $codigoDeError=$e->getCode();
             $error =LogIn::traducirMensaje($codigoDeError,$e);
@@ -209,7 +203,6 @@ class usuario
             ];
             return $response->withJson($arreglo,400);
         }
-
     }
 
     public static function encriptarContrasena($contrasenaPlana)
@@ -219,7 +212,7 @@ class usuario
         else return null;
     }
 
-    public static function logIn($request, $response, $args)
+    public static function logIn($request, $response)
     {
         $usuario = json_decode($request->getBody());
         $correo = $usuario->usuario;
@@ -240,7 +233,14 @@ class usuario
             $newResponse = $response->withJson($autenticar, $codigo);
             return $newResponse;
         } catch (PDOException $e) {
-            echo '{"error":{"text":' . $e->getMessage() . '}}';
+            $codigoDeError=$e->getCode();
+            $error =LogIn::traducirMensaje($codigoDeError,$e);
+            $arreglo = [
+                "estado" =>$e -> getCode(),
+                "error" =>$error,
+                "data" => json_encode($usuario)
+            ];
+            return $response->withJson($arreglo,400);
         }
         finally{
             $db=null;
@@ -266,27 +266,24 @@ class usuario
                                 "estado" => 200,
                                 "mensaje" => "OK",
                                 "datos" => ["idUsuario"=>$resultado->idUsuario,"Usuario"=>$resultado->Usuario,"ClaveAPI"=>$resultado->claveAPI
-                                ,"IDESTADO"=>$resultado->IDESTADO,"idNivelAutorizacion"=>$resultado->idNivelAutorizacion]
+                                    ,"IDESTADO"=>$resultado->IDESTADO,"idNivelAutorizacion"=>$resultado->idNivelAutorizacion]
                             ];
                     } catch (PDOException $e) {
                         throw new ExcepcionApi(2, $e->getMessage());
                     }
                 } else {
-
                     return
                         [
                             "estado" => 101,
                             "mensaje" => "usuario inexistente"
                         ];
                 }
-
             } else {
                 return false;
             }
         } catch (PDOException $e) {
             throw new ExcepcionApi(1, $e->getMessage(), 401);
         }
-
     }
 
     private static function validarContrasena($contrasenaPlana, $contrasenaHash)
@@ -351,10 +348,10 @@ class usuario
             $sentencia->execute();
             $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
             if($resultado){
-                        return true;
-                    } else {
-                        return false;
-                      }//else
+                return true;
+            } else {
+                return false;
+            }
         }catch(PDOException $e){
             $codigoDeError=$e->getCode();
             $error =self::traducirMensaje($codigoDeError,$e);
@@ -366,5 +363,4 @@ class usuario
             return false;
         };
     }
-
 }

@@ -1,16 +1,23 @@
 <?php
+
 class bitacora
 {
-    protected function __construct()
-    {
-
+    protected function __construct(){
     }
 
-    public static function seleccionar ($request,$response,$args){
-        $comando = "SELECT * from ms_bitacora";
+    public static function seleccionar ($request,$response){
+         $postrequest = json_decode($request->getBody());
+
+         $fechaI = $postrequest->hora_inicio;
+         $fechaF = $postrequest->hora_fin;
+         $fechaI = $fechaI.' 00:00:00';
+         $fechaF = $fechaF.' 23:59:59';
+        $comando = "SELECT * from ms_bitacora WHERE :fechaIni<=fecha AND fecha<=:fechaFin";
         try {
             $db = getConnection();
             $sentencia = $db->prepare($comando);
+                $sentencia->bindParam("fechaIni",$fechaI);
+                $sentencia->bindParam("fechaFin",$fechaF);
             $sentencia->execute();
             $resultado = $sentencia->fetchAll(PDO::FETCH_OBJ);
             if ($resultado){
@@ -32,13 +39,9 @@ class bitacora
             $arreglo = [
                 "estado" => 400,
                 "error"=>"Error al traer la Bitácora",
-                "data" => $e
+                "data" => $e->getMessage()
             ];
             return $response->withJson($arreglo,400);
         }
-        finally{
-            $db=null;
-        }
-
     }
 }

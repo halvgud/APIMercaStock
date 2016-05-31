@@ -1,12 +1,11 @@
 <?php
+
 class Permisos
 {
-    protected function __construct()
-    {
-
+    protected function __construct(){
     }
 
-    public static function seleccionar($request, $response, $args)
+    public static function seleccionar($request, $response)
     {
         try {
             $comando = "SELECT idNivelAutorizacion,descripcion FROM ms_nivelAutorizacion";
@@ -28,7 +27,6 @@ class Permisos
                     }
                 }
                 $rol['permisos'] = $permisos;
-
             }
             return ($roles);
         } catch (PDOException $e) {
@@ -39,7 +37,7 @@ class Permisos
         }
     }
 
-    public static function actualizar($request, $response, $args)
+    public static function actualizar($request, $response)
     {
         $bandera = false;
         $db = getConnection();
@@ -82,11 +80,8 @@ class Permisos
             $stmt->bindParam("idOpcion", $wine->idopcion);
             $stmt->bindParam("idEstado", $estado);
             $stmt->execute();
-           // $db = null;
             return true;
         } catch (PDOException $e) {
-            return false;
-            //echo '{"error":{"text":' . $e->getMessage() . '}}';
-        }
+            return false;  }
     }
 }

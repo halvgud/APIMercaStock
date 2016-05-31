@@ -1,12 +1,11 @@
 <?php
+
 class nivel_autorizacion
 {
-    protected function __construct()
-    {
-
+    protected function __construct(){
     }
 
-    public static function seleccionar($request, $response, $args)
+    public static function seleccionar($request, $response)
     {
         $postrequest = json_decode($request->getBody());
         $idUsuario = $postrequest->idGenerico;
@@ -23,7 +22,7 @@ class nivel_autorizacion
                     "estado" => 200,
                     "success" => "Lista de niveles",
                     "data" => [$resultado]
-                ];;
+                ];
                 return $response->withJson($arreglo, 200);
             } else {
                 $arreglo = [
@@ -37,7 +36,7 @@ class nivel_autorizacion
             $arreglo = [
                 "estado" => 400,
                 "error" => "Error al traer listado de Sexo",
-                "data" => $e
+                "data" => $e->getMessage()
             ];
             return $response->withJson($arreglo, 400);
         }
