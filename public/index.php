@@ -34,8 +34,6 @@ require_once("sexo.php");
 require_once("importar.php");
 require_once('exportar.php');
 require_once("concepto.php");
-require_once("importar2.php");
-require_once("exportar2.php");
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Usuario
 $app->post('/usuario/seleccionar',function(ServerRequestInterface $request,ResponseInterface $response){
@@ -162,8 +160,8 @@ $app->post('/importar/articulo', function (ServerRequestInterface $request, Resp
 	return importar::Articulo($request,$response);
 });
 
-$app->post('/exportar/parametro', function (ServerRequestInterface $request, ResponseInterface $response, $args)use ($app){
-	return exportar::Parametro($request,$response,$args);
+$app->post('/exportar/parametro', function (ServerRequestInterface $request, ResponseInterface $response){
+	return exportar::Parametro($request,$response);
 
 });
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Concepto
@@ -175,10 +173,10 @@ $app->post('/sucursal/login', function (ServerRequestInterface $request, Respons
 });
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 $app->post('/exportar/inventario', function (ServerRequestInterface $request, ResponseInterface $response){
-	return exportar2::exportarInventarioAPI($request,$response);
+	return exportar::exportarInventarioAPI($request,$response);
 });
 $app->post('/importar/inventario', function (ServerRequestInterface $request, ResponseInterface $response){
-	return importar2::importarInventarioAPI($request,$response);
+	return importar::importarInventarioAPI($request,$response);
 });
 
 $app->post('/exportar/venta/obtener/ultima',function(ServerRequestInterface $request,ResponseInterface $response){
