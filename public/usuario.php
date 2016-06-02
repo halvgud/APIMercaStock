@@ -334,7 +334,7 @@ class usuario
         return self::$roles;
     }
     public static function revisarToken($token){
-        $query = "select claveAPI from ms_sucursal where claveAPI=:claveApi union all select claveAPI from ms_usuario";
+        $query = "select claveAPI from ms_sucursal where claveAPI=:claveApi union all select claveAPI from ms_usuario WHERE claveAPI=:claveApi";
         try{
             $db=getConnection();
             $sentencia = $db->prepare($query);

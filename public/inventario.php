@@ -312,7 +312,7 @@ class inventario
             foreach ($postrequest->art_id as $renglon ) {
                 $art_id = $renglon;
 
-                $comando = "insert into ms_inventario(idInventario, idInventarioLocal, idSucursal, art_id, existenciaSolicitud, existenciaRespuesta, idUsuario, fechaSolicitud, existenciaEjecucion, idEstado) values (0,0,:idSucursal,:art_id,0,0,:idUsuario,NOW(),3,'A')";
+                $comando = "insert into ms_inventario(idInventario, idInventarioLocal, idSucursal, art_id, existenciaSolicitud, existenciaRespuesta, idUsuario, fechaSolicitud, existenciaEjecucion, idEstado) values (0,0,:idSucursal,:art_id,0,0,:idUsuario,NOW(),0,'A')";
 
                 $sentencia = $db->prepare($comando);
                 $sentencia->bindParam("idSucursal", $postrequest->idSucursal);
