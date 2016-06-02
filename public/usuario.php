@@ -259,7 +259,7 @@ class usuario
                             [
                                 "estado" => 200,
                                 "mensaje" => "OK",
-                                "datos" => ["idUsuario"=>$resultado->idUsuario,"Usuario"=>$resultado->Usuario,"ClaveAPI"=>$resultado->claveAPI
+                                "datos" => ["idUsuario"=>$resultado->idUsuario,"Usuario"=>$resultado->Usuario,"ClaveAPI"=>self::$claveApi
                                     ,"IDESTADO"=>$resultado->IDESTADO,"idNivelAutorizacion"=>$resultado->idNivelAutorizacion]
                             ];
                     } catch (PDOException $e) {
@@ -284,16 +284,16 @@ class usuario
     {
         return password_verify($contrasenaPlana, $contrasenaHash);
     }
-
+    public static $claveApi;
     private static function actualizarSesion($usuario)
     {
         $comando2 = "UPDATE ms_usuario SET fechaSesion=NOW(),claveAPI=:claveApi WHERE usuario=:usuario";
         try {
             $db = getConnection();
-            $claveApi = self::generarClaveApi();
+            self::$claveApi = self::generarClaveApi();
             $sentencia2 = $db->prepare($comando2);
             $sentencia2->bindParam("usuario", $usuario);
-            $sentencia2->bindParam("claveApi", $claveApi);
+            $sentencia2->bindParam("claveApi", self::$claveApi);
             if ($sentencia2->execute()) {
                 return true;
             } else
@@ -334,7 +334,8 @@ class usuario
         return self::$roles;
     }
     public static function revisarToken($token){
-        $query = "select claveAPI from ms_sucursal where claveAPI=:claveApi union all select claveAPI from ms_usuario";
+        $query = "select claveAPI from ms_sucursal where claveAPI=:claveApi and claveAPI!='' union all select claveAPI from ms_usuario where claveAPI=:claveApi
+                  and claveAPI!=''";
         try{
             $db=getConnection();
             $sentencia = $db->prepare($query);
