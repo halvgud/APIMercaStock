@@ -14,7 +14,8 @@ $app->add(function ($request, $response, $next) {
         if(usuario::revisarToken($Auth)){
             return $response = $next($request, $response);
         }else{
-            return $response->withJson($Auth,401);
+            $arreglo=["estado"=>"-1","error"=>"no autenticado","data"=>$Auth];
+            return $response->withJson($arreglo,401);
         }
     }else{
         return $response = $next($request, $response);

@@ -243,7 +243,7 @@ class usuario
 
     private static function autenticar($usuario, $contrasena)
     {
-        $comando = "SELECT idUsuario,Usuario,password,claveAPI,IDESTADO,idNivelAutorizacion FROM ms_usuario WHERE usuario=:usuario ";
+        $comando = "SELECT idUsuario,Usuario,password,claveAPI,IDESTADO,idNivelAutorizacion FROM ms_usuario WHERE usuario=:usuario AND idSucursal=0";
         try {
             $db = getConnection();
             $sentencia = $db->prepare($comando);
