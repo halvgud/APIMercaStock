@@ -100,7 +100,7 @@ class exportar
     {
         $postrequest = json_decode($request->getBody());
         $comando = "SELECT a.cat_id,ms.idInventario, ms.idInventarioLocal, ms.idSucursal, ms.art_id, ms.existenciaSolicitud, ms.existenciaRespuesta, ms.idUsuario, ms.fechaSolicitud, ms.fechaRespuesta, ms.existenciaEjecucion, ms.idEstado FROM ms_inventario ms
-                          inner join articulo a on(a.art_idLocal = ms.art_id)
+                          inner join articulo a on(a.art_id = ms.art_id)
                           WHERE ms.idEstado='A'
                           AND ms.idSucursal=:idSucursal;";
         try {

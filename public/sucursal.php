@@ -10,10 +10,14 @@ class sucursal
         $bandera = isset($postrequest->idGenerico->bandera)?true:false;
         $codigo=200;
         $arreglo=[];
-        if($bandera){
-            $comando = "SELECT idSucursal,nombre,usuario, domicilio, contacto, idEstado,'DEFAULTMERCASTOCK' AS password FROM ms_sucursal";
+        if(!isset($postrequest->banderaSucursal)) {
+            if ($bandera) {
+                $comando = "SELECT idSucursal,nombre,usuario, domicilio, contacto, idEstado,'DEFAULTMERCASTOCK' AS password FROM ms_sucursal";
+            } else {
+                $comando = "SELECT idSucursal,nombre,usuario, domicilio, contacto, idEstado,'DEFAULTMERCASTOCK' AS password FROM ms_sucursal WHERE idEstado>0";
+            }
         }else{
-            $comando = "SELECT idSucursal,nombre,usuario, domicilio, contacto, idEstado,'DEFAULTMERCASTOCK' AS password FROM ms_sucursal where idEstado>0";
+            $comando = "SELECT idSucursal,nombre,usuario, domicilio, contacto, idEstado,'DEFAULTMERCASTOCK' AS password FROM ms_sucursal";
         }
         try {
             $db = getConnection();
@@ -69,8 +73,23 @@ class sucursal
             $stmt->bindParam("idEstado", $wine->idEstado, PDO::PARAM_STR);
             $stmt->execute();
             $wine->id = $db->lastInsertId();
-            $db = null;
+            //$db = null;
             if ($wine->id > 1) {
+
+                $sql1="insert into ms_parametro values(
+                    '1', 'CONFIG_GENERAR_INVENTARIO', 'BANDERA_LISTA_FIJA_SUC', $wine->id, 'TRUE', 'JCDL', NOW()
+                );";
+                $sql2="insert into ms_parametro values(
+                    '1', 'CONFIG_GENERAR_INVENTARIO', 'BANDERA_LISTA_EXCLUYENTE_SUC', $wine->id, 'TRUE', 'JCDL', NOW()
+                );";
+                $stmt2 = $db->prepare($sql1);
+
+                $stmt3 = $db->prepare($sql2);
+
+                $stmt2->bindParam("idSucursal", $wine->idSucursal, PDO::PARAM_STR);
+                $stmt3->bindParam("idSucursal", $wine->idSucursal, PDO::PARAM_STR);
+                $stmt2->execute();
+                $stmt3->execute();
                 $arreglo = [
                     "estado" => 200,
                     "success" => "transaccion terminada",
