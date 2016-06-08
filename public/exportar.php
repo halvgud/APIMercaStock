@@ -132,7 +132,7 @@ class exportar
                         "success" => "Error al cambiar Estado",
                         "data" => $resultado2
                     ];
-                    $codigo=200;
+                    $codigo=201;
                 }
             }
             else {
