@@ -122,7 +122,7 @@ class importar
             $db->beginTransaction();
             foreach ($postrequest->data as $renglon) {
                 $contador++;
-                $art_idLocal = $renglon->art_idLocal!=''?$renglon->art_idLocal:null;
+                $art_id = $renglon->art_id!=''?$renglon->art_id:null;
                 $idSucursal = $renglon->idSucursal;
                 $clave = $renglon->clave!=''?$renglon->clave:null;
                 $claveAlterna = $renglon->claveAlterna;
@@ -147,14 +147,14 @@ class importar
                 $srp_id = $renglon->srp_id;
 
 
-                $comandoUpdate = "INSERT INTO articulo(art_idLocal, idSucursal, clave, claveAlterna, descripcion, servicio, invMin, invMax, factor, precioCompra, precioCompraProm, margen1, precio1, existencia, lote, receta, granel, tipo, status, unidadCompra, unidadVenta, cat_id, srp_id)
+                $comandoUpdate = "INSERT INTO articulo(art_id, idSucursal, clave, claveAlterna, descripcion, servicio, invMin, invMax, factor, precioCompra, precioCompraProm, margen1, precio1, existencia, lote, receta, granel, tipo, status, unidadCompra, unidadVenta, cat_id, srp_id)
                             VALUES (:art_id, :idSucursal, :clave, :claveAlterna, :descripcion, :servicio, :invMin, :invMax, :factor, :precioCompra, :precioCompraProm, :margen1, :precio1, :existencia, :lote, :receta, :granel, :tipo, :status, :unidadCompra, :unidadVenta, :cat_id, :srp_id) ON
-                            DUPLICATE KEY UPDATE idSucursal=:idSucursal, clave=:clave, claveAlterna=:claveAlterna, descripcion=:descripcion, servicio=:servicio, invMin=:invMin, invMax=:invMax, factor=:factor, precioCompra=:precioCompra, precioCompraProm=:precioCompraProm, margen1=:margen1, precio1=:precio1, existencia=:existencia, lote=:lote, receta=:receta, granel=:granel, tipo=:tipo, status=:status, unidadCompra=:unidadCompra, unidadVenta=:unidadVenta, cat_id=:cat_id, srp_id=:srp_id;
+                            DUPLICATE KEY UPDATE clave=:clave, claveAlterna=:claveAlterna, descripcion=:descripcion, servicio=:servicio, invMin=:invMin, invMax=:invMax, factor=:factor, precioCompra=:precioCompra, precioCompraProm=:precioCompraProm, margen1=:margen1, precio1=:precio1, existencia=:existencia, lote=:lote, receta=:receta, granel=:granel, tipo=:tipo, status=:status, unidadCompra=:unidadCompra, unidadVenta=:unidadVenta, cat_id=:cat_id, srp_id=:srp_id;
                            ";
 
                 $sentencia = $db->prepare($comandoUpdate);
 
-                $sentencia->bindParam('art_id', $art_idLocal);
+                $sentencia->bindParam('art_id', $art_id);
                 $sentencia->bindParam('idSucursal', $idSucursal);
                 $sentencia->bindParam('clave', $clave);
                 $sentencia->bindParam('claveAlterna', $claveAlterna);

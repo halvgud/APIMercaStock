@@ -100,7 +100,8 @@ class parametros
                         INNER JOIN articulo a ON (a.art_id = msp3.valor)
                         WHERE
                         msp1.accion = 'CONFIG_GENERAR_INVENTARIO' AND msp1.parametro='BANDERA_LISTA_FIJA_SUC'
-                        AND msp3.accion='LISTA_RELACION_IDSUCURSAL_ARTID' ";
+                        AND msp3.accion='LISTA_RELACION_IDSUCURSAL_ARTID'
+                        AND a.idSucursal=:idSucursal";
         try {
             $idSucursal=$postrequest->idSucursal;
             $db = getConnection();
@@ -158,6 +159,7 @@ class parametros
                         WHERE
                         msp11.accion = 'CONFIG_GENERAR_INVENTARIO' AND msp11.parametro='BANDERA_LISTA_EXCLUYENTE_SUC'
                         AND msp33.accion='LISTA_RELACION_IDSUCURSAL_ARTID_EXCLUYENTE')
+                        AND a.idSucursal=:idSucursal
                         and a.existencia>0; ";
 
         try {

@@ -28,6 +28,7 @@ class inventario
                         msp11.accion = 'CONFIG_GENERAR_INVENTARIO' AND msp11.parametro='BANDERA_LISTA_EXCLUYENTE_SUC'
                         AND msp33.accion='LISTA_RELACION_IDSUCURSAL_ARTID_EXCLUYENTE'
                         and msp11.comentario='TRUE')
+                        AND a.idSucursal=:idSucursal
                      order by rand() limit :sta1;";
         }else{
             $comando = "select art_id,clave,descripcion,existencia from articulo a
@@ -108,7 +109,8 @@ class inventario
                         WHERE
                         msp11.accion = 'CONFIG_GENERAR_INVENTARIO' AND msp11.parametro='BANDERA_LISTA_EXCLUYENTE_SUC'
                         AND msp33.accion='LISTA_RELACION_IDSUCURSAL_ARTID_EXCLUYENTE'
-                        and msp11.comentario='TRUE')";
+                        and msp11.comentario='TRUE')
+                        and a.idSucursal='3'";
             $comando1 = "SELECT art_id,clave,descripcion,existencia FROM articulo a
                      WHERE a.servicio!=1  and a.existencia>0 and art_id not in (select a.art_id from ms_inventario where fechaSolicitud>curdate())
                      AND  descripcion LIKE CONCAT('%',:input,'%')and a.art_id not in ($res_arr)
@@ -121,7 +123,8 @@ class inventario
                         WHERE
                         msp11.accion = 'CONFIG_GENERAR_INVENTARIO' AND msp11.parametro='BANDERA_LISTA_EXCLUYENTE_SUC'
                         AND msp33.accion='LISTA_RELACION_IDSUCURSAL_ARTID_EXCLUYENTE'
-                        and msp11.comentario='TRUE')";
+                        and msp11.comentario='TRUE')
+                        and a.idSucursal='3'";
 
         }else {
             $comando = "SELECT art_id,clave,descripcion,existencia FROM articulo a
@@ -135,7 +138,8 @@ class inventario
                         WHERE
                         msp11.accion = 'CONFIG_GENERAR_INVENTARIO' AND msp11.parametro='BANDERA_LISTA_EXCLUYENTE_SUC'
                         AND msp33.accion='LISTA_RELACION_IDSUCURSAL_ARTID_EXCLUYENTE'
-                        and msp11.comentario='TRUE')";
+                        and msp11.comentario='TRUE')
+                        and articulo.idSucursal='3'";
             $comando1 = "SELECT art_id,clave,descripcion,existencia FROM articulo a
                      WHERE a.servicio!=1 and a.art_id not in (select art_id from ms_inventario where fechaSolicitud>curdate())  AND descripcion LIKE CONCAT('%',:input,'%')
                      and a.art_id NOT IN (
@@ -147,7 +151,8 @@ class inventario
                         WHERE
                         msp11.accion = 'CONFIG_GENERAR_INVENTARIO' AND msp11.parametro='BANDERA_LISTA_EXCLUYENTE_SUC'
                         AND msp33.accion='LISTA_RELACION_IDSUCURSAL_ARTID_EXCLUYENTE'
-                        and msp11.comentario='TRUE')";
+                        and msp11.comentario='TRUE')
+                        and a.idSucursal='3'";
         }
         try {
             $db = getConnection();
