@@ -14,20 +14,20 @@ class importar
             $db = getConnection();
             $db->beginTransaction();
             foreach ($postrequest->data as $renglon ) {
-                $dep_idLocal=$renglon->dep_idLocal;
+                $dep_id=$renglon->dep_id;
                 $idSucursal = $renglon->idSucursal;
                 $nombre = $renglon->nombre;
                 $restringido = $renglon->restringido;
                 $porcentaje = $renglon->porcentaje;
                 $status = $renglon->status;
 
-                $comandoUpdate="insert into departamento(dep_idLocal,idSucursal,nombre,restringido,porcentaje,status)
+                $comandoUpdate="insert into departamento(dep_id,idSucursal,nombre,restringido,porcentaje,status)
                             values (:dep_id, :idSucursal, :nombre, :restringido, :porcentaje, :status) on
                             duplicate key update idSucursal=:idSucursal,nombre=:nombre,restringido=:restringido,porcentaje=:porcentaje,status=:status";
 
                 $sentencia = $db->prepare($comandoUpdate);
 
-                $sentencia->bindParam('dep_id', $dep_idLocal);
+                $sentencia->bindParam('dep_id', $dep_id);
                 $sentencia->bindParam('idSucursal', $idSucursal);
                 $sentencia->bindParam('nombre', $nombre);
                 $sentencia->bindParam('status', $status);
@@ -67,19 +67,19 @@ class importar
             $db = getConnection();
             $db->beginTransaction();
             foreach ($postrequest->data as $renglon ) {
-                $cat_id_Local=$renglon->cat_id_Local;
+                $cat_id=$renglon->cat_id;
                 $idSucursal = $renglon->idSucursal;
                 $nombre= $renglon->nombre;
                 $status = $renglon->status;
                 $dep_id = $renglon->dep_id;
 
-                $comandoUpdate="insert into categoria(cat_id_Local,idSucursal,nombre,status,dep_id)
+                $comandoUpdate="insert into categoria(cat_id,idSucursal,nombre,status,dep_id)
                             values (:cat_id, :idSucursal, :nombre, :status, :dep_id) on
                             duplicate key update idSucursal=:idSucursal,nombre=:nombre,status=:status,dep_id=:dep_id;";
 
                 $sentencia = $db->prepare($comandoUpdate);
 
-                $sentencia->bindParam('cat_id', $cat_id_Local);
+                $sentencia->bindParam('cat_id', $cat_id);
                 $sentencia->bindParam('idSucursal', $idSucursal);
                 $sentencia->bindParam('nombre', $nombre);
                 $sentencia->bindParam('status', $status);

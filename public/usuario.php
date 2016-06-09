@@ -176,46 +176,7 @@ class usuario
         }
     }
 
-    public static function obtenerNuevo($request,$response){
-        $postrequest = json_decode($request->getBody());
-        $query = "select idUsuario,usuario,password,nombre,apellido,sexo,contacto,idNivelAutorizacion,idEstado,fechaEstado,fechaSesion,idSucursal from ms_usuario";
-        try{
-            $db=getConnection();
-            $sentencia = $db->prepare($query);
-            //sentencia->bindParam("",$postrequest->algunargumento);
-            $sentencia->execute();
-            $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
-            if($resultado){
-                $arreglo =
-                    [
-                        "estado" => 200,
-                        "success" => "",
-                        "data" => $resultado
-                    ];
-                $codigo=200;
-            } else {
-                $arreglo =
-                    [
-                        "estado" => "warning",
-                        "mensaje" => "",
-                        "data" => $resultado
-                    ];
-                $codigo=200;
-            }
-        }catch(PDOException $e){
-            $codigoDeError=$e->getCode();
-            $error =LogIn::traducirMensaje($codigoDeError,$e);
-            $arreglo = [
-                "estado" =>$e -> getCode(),
-                "error" =>$error,
-                "data" => json_encode($postrequest)
-            ];
-            $codigo=400;
-        }finally{
-            $db=null;
-            return $response->withJson($arreglo, $codigo,JSON_UNESCAPED_UNICODE);
-        }
-    }
+
 
     public static function encriptarContrasena($contrasenaPlana)
     {

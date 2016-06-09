@@ -11,6 +11,7 @@ $app->add(function ($request, $response, $next) {
                 $Auth = $value;
          }
        }
+
         if(usuario::revisarToken($Auth)){
             return $response = $next($request, $response);
         }else{

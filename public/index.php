@@ -46,8 +46,8 @@ $app->post('/usuario/actualizar',function(ServerRequestInterface $request,Respon
 	return usuario::actualizar($request,$response);
 });
 
-$app->post('/usuario/obtenerNuevo',function(ServerRequestInterface $request,ResponseInterface $response){
-	return usuario::obtenerNuevo($request,$response);
+$app->post('/exportar/usuario',function(ServerRequestInterface $request,ResponseInterface $response){
+	return exportar::usuario($request,$response);
 });
 $app->post('/usuario/login', function (ServerRequestInterface $request, ResponseInterface $response){
 	return usuario::logIn($request,$response);
@@ -174,6 +174,9 @@ $app->post('/sucursal/login', function (ServerRequestInterface $request, Respons
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 $app->post('/exportar/inventario', function (ServerRequestInterface $request, ResponseInterface $response){
 	return exportar::exportarInventarioAPI($request,$response);
+});
+$app->post('/exportar/inventario/actualizar', function (ServerRequestInterface $request, ResponseInterface $response){
+	return exportar::actualizarInventario($request,$response);
 });
 $app->post('/importar/inventario', function (ServerRequestInterface $request, ResponseInterface $response){
 	return importar::importarInventarioAPI($request,$response);
