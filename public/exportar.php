@@ -30,7 +30,7 @@ class exportar
                                     "mensaje" => "",
                                     "data" => $resultado
                                 ];
-                            $codigo=200;
+                            $codigo=202;
                           }//else
             }else{
                 $arreglo =
@@ -77,11 +77,11 @@ class exportar
                $codigo=200;
             } else {
                 $arreglo = [
-                    "estado" => 400,
+                    "estado" => 202,
                     "error" => "Error al traer listado de Parametros",
                     "data" => $idSucursal
                 ];;
-                $codigo=400;
+                $codigo=202;
             }
         } catch (PDOException $e) {
             $arreglo = [
@@ -96,44 +96,64 @@ class exportar
             return $response->withJson($arreglo, $codigo);
         }
     }
+    public static function actualizarInventario($request,$response){
+        $postrequest = json_decode($request->getBody());
+        $db = getConnection();
+        $comando2 = "UPDATE ms_inventario SET idEstado='E' WHERE idEstado='A' AND idSucursal=:idSucursal;";
+        try{
+            $sentencia = $db->prepare($comando2);
+            $sentencia->bindParam("idSucursal", $postrequest->idSucursal);
+            $resultado = $sentencia -> execute();
+            if($resultado){
+                 $arreglo =
+                            [
+                                "estado" => 200,
+                                "success" => "",
+                                "data" => $resultado
+                            ];
+                        return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
+                    } else {
+                        $arreglo =
+                            [
+                                "estado" => "warning",
+                                "mensaje" => "no se actualizo inventario",
+                                "data" => $resultado
+                            ];
+                        return $response->withJson($arreglo, 202, JSON_UNESCAPED_UNICODE);
+                      }//else
+        }catch(PDOException $e){
+            $codigoDeError=$e->getCode();
+            $error =self::traducirMensaje($codigoDeError,$e);
+            $arreglo = [
+                "estado" =>$e -> getCode(),
+                "error" =>$error,
+                "data" => json_encode($postrequest)
+            ];
+            return $response->withJson($arreglo,400);
+        }
+    }
     public static function exportarInventarioAPI($request, $response)
     {
         $postrequest = json_decode($request->getBody());
         $comando = "SELECT a.cat_id,ms.idInventario, ms.idInventarioLocal, ms.idSucursal, ms.art_id, ms.existenciaSolicitud, ms.existenciaRespuesta, ms.idUsuario, ms.fechaSolicitud, ms.fechaRespuesta, ms.existenciaEjecucion, ms.idEstado FROM ms_inventario ms
-                          inner join articulo a on(a.art_id = ms.art_id)
+                          inner join articulo a on(a.art_id = ms.art_id and ms.idSucursal=a.idSucursal)
                           WHERE ms.idEstado='A'
                           AND ms.idSucursal=:idSucursal;";
         try {
             $db = getConnection();
             $db->query("SET NAMES 'utf8'");
-            $db->query("SET CHARACTER SET utf8");
+            $db->query("SET CHARACTER SET utf8");   
             $sentencia = $db->prepare($comando);
             $sentencia->bindParam("idSucursal", $postrequest->idSucursal);
             $sentencia->execute();
             $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
-            //var_dump($resultado);
             if($resultado){
-                $comando2 = "UPDATE ms_inventario SET idEstado='E' WHERE idEstado='A' AND idSucursal=:idSucursal;";
-
-                $sentencia2 = $db->prepare($comando2);
-                $sentencia2->bindParam("idSucursal", $postrequest->idSucursal);
-                $sentencia2->execute();
-                $resultado2 = $sentencia2->rowCount();
-                if ($resultado2>0) {
                     $arreglo = [
                         "estado" => 200,
                         "success"=>"OK",
                         "data" => $resultado
                     ];
                     $codigo=200;
-                } else {
-                    $arreglo = [
-                        "estado" => 'warning',
-                        "success" => "Error al cambiar Estado",
-                        "data" => $resultado2
-                    ];
-                    $codigo=200;
-                }
             }
             else {
                 $arreglo = [
@@ -141,7 +161,7 @@ class exportar
                     "success" => "Error al exportar Inventario",
                     "data" => $resultado
                 ];
-                $codigo=200;
+                $codigo=202;
             }
         } catch (PDOException $e) {
             $arreglo = [
@@ -156,5 +176,45 @@ class exportar
             return $response->withJson($arreglo,$codigo,JSON_UNESCAPED_UNICODE);
         }
     }
-
+    public static function usuario($request,$response){
+        $postrequest = json_decode($request->getBody());
+        $query = "select idUsuario,usuario,password,nombre,apellido,sexo,contacto,idNivelAutorizacion,idEstado,fechaEstado,fechaSesion,idSucursal from ms_usuario
+                  where idSucursal=:idSucursal";
+        try{
+            $db=getConnection();
+            $sentencia = $db->prepare($query);
+            $sentencia->bindParam("idSucursal",$postrequest->idSucursal);
+            $sentencia->execute();
+            $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+            if($resultado){
+                $arreglo =
+                    [
+                        "estado" => 200,
+                        "success" => "",
+                        "data" => $resultado
+                    ];
+                $codigo=200;
+            } else {
+                $arreglo =
+                    [
+                        "estado" => "warning",
+                        "mensaje" => "",
+                        "data" => $resultado
+                    ];
+                $codigo=202;
+            }
+        }catch(PDOException $e){
+            $codigoDeError=$e->getCode();
+            $error =LogIn::traducirMensaje($codigoDeError,$e);
+            $arreglo = [
+                "estado" =>$e -> getCode(),
+                "error" =>$error,
+                "data" => json_encode($postrequest)
+            ];
+            $codigo=400;
+        }finally{
+            $db=null;
+            return $response->withJson($arreglo, $codigo,JSON_UNESCAPED_UNICODE);
+        }
+    }
 }

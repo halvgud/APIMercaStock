@@ -13,10 +13,9 @@ class inventario
         if(isset($new_arr)){
             $res_arr = implode(',',$new_arr);
             $comando = "select art_id,clave,descripcion,existencia from articulo a
-                      INNER JOIN categoria c on (a.cat_id=c.cat_id_Local)
-                      INNER JOIN departamento d on (d.dep_idLocal=c.dep_id)
-
-                     where a.servicio!=1  and a.cat_id like :cat_id and d.dep_idLocal like :dep_id and a.idSucursal like :idSucursal and art_id not in (".$res_arr.") and art_id not in (select art_id from ms_inventario where fechaSolicitud>curdate())
+                        INNER JOIN categoria c on (a.cat_id=c.cat_id and c.idSucursal=:idSucursal)
+                        INNER JOIN departamento d on (d.dep_id=c.dep_id and d.idSucursal=:idSucursal)
+                     where a.servicio!=1  and a.cat_id like :cat_id and d.dep_id like :dep_id and a.idSucursal like :idSucursal and art_id not in (".$res_arr.") and art_id not in (select art_id from ms_inventario where fechaSolicitud>curdate())
                       and a.existencia>0
                       and a.art_id NOT IN (
                             SELECT msp33.valor FROM ms_parametro msp11
@@ -32,9 +31,9 @@ class inventario
                      order by rand() limit :sta1;";
         }else{
             $comando = "select art_id,clave,descripcion,existencia from articulo a
-                        INNER JOIN categoria c on (a.cat_id=c.cat_id_Local)
-                        INNER JOIN departamento d on (d.dep_idLocal=c.dep_id)
-                     where a.servicio!=1 and a.cat_id like :cat_id and d.dep_idLocal like :dep_id and  a.idSucursal like :idSucursal
+                        INNER JOIN categoria c on (a.cat_id=c.cat_id and c.idSucursal=:idSucursal)
+                        INNER JOIN departamento d on (d.dep_id=c.dep_id and d.idSucursal=:idSucursal)
+                     where a.servicio!=1 and a.cat_id like :cat_id and d.dep_id like :dep_id and  a.idSucursal like :idSucursal
                       and a.existencia>0
                       and art_id not in (select art_id from ms_inventario where fechaSolicitud>curdate())
                       and a.art_id NOT IN (

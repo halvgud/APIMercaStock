@@ -180,12 +180,14 @@ class sucursal
     {
         return md5(microtime() . rand());
     }
+    public static $claveNuevaAPI="";
     private static function actualizarSesion($usuario,$idSucursal)
     {
         $comando2 = "UPDATE ms_sucursal SET claveAPI=:claveApi WHERE usuario=:usuario and idSucursal=:idSucursal";
         try {
             $db = getConnection();
             $claveApi = self::generarClaveApi();
+            self::$claveNuevaAPI=$claveApi;
             $sentencia2 = $db->prepare($comando2);
             $sentencia2->bindParam("usuario", $usuario);
             $sentencia2->bindParam("idSucursal",$idSucursal);
@@ -250,13 +252,13 @@ class sucursal
         $password = isset($postrequest->usuario)?$postrequest->password:"";
         $idSucursal = isset($postrequest->idSucursal)?$postrequest->idSucursal:"";
         try {
-            $autenticar = self::autenticar($usuario, $password,$idSucursal);
+            $autenticar = self::autenticar($usuario, $password,$idSucursal,$postrequest);
             if ($autenticar['estado'] == '200') {
                 $datos = $autenticar['datos'];
                 $codigo = 200;
 
             } else {
-                $datos="No autorizado";
+                $datos=$autenticar;
                 $codigo = 401;
             }
             return $response->withJson($datos, $codigo);;
@@ -268,9 +270,9 @@ class sucursal
         }
     }
 
-    private static function autenticar($usuario, $contrasena,$idSucursal)
+    private static function autenticar($usuario, $contrasena,$idSucursal,$postrequest)
     {
-        $comando = "SELECT idSucursal,password,usuario, claveAPI FROM ms_sucursal where usuario=:usuario and idSucursal=:idSucursal";
+        $comando = "SELECT idSucursal,password,usuario, claveAPI,nombre FROM ms_sucursal where usuario=:usuario and idSucursal=:idSucursal";
         try {
             $db = getConnection();
             $sentencia = $db->prepare($comando);
@@ -287,7 +289,9 @@ class sucursal
                             [
                                 "estado" => 200,
                                 "mensaje" => "OK",
-                                "datos" => $resultado
+                                "datos" => ["idSucursal"=>$resultado->idSucursal,"claveAPI"=>self::$claveNuevaAPI,
+                                            "password"=>$resultado->password,"usuario"=>$resultado->usuario,
+                                            "nombre"=>$resultado->nombre]
                             ];
                     } catch (PDOException $e) {
                         throw new ExcepcionApi(2, $e->getMessage());
@@ -296,7 +300,8 @@ class sucursal
                     return
                         [
                             "estado" => 101,
-                            "mensaje" => "usuario inexistente"
+                            "mensaje" => "usuario inexistente",
+                            "data"=>$postrequest
                         ];
                 }
             } else {
