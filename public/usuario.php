@@ -166,6 +166,149 @@ class usuario
             $db=null;
         }
     }
+    public static function actualizarContrasena($request, $response)
+    {
+
+        $postrequest = json_decode($request->getBody());
+        $comando = "SELECT idUsuario,Usuario,password,claveAPI,IDESTADO,idNivelAutorizacion FROM ms_usuario WHERE usuario=:usuario AND idSucursal=0";
+        // var_dump($comando);
+        $usuario=$postrequest->usuario;
+        try {
+            $db = getConnection();
+            $sentencia = $db->prepare($comando);
+            $sentencia->bindParam("usuario", $usuario);
+            $sentencia->execute();
+
+            if ($sentencia) {
+                $resultado = $sentencia->fetchObject();
+                if ($resultado) {
+                    $query2 = "UPDATE ms_usuario SET password=:passwordNueva WHERE usuario=:usuario";
+                    try {
+                        $autenticar = self::autenticar($postrequest->usuario, $postrequest->passwordActual);
+
+                        if ($autenticar['estado'] == '200') {
+                            $db = getConnection();
+                            //if(self::validarContrasena($postrequest->passwordActual, ''));
+                            //$passwordActual = self::encriptarContrasena($postrequest->passwordActual);
+                            $passwordNueva = self::encriptarContrasena($postrequest->passwordNueva);
+                            $sentencia = $db->prepare($query2);
+                            //$sentencia->bindParam("passwordActual", $postrequest->passwordActual);
+                            $sentencia->bindParam("passwordNueva", $passwordNueva);
+                            $sentencia->bindParam("usuario", $postrequest->usuario);
+
+
+                            $resultado = $sentencia->execute();
+                            if ($resultado) {
+                                $arreglo =
+                                    [
+                                        "estado" => "success",
+                                        "success" => "Se ha actualizado la contraseña con éxito",
+                                        "data" => $resultado
+                                    ];
+                                return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
+                            } else {
+                                $arreglo =
+                                    [
+                                        "estado" => "warning",
+                                        "mensaje" => "No se cambió ningún dato",
+                                        "data" => $resultado
+                                    ];
+                                return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
+                            }
+                        } else {
+                            $arreglo =
+                                [
+                                    "estado" => "warning",
+                                    "mensaje" => "La contraseña actual no es correcta",
+                                    "data" => "Error"
+                                ];
+                            return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
+                        }
+                    } catch (PDOException $e) {
+                        $arreglo =
+                            [
+                                "estado" => "warning",
+                                "mensaje" => "La contraseña actual no es correcta",
+                                "data" => "Error"
+                            ];
+                        return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
+                    } finally {
+                        $db = null;
+                    }
+                } else {
+                    return false;
+                }
+            }
+        } catch (PDOException $e) {
+            //throw new ExcepcionApi(1, $e->getMessage(), 401);
+            $arreglo =
+                [
+                    "estado" => "warning",
+                    "mensaje" => "La contraseña actual no es correcta",
+                    "data" => "Error"
+                ];
+            return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
+        }
+        /*
+        $postrequest = json_decode($request->getBody());
+        $query = "UPDATE ms_usuario SET password=:passwordNueva WHERE usuario=:usuario";
+
+        try {
+            $autenticar=self::autenticar($postrequest->usuario,$postrequest->passwordActual);
+
+            if ($autenticar['estado'] == '200') {
+                $db = getConnection();
+                //if(self::validarContrasena($postrequest->passwordActual, ''));
+                //$passwordActual = self::encriptarContrasena($postrequest->passwordActual);
+                $passwordNueva = self::encriptarContrasena($postrequest->passwordNueva);
+                $sentencia = $db->prepare($query);
+                //$sentencia->bindParam("passwordActual", $postrequest->passwordActual);
+                $sentencia->bindParam("passwordNueva", $passwordNueva);
+                $sentencia->bindParam("usuario", $postrequest->usuario);
+
+
+                $resultado = $sentencia->execute();
+                if ($resultado) {
+                    $arreglo =
+                        [
+                            "estado" => 200,
+                            "success" => "Se ha actualizado la contraseña con éxito",
+                            "data" => $resultado
+                        ];
+                    return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
+                } else {
+                    $arreglo =
+                        [
+                            "estado" => "warning",
+                            "mensaje" => "No se cambió ningún dato",
+                            "data" => $resultado
+                        ];
+                    return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
+                }
+            }
+            else{
+                $arreglo =
+                    [
+                        "estado" => "warning",
+                        "mensaje" => "No se cambió ningún dato",
+                        "data" => "Error"
+                    ];
+                return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
+            }
+        } catch (PDOException $e) {
+            $codigoDeError = $e->getCode();
+            $error = self::traducirMensaje($codigoDeError, $e);
+            $arreglo = [
+                "estado" => $e->getCode(),
+                "error" => $error,
+                "data" => json_encode($postrequest)
+            ];;
+            return $response->withJson($arreglo, 400);//json_encode($wine);
+        }
+        finally{
+            $db=null;
+        }*/
+    }
 
     public static function obtenerNuevo($request,$response){
         $postrequest = json_decode($request->getBody());
@@ -244,6 +387,7 @@ class usuario
     private static function autenticar($usuario, $contrasena)
     {
         $comando = "SELECT idUsuario,Usuario,password,claveAPI,IDESTADO,idNivelAutorizacion FROM ms_usuario WHERE usuario=:usuario AND idSucursal=0";
+       // var_dump($comando);
         try {
             $db = getConnection();
             $sentencia = $db->prepare($comando);

@@ -45,7 +45,9 @@ $app->post('/usuario/insertar', function (ServerRequestInterface $request, Respo
 $app->post('/usuario/actualizar',function(ServerRequestInterface $request,ResponseInterface $response){
 	return usuario::actualizar($request,$response);
 });
-
+$app->post('/usuario/actualizarContrasena',function(ServerRequestInterface $request,ResponseInterface $response){
+	return usuario::actualizarContrasena($request,$response);
+});
 $app->post('/usuario/obtenerNuevo',function(ServerRequestInterface $request,ResponseInterface $response){
 	return usuario::obtenerNuevo($request,$response);
 });
