@@ -142,25 +142,44 @@ class parametros
         $postrequest = json_decode($request->getBody());
 ///Buscar en Generar Inventario, agrega artículos que se encuentran el Lista Fija, que no hayan sido agregados al día actual y
         //que no se encuentren en la lista excluyente
-        $comando = "SELECT art_id, clave, descripcion, existencia,msp1.comentario FROM ms_parametro msp1
-                        INNER JOIN ms_parametro msp2 ON (msp2.accion=msp1.accion AND msp2.parametro='_COMPONENTE_LISTADO')
-                        INNER JOIN ms_parametro msp3 ON (msp2.valor=msp3.accion AND msp3.parametro=msp1.valor)
-                        INNER JOIN articulo a ON (a.art_id = msp3.valor)
-                        WHERE
-                        msp1.accion = 'CONFIG_GENERAR_INVENTARIO' AND msp1.parametro='BANDERA_LISTA_FIJA_SUC'
-                        AND msp3.accion='LISTA_RELACION_IDSUCURSAL_ARTID' AND
-                        msp3.valor NOT IN (SELECT msi.art_id FROM ms_inventario msi WHERE fechaSolicitud>curdate() AND idEstado='A'
-                            UNION ALL SELECT 0) AND msp3.valor NOT IN (
-                            SELECT msp33.valor FROM ms_parametro msp11
-
-                        INNER JOIN ms_parametro msp22 ON (msp22.accion=msp11.accion AND msp22.parametro='_COMPONENTE_LISTADO_EXCLUYENTE')
-                        INNER JOIN ms_parametro msp33 ON (msp22.valor=msp33.accion AND msp33.parametro=msp11.valor)
-                        INNER JOIN articulo a ON (a.art_id = msp33.valor)
-                        WHERE
-                        msp11.accion = 'CONFIG_GENERAR_INVENTARIO' AND msp11.parametro='BANDERA_LISTA_EXCLUYENTE_SUC'
-                        AND msp33.accion='LISTA_RELACION_IDSUCURSAL_ARTID_EXCLUYENTE')
-                        AND a.idSucursal=:idSucursal
-                        and a.existencia>0; ";
+        $comando = "select
+                    a.art_id,
+                    a.clave,
+                    a.descripcion,
+                    a.existencia,
+                    msp1.comentario
+                    from articulo a
+                    inner join ms_parametro msp1 on (
+                        msp1.accion='CONFIG_GENERAR_INVENTARIO' and
+                        msp1.parametro='BANDERA_LISTA_FIJA_SUC')
+                    inner join ms_parametro msp2 on (msp2.accion = msp1.accion and msp2.parametro='_COMPONENTE_LISTADO')
+                    inner join ms_parametro msp3 on (
+                        msp3.accion = 'LISTA_RELACION_IDSUCURSAL_ARTID' and
+                        msp3.accion =msp2.valor and msp3.parametro = msp1.valor)
+                    where a.art_id = msp3.valor
+                    and msp3.valor not in (
+                        select msi.art_id from
+                            ms_inventario msi
+                            where msi.fechaSolicitud>curdate()
+                            and msi.idEstado = 'A'
+                            union all
+                            select 0
+                            union all
+                            select
+                    a.art_id
+                    from articulo a
+                    inner join ms_parametro msp1 on (
+                        msp1.accion='CONFIG_GENERAR_INVENTARIO' and
+                        msp1.parametro='BANDERA_LISTA_EXCLUYENTE_SUC')
+                    inner join ms_parametro msp2 on (msp2.accion = msp1.accion and msp2.parametro='_COMPONENTE_LISTADO')
+                    inner join ms_parametro msp3 on (
+                        msp3.accion = 'LISTA_RELACION_IDSUCURSAL_ARTID_EXCLUYENTE' and
+                        msp3.accion =msp2.valor and msp3.parametro = msp1.valor)
+                    where a.art_id = msp3.valor
+                        )
+                AND a.idSucursal =:idSucursal
+                AND a.existencia > 0
+                  ; ";
 
         try {
             $idSucursal=$postrequest->idSucursal;
