@@ -7,10 +7,14 @@ class Permisos
 
     public static function seleccionar($request, $response)
     {
+        $wine = json_decode($request->getBody());
+
+        //var_dump($wine);
         try {
-            $comando = "SELECT idNivelAutorizacion,descripcion FROM ms_nivelAutorizacion";
+            $comando = "SELECT idNivelAutorizacion,descripcion FROM ms_nivelAutorizacion WHERE  idNivelAutorizacion>(select idNivelAutorizacion from ms_usuario WHERE usuario=:usuario)";
             $db = getConnection();
             $sentencia = $db->prepare($comando);
+            $sentencia->bindParam("usuario", $wine->usuario);
             $sentencia->execute();
             $roles = $sentencia->fetchAll();
             foreach ($roles as &$rol) {

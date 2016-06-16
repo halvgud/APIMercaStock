@@ -8,9 +8,9 @@ class articulo
     public static function seleccionar($request, $response){
         $postrequest = json_decode($request->getBody());
         if($postrequest->dep_id!='%'){
-            $comando = "SELECT a.clave, a.descripcion, a.margen1, a.precio1, a.existencia  FROM articulo a inner join categoria c on (c.cat_id=a.cat_id) inner join departamento dp on (dp.dep_id=c.dep_id ) where a.idSucursal=:idSucursal and dp.dep_id=:dep_id and c.cat_id=:cat_id ";
+            $comando = "SELECT a.clave, a.descripcion, a.margen1, a.precio1, a.existencia  FROM articulo a inner join categoria c on (c.cat_id=a.cat_id) inner join departamento dp on (dp.dep_id=c.dep_id ) where a.idSucursal=:idSucursal and dp.idSucursal=:idSucursal and c.idSucursal=:idSucursal and dp.dep_id=:dep_id and c.cat_id=:cat_id ";
         }else{
-            $comando = "SELECT a.clave, a.descripcion, a.margen1, a.precio1, a.existencia  FROM articulo a inner join categoria c on (c.cat_id=a.cat_id)  where a.idSucursal=:idSucursal and c.cat_id=:cat_id ";
+            $comando = "SELECT a.clave, a.descripcion, a.margen1, a.precio1, a.existencia  FROM articulo a inner join categoria c on (c.cat_id=a.cat_id)  where a.idSucursal=:idSucursal and  dp.idSucursal=:idSucursal and c.idSucursal=:idSucursal and c.cat_id=:cat_id ";
         }
         try {
             $db = getConnection();

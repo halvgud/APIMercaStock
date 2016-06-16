@@ -8,7 +8,7 @@ class departamento
     public static function seleccionar($request, $response)
     {
         $postrequest = json_decode($request->getBody());
-        $comando = "SELECT * FROM departamento WHERE idSucursal like :idSucursal";
+        $comando = "SELECT * FROM departamento WHERE idSucursal like :idSucursal and departamento.status=1";
 
         try {
             $idSucursal=isset($postrequest->idSucursal)?$postrequest->idSucursal:(isset($postrequest->idGenerico)?$postrequest->idGenerico:0);

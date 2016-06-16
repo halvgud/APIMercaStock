@@ -11,7 +11,7 @@ class categoria
         $comando = "SELECT cat_id, cat_id_Local,idSucursal,nombre,dep_id
                         FROM categoria
                         WHERE idSucursal LIKE :idSucursal
-                          AND dep_id LIKE :dep_id";
+                          AND dep_id LIKE :dep_id and status=1";
         try {
             $db = getConnection();
             $sentencia = $db->prepare($comando);

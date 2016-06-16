@@ -22,11 +22,12 @@ class inventario
 
                         INNER JOIN ms_parametro msp22 ON (msp22.accion=msp11.accion AND msp22.parametro='_COMPONENTE_LISTADO_EXCLUYENTE')
                         INNER JOIN ms_parametro msp33 ON (msp22.valor=msp33.accion AND msp33.parametro=msp11.valor)
-                        INNER JOIN articulo a ON (a.art_id = msp33.valor)
+                        /*INNER JOIN articulo a ON (a.art_id = msp33.valor)*/
                         WHERE
                         msp11.accion = 'CONFIG_GENERAR_INVENTARIO' AND msp11.parametro='BANDERA_LISTA_EXCLUYENTE_SUC'
                         AND msp33.accion='LISTA_RELACION_IDSUCURSAL_ARTID_EXCLUYENTE'
-                        and msp11.comentario='TRUE')
+                        and msp11.comentario='TRUE'
+                        and msp33.parametro=:idSucursal)
                         AND a.idSucursal=:idSucursal
                      order by rand() limit :sta1;";
         }else{
@@ -41,11 +42,12 @@ class inventario
 
                         INNER JOIN ms_parametro msp22 ON (msp22.accion=msp11.accion AND msp22.parametro='_COMPONENTE_LISTADO_EXCLUYENTE')
                         INNER JOIN ms_parametro msp33 ON (msp22.valor=msp33.accion AND msp33.parametro=msp11.valor)
-                        INNER JOIN articulo a ON (a.art_id = msp33.valor)
+                        /*INNER JOIN articulo a ON (a.art_id = msp33.valor)*/
                         WHERE
                         msp11.accion = 'CONFIG_GENERAR_INVENTARIO' AND msp11.parametro='BANDERA_LISTA_EXCLUYENTE_SUC'
                         AND msp33.accion='LISTA_RELACION_IDSUCURSAL_ARTID_EXCLUYENTE'
-                        and msp11.comentario='TRUE')
+                        and msp11.comentario='TRUE'
+                        and msp33.parametro=:idSucursal)
                      order by rand() limit :sta1;";
         }
         try {
@@ -207,15 +209,15 @@ class inventario
         if(isset($new_arr)) {
             $res_arr = implode(',', $new_arr);
             $comando = "select a.art_id,a.clave,a.descripcion,a.existencia from venta v
-                                inner join detallev dv on (dv.ven_idLocal = v.ven_idLocal)
+                                inner join detallev dv on (dv.ven_idLocal = v.ven_id)
                                 inner join articulo a on (a.art_id = dv.art_id)
                                 inner join categoria c on (c.cat_id = a.cat_id)
-                      INNER JOIN departamento d on (d.dep_idLocal=c.dep_id)
+                      INNER JOIN departamento d on (d.dep_id=c.dep_id)
                                 inner join ms_sucursal ms on (ms.idSucursal =:idSucursal)
                                 where
                                 v.fecha>=:fechaInicio
                                 and v.fecha<=:fechaFin
-                                and c.cat_id_Local like :cat_id
+                                and c.cat_id like :cat_id
                                 and a.existencia>0
                                 and a.art_id not in ($res_arr)
                                 and a.art_id not in (select art_id from ms_inventario where fechaSolicitud>curdate())
@@ -229,21 +231,21 @@ class inventario
                         msp11.accion = 'CONFIG_GENERAR_INVENTARIO' AND msp11.parametro='BANDERA_LISTA_EXCLUYENTE_SUC'
                         AND msp33.accion='LISTA_RELACION_IDSUCURSAL_ARTID_EXCLUYENTE'
                         and msp11.comentario='TRUE')
-                        and d.dep_idLocal like :dep_id
+                        and d.dep_id like :dep_id
                                 group by a.art_id
                                 order by count(*) desc
                             limit :sta1;";
         }else {
             $comando = "select a.art_id,a.clave,a.descripcion,a.existencia from venta v
-                                inner join detallev dv on (dv.ven_idLocal = v.ven_idLocal)
+                                inner join detallev dv on (dv.ven_idLocal = v.ven_id)
                                 inner join articulo a on (a.art_id = dv.art_id)
                                 inner join categoria c on (c.cat_id = a.cat_id)
-                                INNER JOIN departamento d on (d.dep_idLocal=c.dep_id)
+                                INNER JOIN departamento d on (d.dep_id=c.dep_id)
                                 inner join ms_sucursal ms on (ms.idSucursal =:idSucursal)
                                 where
                                 v.fecha>=:fechaInicio
                                 and v.fecha<=:fechaFin
-                                and c.cat_id_Local like :cat_id
+                                and c.cat_id like :cat_id
                                 and a.existencia>0
                                 and a.art_id not in (select art_id from ms_inventario where fechaSolicitud>curdate())
                                  and a.art_id NOT IN (
@@ -256,7 +258,7 @@ class inventario
                         msp11.accion = 'CONFIG_GENERAR_INVENTARIO' AND msp11.parametro='BANDERA_LISTA_EXCLUYENTE_SUC'
                         AND msp33.accion='LISTA_RELACION_IDSUCURSAL_ARTID_EXCLUYENTE'
                         and msp11.comentario='TRUE')
-                        and d.dep_idLocal like :dep_id
+                        and d.dep_id like :dep_id
                                 group by a.art_id
                                 order by count(*) desc
                             limit :sta1;";
@@ -368,7 +370,7 @@ class inventario
                                 inner join articulo a on (a.art_id = msi.art_id)
                                 inner join categoria c on (c.cat_id = a.cat_id)
                                 inner join ms_sucursal ms on (ms.idSucursal =:idSucursal)
-                                INNER JOIN departamento d on (d.dep_idLocal=c.dep_id)
+                                INNER JOIN departamento d on (d.dep_id=c.dep_id)
                                 where
                                 msi.fechaSolicitud>=:fechaInicio
                                 and msi.fechaSolicitud<=:fechaFin
@@ -386,7 +388,7 @@ class inventario
                         WHERE
                         msp11.accion = 'CONFIG_GENERAR_INVENTARIO' AND msp11.parametro='BANDERA_LISTA_EXCLUYENTE_SUC'
                         AND msp33.accion='LISTA_RELACION_IDSUCURSAL_ARTID_EXCLUYENTE')
-                        and d.dep_idLocal like :dep_id
+                        and d.dep_id like :dep_id
                                 group by a.art_id
                                having count(*)>=3
                                 order by count(*) desc
@@ -397,7 +399,7 @@ class inventario
                                 inner join articulo a on (a.art_id = msi.art_id)
                                 inner join categoria c on (c.cat_id = a.cat_id)
                                 inner join ms_sucursal ms on (ms.idSucursal =:idSucursal)
-                                INNER JOIN departamento d on (d.dep_idLocal=c.dep_id)
+                                INNER JOIN departamento d on (d.dep_id=c.dep_id)
                                 where
                                 msi.fechaSolicitud>=:fechaInicio
                                 and msi.fechaSolicitud<=:fechaFin
@@ -414,7 +416,7 @@ class inventario
                         WHERE
                         msp11.accion = 'CONFIG_GENERAR_INVENTARIO' AND msp11.parametro='BANDERA_LISTA_EXCLUYENTE_SUC'
                         AND msp33.accion='LISTA_RELACION_IDSUCURSAL_ARTID_EXCLUYENTE')
-                        and d.dep_idLocal like :dep_id
+                        and d.dep_id like :dep_id
                                 group by a.art_id
                                having count(*)>=3
                                 order by count(*) desc
@@ -444,9 +446,9 @@ class inventario
             } else {
                 $arreglo = [
                     "estado" => 'warning',
-                    "success" => "Error al traer listado de Inventario Mas Vendido",
+                    "success" => "Error al traer listado de Inventario Mas Conflictivos",
                     "data" => $resultado
-                ];;
+                ];
                 return $response->withJson($arreglo, 200);
             }
         } catch (PDOException $e) {

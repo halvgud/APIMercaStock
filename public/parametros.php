@@ -178,6 +178,7 @@ class parametros
                     where a.art_id = msp3.valor
                         )
                 AND a.idSucursal =:idSucursal
+                and msp1.valor = a.idSucursal
                 AND a.existencia > 0
                   ; ";
 
@@ -188,27 +189,21 @@ class parametros
             $sentencia->bindParam('idSucursal',$idSucursal );
             $sentencia->execute();
             $resultado = $sentencia->fetchAll(PDO::FETCH_OBJ);
-            if (isset($postrequest->bandera)||$resultado[0]->comentario=="TRUE") {
+            if (isset($postrequest->bandera)||(isset($resultado[0])&&$resultado[0]->comentario=="TRUE")) {
+
                 $arreglo = [
                     "estado" => 200,
                     "success"=>"OK",
                     "data" => $resultado
                 ];
                 return $response->withJson($arreglo,200);
-            } else if($resultado) {
+            } else {
                 $arreglo = [
                     "estado" => 'nomessage',
                     "success" => "No necesario",
                     "data" => ""
                 ];
                 return $response->withJson($arreglo, 200);
-            }else{
-                $arreglo = [
-                    "estado" => 400,
-                    "error" => "error al traer el listado de articulos",
-                    "data" => $resultado
-                ];
-                return $response->withJson($arreglo, 400);
             }
         } catch (PDOException $e) {
             $arreglo = [
