@@ -150,7 +150,7 @@ class sucursal
             }
         } catch (PDOException $e) {
             $codigoDeError = $e->getCode();
-            $error = self::traducirMensaje($codigoDeError, $e);
+            $error = logIn::traducirMensaje($codigoDeError, $e);
             $arreglo = [
                 "estado" => $e->getCode(),
                 "error" => $error,
@@ -231,7 +231,7 @@ class sucursal
                       }
         }catch(PDOException $e){
             $codigoDeError=$e->getCode();
-            $error =self::traducirMensaje($codigoDeError,$e);
+            $error =logIn::traducirMensaje($codigoDeError,$e);
             $arreglo = [
                 "estado" =>$e -> getCode(),
                 "error" =>$error,

@@ -85,7 +85,7 @@ class usuario
             }
         } catch (PDOException $e) {
             $codigoDeError = $e->getCode();
-            $error = self::traducirMensaje($codigoDeError, $e);
+            $error = logIn::traducirMensaje($codigoDeError, $e);
             $arreglo = [
                 "estado" => $e->getCode(),
                 "error" => $error,
@@ -162,7 +162,7 @@ class usuario
             }
         } catch (PDOException $e) {
             $codigoDeError = $e->getCode();
-            $error = self::traducirMensaje($codigoDeError, $e);
+            $error = logIn::traducirMensaje($codigoDeError, $e);
             $arreglo = [
                 "estado" => $e->getCode(),
                 "error" => $error,
