@@ -31,7 +31,7 @@ class sexo
         } catch (PDOException $e) {
             $arreglo = [
                 "estado" => 400,
-                "error" => "Error al traer listado de Sexo",
+                "error" => general::traducirMensaje($e->getCode(),$e),
                 "datos" => $e->getMessage()
             ];
             return $response->withJson($arreglo, 400);

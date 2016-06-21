@@ -37,7 +37,7 @@ class categoria
         } catch (PDOException $e) {
             $arreglo = [
                 "estado" => 400,
-                "error" => logIn::traducirMensaje($e->getCode(),$e),
+                "error" => general::traducirMensaje($e->getCode(),$e),
                 "datos" =>"Error al traer listado de Categoria"
             ];
             $respuesta= $response->withJson($arreglo, 400);

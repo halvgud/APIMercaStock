@@ -79,7 +79,7 @@ class inventario
         } catch (PDOException $e) {
             $arreglo = [
                 "estado" => 400,
-                "error" => "Error al traer listado de Inventario",
+                "error" => general::traducirMensaje($e->getCode(),$e),
                 "datos" => $e->getMessage()
             ];
             return $response->withJson($arreglo, 400);
@@ -188,7 +188,7 @@ class inventario
         } catch (PDOException $e) {
             $arreglo = [
                 "estado" => 400,
-                "error" => "Error al traer listado de Inventario",
+                "error" => general::traducirMensaje($e->getCode(),$e),
                 "datos" => $e->getMessage()
             ];
             return $response->withJson($arreglo, 400);
@@ -295,7 +295,7 @@ class inventario
         } catch (PDOException $e) {
             $arreglo = [
                 "estado" => 400,
-                "error" => "Error al traer listado de Inventario",
+                "error" => general::traducirMensaje($e->getCode(),$e),
                 "datos" => $e->getMessage()
             ];
             return $response->withJson($arreglo, 400);
@@ -309,10 +309,12 @@ class inventario
     {
         set_time_limit(0);
         $postrequest = json_decode($request->getBody());
+        $db=null;
         $resultado="";
 
         try {
             $db = getConnection();
+            $db->beginTransaction();
             $db->query("SET NAMES 'utf8'");
             $db->query("SET CHARACTER SET utf8");
             foreach ($postrequest->art_id as $renglon ) {
@@ -333,8 +335,10 @@ class inventario
                     "success" => "OK",
                     "data" => $resultado
                 ];
+                $db->commit();
                 return $response->withJson($arreglo, 200);
             } else {
+                $db->rollBack();
                 $arreglo = [
                     "estado" => 401,
                     "error" => "Error al insertar Registros, asegurese que la lista no este vacia",
@@ -343,9 +347,10 @@ class inventario
                 return $response->withJson($arreglo, 401);
             }
         } catch (PDOException $e) {
+            $db->rollBack();
             $arreglo = [
                 "estado" => 400,
-                "error" => "Error al insertar Registro",
+                "error" => general::traducirMensaje($e->getCode(),$e),
                 "datos" => $e->getMessage()
             ];
             return $response->withJson($arreglo, 400);
@@ -454,7 +459,7 @@ class inventario
         } catch (PDOException $e) {
             $arreglo = [
                 "estado" => 400,
-                "error" => "Error al traer listado de Inventario",
+                "error" => general::traducirMensaje($e->getCode(),$e),
                 "datos" => $e->getMessage()
             ];
             return $response->withJson($arreglo, 400);

@@ -33,7 +33,7 @@ class concepto
         } catch (PDOException $e) {
             $arreglo = [
                 "estado" => 400,
-                "error" => "Error al traer listado de Concepto",
+                "error" => general::traducirMensaje($e->getCode(),$e),
                 "data" => $e->getMessage()
             ];
             return $response->withJson($arreglo, 400);

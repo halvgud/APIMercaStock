@@ -27,7 +27,7 @@ class usuario
         } catch (PDOException $e) {
             $arreglo = [
                 "estado" => 400,
-                "error" => "Error al traer listado de Sexo",
+                "error" => general::traducirMensaje($e->getCode(),$e),
                 "data" => $e
             ];
             return $response->withJson($arreglo, 400);
@@ -40,56 +40,58 @@ class usuario
 
     public static function insertar($request, $response)
     {
-        $wine = json_decode($request->getBody());
         $claveApi = "";
         $idEstado = "A";
         $claveGCM = '0';
         $idUsuario = self::obtenerIdUsuario();
-
+        $postrequest = json_decode($request->getBody());
         $sql = "INSERT INTO ms_usuario (idUsuario,usuario,password,nombre,apellido,sexo,contacto,idSucursal,claveAPI,idEstado,fechaEstado,fechaSesion,claveGCM,idNivelAutorizacion) VALUES
                 (:idUsuario,:usuario,:password,:nombre,:apellido,:sexo,:contacto,:idSucursal,:claveAPI,:idEstado,now(),now(),:claveGCM,:idNivelAutorizacion)";
+        $db=null;
         try {
-            $password = self::encriptarContrasena($wine->password);
+            $password = self::encriptarContrasena($postrequest->password);
             $db = getConnection();
+            $db->beginTransaction();
             $stmt = $db->prepare($sql);
             $stmt->bindParam("idUsuario", $idUsuario, PDO::PARAM_INT);
-            $stmt->bindParam(":usuario", $wine->usuario, PDO::PARAM_STR);
+            $stmt->bindParam(":usuario", $postrequest->usuario, PDO::PARAM_STR);
             $stmt->bindParam(":password", $password);
-            $stmt->bindParam(":nombre", $wine->nombre, PDO::PARAM_STR);
-            $stmt->bindParam(":apellido", $wine->apellido, PDO::PARAM_STR);
-            $stmt->bindParam(":sexo", $wine->sexo, PDO::PARAM_STR);
-            $stmt->bindParam(":contacto", $wine->contacto, PDO::PARAM_INT);
+            $stmt->bindParam(":nombre", $postrequest->nombre, PDO::PARAM_STR);
+            $stmt->bindParam(":apellido", $postrequest->apellido, PDO::PARAM_STR);
+            $stmt->bindParam(":sexo", $postrequest->sexo, PDO::PARAM_STR);
+            $stmt->bindParam(":contacto", $postrequest->contacto, PDO::PARAM_INT);
             $stmt->bindParam(":idSucursal", $claveGCM, PDO::PARAM_INT);
             $stmt->bindParam(":claveAPI", $claveApi);
             $stmt->bindParam(":idEstado", $idEstado);
             $stmt->bindParam(":claveGCM", $claveGCM);
-            $stmt->bindParam(":idNivelAutorizacion", $wine->idNivelAutorizacion, PDO::PARAM_INT);
+            $stmt->bindParam(":idNivelAutorizacion", $postrequest->idNivelAutorizacion, PDO::PARAM_INT);
             $stmt->execute();
-            $wine->id = $db->lastInsertId();
+            $postrequest->id = $db->lastInsertId();
             $db = null;
-            if ($wine->idUsuario > 0) {
+            if ($postrequest->idUsuario > 0) {
                 $arreglo = [
                     "estado" => 200,
-                    "success" => "Usuario " . $wine->usuario . " registrado correctamente",
-                    "datos" => $wine
+                    "success" => "Usuario " . $postrequest->usuario . " registrado correctamente",
+                    "datos" => $postrequest
                 ];
+                $db->commit();
                 $codigo = 200;
 
             } else {
+                $db->rollBack();
                 $arreglo = [
                     "estado" => 400,
                     "error" => "transaccion sin terminar",
-                    "datos" => $wine
+                    "datos" => $postrequest
                 ];;
                 $codigo = 400;
             }
         } catch (PDOException $e) {
-            $codigoDeError = $e->getCode();
-            $error = self::traducirMensaje($codigoDeError, $e);
+            $db->rollBack();
             $arreglo = [
                 "estado" => $e->getCode(),
-                "error" => $error,
-                "datos" => json_encode($wine)
+                "error" => general::traducirMensaje($e->getCode(),$e),
+                "datos" => json_encode($postrequest)
             ];
             $codigo=400;
         }
@@ -120,6 +122,7 @@ class usuario
     public static function actualizar($request, $response)
     {
         $postrequest = json_decode($request->getBody());
+        $db=null;
         if($postrequest->password!='DEFAULTMERCASTOCK'){
             $query = "UPDATE ms_usuario SET password=:password,nombre=:nombre,apellido=:apellido,sexo=:sexo,contacto=:contacto," .
                 "idSucursal=:idSucursal,idEstado=:idEstado,idNivelAutorizacion=:idNivelAutorizacion WHERE usuario=:usuario";
@@ -129,6 +132,7 @@ class usuario
         }
         try {
             $db = getConnection();
+            $db->beginTransaction();
             $password = self::encriptarContrasena($postrequest->password);
             $sentencia = $db->prepare($query);
             $sentencia->bindParam("usuario", $postrequest->usuario);
@@ -150,8 +154,10 @@ class usuario
                         "success" => "Se a actualizado el usuario con éxito",
                         "data" => $resultado
                     ];
+                $db->commit();
                 $codigo=200;
             } else {
+                $db->rollBack();
                 $arreglo =
                     [
                         "estado" => "warning",
@@ -161,11 +167,10 @@ class usuario
                 $codigo=200;
             }
         } catch (PDOException $e) {
-            $codigoDeError = $e->getCode();
-            $error = self::traducirMensaje($codigoDeError, $e);
+            $db->rollBack();
             $arreglo = [
                 "estado" => $e->getCode(),
-                "error" => $error,
+                "error" => general::traducirMensaje($e->getCode(),$e),
                 "data" => json_encode($postrequest)
             ];
             $codigo=400;
@@ -177,13 +182,13 @@ class usuario
     }
     public static function actualizarContrasena($request, $response)
     {
-
         $postrequest = json_decode($request->getBody());
-        $comando = "SELECT idUsuario,Usuario,password,claveAPI,IDESTADO,idNivelAutorizacion FROM ms_usuario WHERE usuario=:usuario AND idSucursal=0";
-        // var_dump($comando);
         $usuario=$postrequest->usuario;
+        $db=null;
+        $comando = "SELECT idUsuario,Usuario,password,claveAPI,IDESTADO,idNivelAutorizacion FROM ms_usuario WHERE usuario=:usuario AND idSucursal=0";
         try {
             $db = getConnection();
+            $db->beginTransaction();
             $sentencia = $db->prepare($comando);
             $sentencia->bindParam("usuario", $usuario);
             $sentencia->execute();
@@ -196,16 +201,11 @@ class usuario
                         $autenticar = self::autenticar($postrequest->usuario, $postrequest->passwordActual);
 
                         if ($autenticar['estado'] == '200') {
-                            $db = getConnection();
-                            //if(self::validarContrasena($postrequest->passwordActual, ''));
-                            //$passwordActual = self::encriptarContrasena($postrequest->passwordActual);
+                            //$db = getConnection();
                             $passwordNueva = self::encriptarContrasena($postrequest->passwordNueva);
                             $sentencia = $db->prepare($query2);
-                            //$sentencia->bindParam("passwordActual", $postrequest->passwordActual);
                             $sentencia->bindParam("passwordNueva", $passwordNueva);
                             $sentencia->bindParam("usuario", $postrequest->usuario);
-
-
                             $resultado = $sentencia->execute();
                             if ($resultado) {
                                 $arreglo =
@@ -214,8 +214,10 @@ class usuario
                                         "success" => "Se ha actualizado la contraseña con éxito",
                                         "data" => $resultado
                                     ];
+                                $db->commit();
                                 return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
                             } else {
+                                $db->rollBack();
                                 $arreglo =
                                     [
                                         "estado" => "warning",
@@ -225,6 +227,7 @@ class usuario
                                 return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
                             }
                         } else {
+                            $db->rollBack();
                             $arreglo =
                                 [
                                     "estado" => "warning",
@@ -234,11 +237,12 @@ class usuario
                             return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
                         }
                     } catch (PDOException $e) {
+                        $db->rollBack();
                         $arreglo =
                             [
                                 "estado" => "warning",
                                 "mensaje" => "La contraseña actual no es correcta",
-                                "data" => "Error"
+                                "data" => general::traducirMensaje($e->getCode(),$e)
                             ];
                         return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
                     } finally {
@@ -249,74 +253,15 @@ class usuario
                 }
             }
         } catch (PDOException $e) {
-            //throw new ExcepcionApi(1, $e->getMessage(), 401);
+            $db->rollBack();
             $arreglo =
                 [
                     "estado" => "warning",
                     "mensaje" => "La contraseña actual no es correcta",
-                    "data" => "Error"
+                    "data" => general::traducirMensaje($e->getCode(),$e)
                 ];
             return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
         }
-        /*
-        $postrequest = json_decode($request->getBody());
-        $query = "UPDATE ms_usuario SET password=:passwordNueva WHERE usuario=:usuario";
-
-        try {
-            $autenticar=self::autenticar($postrequest->usuario,$postrequest->passwordActual);
-
-            if ($autenticar['estado'] == '200') {
-                $db = getConnection();
-                //if(self::validarContrasena($postrequest->passwordActual, ''));
-                //$passwordActual = self::encriptarContrasena($postrequest->passwordActual);
-                $passwordNueva = self::encriptarContrasena($postrequest->passwordNueva);
-                $sentencia = $db->prepare($query);
-                //$sentencia->bindParam("passwordActual", $postrequest->passwordActual);
-                $sentencia->bindParam("passwordNueva", $passwordNueva);
-                $sentencia->bindParam("usuario", $postrequest->usuario);
-
-
-                $resultado = $sentencia->execute();
-                if ($resultado) {
-                    $arreglo =
-                        [
-                            "estado" => 200,
-                            "success" => "Se ha actualizado la contraseña con éxito",
-                            "data" => $resultado
-                        ];
-                    return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
-                } else {
-                    $arreglo =
-                        [
-                            "estado" => "warning",
-                            "mensaje" => "No se cambió ningún dato",
-                            "data" => $resultado
-                        ];
-                    return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
-                }
-            }
-            else{
-                $arreglo =
-                    [
-                        "estado" => "warning",
-                        "mensaje" => "No se cambió ningún dato",
-                        "data" => "Error"
-                    ];
-                return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
-            }
-        } catch (PDOException $e) {
-            $codigoDeError = $e->getCode();
-            $error = self::traducirMensaje($codigoDeError, $e);
-            $arreglo = [
-                "estado" => $e->getCode(),
-                "error" => $error,
-                "data" => json_encode($postrequest)
-            ];;
-            return $response->withJson($arreglo, 400);//json_encode($wine);
-        }
-        finally{
-            $db=null;
-        }*/
     }
 
 
@@ -343,11 +288,9 @@ class usuario
             }
             return $response->withJson($autenticar, $codigo);
         } catch (PDOException $e) {
-            $codigoDeError=$e->getCode();
-            $error =LogIn::traducirMensaje($codigoDeError,$e);
             $arreglo = [
                 "estado" =>$e -> getCode(),
-                "error" =>$error,
+                "error" => general::traducirMensaje($e->getCode(),$e),
                 "data" => json_encode($usuario)
             ];
             return $response->withJson($arreglo,400);
@@ -405,7 +348,7 @@ class usuario
             $error =LogIn::traducirMensaje($codigoDeError,$e);
             $arreglo = [
                 "estado" =>$e -> getCode(),
-                "error" =>$error,
+                "error" => general::traducirMensaje($e->getCode(),$e),
                 "data" => json_encode($usuario)
             ];
             return $arreglo;
@@ -440,31 +383,6 @@ class usuario
         return md5(microtime() . rand());
     }
 
-/*
-    public static function obtener($username) {
-        if (!empty($username)) {
-            self::InicializarRoles($username);
-            return (self::$roles);
-
-        } else {
-            return false;
-        }
-    }*/
-/*
-    protected static function InicializarRoles($usuario) {
-        self::$roles = array();
-
-        $comando = "SELECT mna.idNivelAutorizacion,mna.descripcion from ms_nivelAutorizacion mna inner join ms_usuario mu on (mu.idUsuario =:idUsuario and mu.idNivelAutorizacion = mna.idNivelAutorizacion) order by mna.idNivelAutorizacion asc";
-        $db = getConnection();
-        $sentencia = $db->prepare($comando);
-        $sentencia->bindParam("idUsuario", $usuario);
-        $sentencia->execute();
-        $resultado = $sentencia->fetchAll(PDO::FETCH_OBJ);
-        foreach($resultado as $rol) {
-            self::$roles[$rol->descripcion] = Roles::obtenerPermisosDelRol($rol->idNivelAutorizacion);
-        }
-        return self::$roles;
-    }*/
     public static function revisarToken($token){
         $query = "select claveAPI from ms_sucursal where claveAPI=:claveApi and claveAPI!='' union all select claveAPI from ms_usuario where claveAPI=:claveApi
                   and claveAPI!=''";

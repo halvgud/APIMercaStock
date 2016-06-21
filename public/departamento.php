@@ -35,7 +35,7 @@ class departamento
         } catch (PDOException $e) {
             $arreglo = [
                 "estado" => 400,
-                "error" => "Error al traer listado de Departamento",
+                "error" => general::traducirMensaje($e->getCode(),$e),
                 "datos" => $e->getMessage()
             ];
             return $response->withJson($arreglo, 400);

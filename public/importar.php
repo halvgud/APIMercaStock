@@ -49,7 +49,7 @@ class importar
             $db->rollBack();
             $arreglo = [
                 "estado" => 400,
-                "error" => "Error al Insertar o Actualizar un registro",
+                "error" => general::traducirMensaje($e->getCode(),$e),
                 "datos" => $e->getMessage()
             ];
             return $response->withJson($arreglo, 400);
@@ -100,7 +100,7 @@ class importar
             $db->rollBack();
             $arreglo = [
                 "estado" => 400,
-                "error" => "Error al Insertar o Actualizar un registro",
+                "error" => general::traducirMensaje($e->getCode(),$e),
                 "datos" => $e->getMessage()
             ];
 
@@ -117,7 +117,6 @@ class importar
         $db=null;
         $contador=0;
         try {
-
             $db = getConnection();
             $db->beginTransaction();
             foreach ($postrequest->data as $renglon) {
@@ -145,7 +144,6 @@ class importar
                 $unidadVenta = $renglon->unidadVenta;
                 $cat_id = $renglon->cat_id;
                 $srp_id = $renglon->srp_id;
-
 
                 $comandoUpdate = "INSERT INTO articulo(art_id, idSucursal, clave, claveAlterna, descripcion, servicio, invMin, invMax, factor, precioCompra, precioCompraProm, margen1, precio1, existencia, lote, receta, granel, tipo, status, unidadCompra, unidadVenta, cat_id, srp_id)
                             VALUES (:art_id, :idSucursal, :clave, :claveAlterna, :descripcion, :servicio, :invMin, :invMax, :factor, :precioCompra, :precioCompraProm, :margen1, :precio1, :existencia, :lote, :receta, :granel, :tipo, :status, :unidadCompra, :unidadVenta, :cat_id, :srp_id) ON
@@ -196,7 +194,7 @@ class importar
             $db->rollBack();
             $arreglo = [
                 "estado" => 400,
-                "error" => "Error al Insertar o Actualizar un registro",
+                "error" => general::traducirMensaje($e->getCode(),$e),
                 "datos" => $e->getMessage()
             ];
             return $response->withJson($arreglo, 400);
@@ -210,9 +208,9 @@ class importar
     public static function Venta($request,$response)
     {
         set_time_limit(0);
+        $contador=0;
         $postrequest = json_decode($request->getBody());
         $db=null;
-        $contador=0;
         try {
             $db = getConnection();
             $db->beginTransaction();
@@ -270,6 +268,7 @@ class importar
                 $db->commit();
                 return $response->withJson($arreglo, 200);
             }else{
+                $db->rollBack();
                 $arreglo=[
                     "estado"=>"400",
                     "error"=>"error de formato",
@@ -281,7 +280,7 @@ class importar
             $db->rollBack();
             $arreglo = [
                 "estado" => 400,
-                "error" => "Error al Insertar o Actualizar un registro",
+                "error" => general::traducirMensaje($e->getCode(),$e),
                 "datos" => $e->getMessage()
             ];
             return $response->withJson($arreglo, 400);
@@ -296,9 +295,9 @@ class importar
     public static function DetalleVenta($request,$response)
     {
         set_time_limit(0);
+        $contador=0;
         $postrequest = json_decode($request->getBody());
         $db=null;
-        $contador=0;
         try {
             $db = getConnection();
             $db->beginTransaction();
@@ -364,6 +363,7 @@ class importar
                 $db->commit();
                 return $response->withJson($arreglo, 200);
             }else{
+                $db->rollBack();
                 $arreglo=[
                     "estado"=>"400",
                     "error"=>"error de formato",
@@ -375,7 +375,7 @@ class importar
             $db->rollBack();
             $arreglo = [
                 "estado" => 400,
-                "error" => "Error al Insertar o Actualizar un registro",
+                "error" => general::traducirMensaje($e->getCode(),$e),
                 "datos" => $e->getMessage()
             ];
             return $response->withJson($arreglo, 400);
@@ -387,10 +387,10 @@ class importar
     }
     public static function importarInventarioAPI($request, $response){
         $postrequest = json_decode($request->getBody());
-
-
+        $db=null;
         try {
             $db = getConnection();
+            $db->beginTransaction();
             $query = "UPDATE ms_inventario SET idInventarioLocal=:idInventarioLocal, existenciaSolicitud=:existenciaSolicitud, existenciaRespuesta=:existenciaRespuesta, idUsuario=:idUsuario, fechaSolicitud=:fechaSolicitud, fechaRespuesta=:fechaRespuesta, existenciaEjecucion=:existenciaEjecucion, idEstado=:idEstado
                     WHERE idInventario=:idInventario AND art_id=:art_id AND ms_inventario.idSucursal=:idSucursal ;";
             $sentencia = $db->prepare($query);
@@ -417,8 +417,10 @@ class importar
                         "success" => "Se a actualizado con éxito",
                         "data" => $resultado
                     ];
+                $db->commit();
                 return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
             } else {
+                $db->rollBack();
                 $arreglo =
                     [
                         "estado" => "warning",
@@ -428,19 +430,16 @@ class importar
                 return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
             }
         } catch (PDOException $e) {
-            $codigoDeError = $e->getCode();
-            $error = 'Error';
+            $db->rollBack();
             $arreglo = [
-                "estado" => $e->getCode(),
-                "error" => $error,
+                "estado" => 400,
+                "error" => general::traducirMensaje($e->getCode(),$e),
                 "data" => json_encode($postrequest)
-            ];;
+            ];
             return $response->withJson($arreglo, 400);
         }
         finally{
             $db=null;
         }
     }
-
-
 }

@@ -41,7 +41,7 @@ class articulo
         } catch (PDOException $e) {
             $arreglo = [
                 "estado" => 400,
-                "error" => "Error al traer listado de Articulos",
+                "error" => general::traducirMensaje($e->getCode(),$e),
                 "datos" => $e->getMessage()
             ];
             return $response->withJson($arreglo, 400);
@@ -96,7 +96,51 @@ class articulo
         } catch (PDOException $e) {
             $arreglo = [
                 "estado" => 400,
-                "error" => "Error al traer listado de Articulos",
+                "error" => general::traducirMensaje($e->getCode(),$e),
+                "datos" => $e->getMessage()
+            ];
+            return $response->withJson($arreglo, 400);
+        }
+        finally{
+            $db=null;
+        }
+    }
+    public static function insertar($request, $response)
+    {
+        $postrequest = json_decode($request->getBody());
+        $db=null;
+        try {
+            $db = getConnection();
+            $db->beginTransaction();
+            foreach ($postrequest->datos as $renglon ) {
+                $art_id=$renglon->art_id;
+                $imp_id = $renglon->imp_id;
+
+                $comandoUpdate="insert into articuloimpuesto(art_id,imp_id)
+                            values (:art_id, :imp_id) on
+                            duplicate key update art_id=:art_id,imp_id=:imp_id;";
+                $sentencia = $db->prepare($comandoUpdate);
+                $sentencia->bindParam('art_id', $art_id);
+                $sentencia->bindParam('imp_id', $imp_id);
+                $banderaEjecucion=$sentencia->execute();
+                if($banderaEjecucion==false){
+                    break;
+                }
+            }
+            if($banderaEjecucion) {
+                $arreglo = [
+                    "estado" => 200,
+                    "success" => "Se a importado la informacion",
+                    "datos" => $sentencia
+                ];
+                $db->commit();
+                return $response->withJson($arreglo, 200);
+            }
+        } catch (PDOException $e) {
+            $db->rollBack();
+            $arreglo = [
+                "estado" => 400,
+                "error" => general::traducirMensaje($e->getCode(),$e),
                 "datos" => $e->getMessage()
             ];
             return $response->withJson($arreglo, 400);

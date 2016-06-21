@@ -39,7 +39,7 @@ class sucursal
         } catch (PDOException $e) {
             $arreglo = [
                 "estado" => 400,
-                "error" => "Error al traer listado de Sucursal",
+                "error" => general::traducirMensaje($e->getCode(),$e),
                 "data" => $e
             ];
             $codigo=400;
@@ -52,57 +52,62 @@ class sucursal
 
     public static function registrar($request, $response)
     {
-        $wine = json_decode($request->getBody());
-        $password = self::encriptarContrasena($wine->password);
+        $postrequest = json_decode($request->getBody());
+        $db=null;
+        $password = self::encriptarContrasena($postrequest->password);
         $sql = "INSERT INTO ms_sucursal (idSucursal, nombre, usuario, password, claveAPI, domicilio, contacto, idEstado) VALUES
 	    (:idSucursal,:nombre,:usuario,:password,:claveAPI,:domicilio,:contacto,:idEstado)";
 
         try {
             $db = getConnection();
+            $db->beginTransaction();
             $stmt = $db->prepare($sql);
-            $stmt->bindParam("idSucursal", $wine->idSucursal, PDO::PARAM_STR);
-            $stmt->bindParam("nombre", $wine->nombre, PDO::PARAM_STR);
-            $stmt->bindParam("usuario", $wine->usuario, PDO::PARAM_STR);
+            $stmt->bindParam("idSucursal", $postrequest->idSucursal, PDO::PARAM_STR);
+            $stmt->bindParam("nombre", $postrequest->nombre, PDO::PARAM_STR);
+            $stmt->bindParam("usuario", $postrequest->usuario, PDO::PARAM_STR);
             $stmt->bindParam("password", $password, PDO::PARAM_STR);
-            $stmt->bindParam("claveAPI", $wine->claveAPI,PDO::PARAM_STR);
-            $stmt->bindParam("domicilio", $wine->domicilio, PDO::PARAM_STR);
-            $stmt->bindParam("contacto", $wine->contacto, PDO::PARAM_STR);
-            $stmt->bindParam("idEstado", $wine->idEstado, PDO::PARAM_STR);
+            $stmt->bindParam("claveAPI", $postrequest->claveAPI,PDO::PARAM_STR);
+            $stmt->bindParam("domicilio", $postrequest->domicilio, PDO::PARAM_STR);
+            $stmt->bindParam("contacto", $postrequest->contacto, PDO::PARAM_STR);
+            $stmt->bindParam("idEstado", $postrequest->idEstado, PDO::PARAM_STR);
             $stmt->execute();
-            $wine->id = $db->lastInsertId();
+            $postrequest->id = $db->lastInsertId();
             //$db = null;
-            if ($wine->id > 1) {
+            if ($postrequest->id > 1) {
 
                 $sql1="insert into ms_parametro values(
-                    '1', 'CONFIG_GENERAR_INVENTARIO', 'BANDERA_LISTA_FIJA_SUC', $wine->id, 'TRUE', 'JCDL', NOW()
+                    '1', 'CONFIG_GENERAR_INVENTARIO', 'BANDERA_LISTA_FIJA_SUC', $postrequest->id, 'TRUE', 'JCDL', NOW()
                 );";
                 $sql2="insert into ms_parametro values(
-                    '1', 'CONFIG_GENERAR_INVENTARIO', 'BANDERA_LISTA_EXCLUYENTE_SUC', $wine->id, 'TRUE', 'JCDL', NOW()
+                    '1', 'CONFIG_GENERAR_INVENTARIO', 'BANDERA_LISTA_EXCLUYENTE_SUC', $postrequest->id, 'TRUE', 'JCDL', NOW()
                 );";
                 $stmt2 = $db->prepare($sql1);
 
                 $stmt3 = $db->prepare($sql2);
 
-                $stmt2->bindParam("idSucursal", $wine->idSucursal, PDO::PARAM_STR);
-                $stmt3->bindParam("idSucursal", $wine->idSucursal, PDO::PARAM_STR);
+                $stmt2->bindParam("idSucursal", $postrequest->idSucursal, PDO::PARAM_STR);
+                $stmt3->bindParam("idSucursal", $postrequest->idSucursal, PDO::PARAM_STR);
                 $stmt2->execute();
                 $stmt3->execute();
                 $arreglo = [
                     "estado" => 200,
                     "success" => "transaccion terminada",
-                    "data" => $wine
+                    "data" => $postrequest
                 ];
+                $db->commit();
                 return $response->withJson($arreglo, 200);
             } else {
+                $db->rollBack();
                 $arreglo = [
                     "estado" => 400,
                     "error" => "transaccion sin terminar",
-                    "data" => $wine
+                    "data" => $postrequest
                 ];;
                 return $response->withJson($arreglo, 400);
             }
         } catch (PDOException $e) {
-            echo '{"error":' . $e->getMessage() . '}';
+            $db->rollBack();
+            echo general::traducirMensaje($e->getCode(),$e);
         }
         finally{
             $db=null;
@@ -112,6 +117,7 @@ class sucursal
     public static function actualizar($request, $response)
     {
         $postrequest = json_decode($request->getBody());
+        $db=null;
         if($postrequest->password!='DEFAULTMERCASTOCK') {
             $query = "UPDATE ms_sucursal SET nombre=:nombre,usuario=:usuario,password=:password,domicilio=:domicilio,contacto=:contacto,idEstado=:idEstado WHERE idSucursal=:idSucursal";
         }else{
@@ -119,6 +125,7 @@ class sucursal
         }
         try {
             $db = getConnection();
+            $db->beginTransaction();
             $password = self::encriptarContrasena($postrequest->password,PDO::PARAM_STR);
             $sentencia = $db->prepare($query);
             $sentencia ->bindParam("idSucursal",$postrequest->idSucursal,PDO::PARAM_INT);
@@ -138,8 +145,10 @@ class sucursal
                         "success" => "Se a actualizado el usuario con éxito",
                         "data" => $resultado
                     ];
+                $db->commit();
                 return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
             } else {
+                $db->rollBack();
                 $arreglo =
                     [
                         "estado" => "warning",
@@ -149,11 +158,12 @@ class sucursal
                 return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
             }
         } catch (PDOException $e) {
+            $db->rollBack();
             $codigoDeError = $e->getCode();
             $error = self::traducirMensaje($codigoDeError, $e);
             $arreglo = [
                 "estado" => $e->getCode(),
-                "error" => $error,
+                "error" => general::traducirMensaje($e->getCode(),$e),
                 "data" => json_encode($postrequest)
             ];;
             return $response->withJson($arreglo, 400);
@@ -234,7 +244,7 @@ class sucursal
             $error =self::traducirMensaje($codigoDeError,$e);
             $arreglo = [
                 "estado" =>$e -> getCode(),
-                "error" =>$error,
+                "error" => general::traducirMensaje($e->getCode(),$e),
                 "data" => json_encode($postrequest)
             ];
             return $response->withJson($arreglo,400);

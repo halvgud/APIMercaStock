@@ -38,7 +38,7 @@ class bitacora
         }catch(PDOException $e){
             $arreglo = [
                 "estado" => 400,
-                "error"=>"Error al traer la Bitácora",
+                "error" => general::traducirMensaje($e->getCode(),$e),
                 "data" => $e->getMessage()
             ];
             return $response->withJson($arreglo,400);
