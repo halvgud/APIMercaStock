@@ -301,7 +301,7 @@ class importar
         try {
             $db = getConnection();
             $db->beginTransaction();
-            var_dump($postrequest[0]->data);
+            //var_dump($postrequest[0]->data);
             if (isset($postrequest[0]->data) && gettype($postrequest[0]->data) == 'array') {
                 $comando = "insert into  detallev (ven_idLocal, idSucursal, art_id, clave, descripcion, cantidad, unidad, precioNorSin, precioNorCon, precioSin, precioCon, importeNorSin, importeNorCon, importeSin, importeCon, descPorcentaje, descTotal, precioCompra, importeCompra, sinGravar, caracteristicas, orden, detImp, iepsActivo, cuotaIeps, cuentaPredial, movVen, movVenC, monPrecioNorSin, monPrecioNorCon, monPrecioSin, monPrecioCon, monImporteNorSin, monImporteNorCon, monImporteSin, monImporteCon, nombreAduana, fechaDocAduanero, numeroDocAduanero, lote, receta, tipo, trr_id, ncr_id)
                 values(:ven_id,:idSucursal,:art_id,:clave,:descripcion,:cantidad,:unidad,:precioNorSin,:precioNorCon,:precioSin,:precioCon,:importeNorSin,:importeNorCon,:importeSin,:importeCon,:descPorcentaje,:descTotal,:precioCompra,:importeCompra,:sinGravar,:caracteristicas,:orden,:detImp,:iepsActivo,:cuotaIeps,:cuentaPredial,:movVen,:movVenC,:monPrecioNorSin,:monPrecioNorCon,:monPrecioSin,:monPrecioCon,:monImporteNorSin,:monImporteNorCon,:monImporteSin,:monImporteCon,:nombreAduana,:fechaDocAduanero,:numeroDocAduanero,:lote,:receta,:tipo,:trr_id,:ncr_id)
