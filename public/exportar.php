@@ -218,7 +218,7 @@ class exportar
         }
     }
     public static function generarDashBoard($request,$response){
-        //$postrequest = json_decode($request->getBody());
+        $postrequest = json_decode($request->getBody());
         $query = "select ms.idSucursal,ms.nombre as nombreSucursal,
                     sum(case when mi.idEstado='P' then 1 else 0 end) as inventarioActual,
                     sum(case when mi.idEstado='E' then 1 else 0 end) as inventarioTotal,
@@ -300,6 +300,49 @@ class exportar
                 "data" => json_encode($postrequest)
             ];
             return $response->withJson($arreglo,400,JSON_UNESCAPED_UNICODE);
+        }
+    }
+    public static function GenerarDashBoardPorSucursal($request,$response){
+        $postrequest = json_decode($request->getBody());
+        $query = "select mp1.accion,lower(mp1.parametro) as descripcion,mp1.valor as tiempoRestante,
+        mp1.comentario as tiempoDefinido,date_add(mp1.fechaActualizacion,interval 1 hour) as fechaActualizacion,
+        mp2.valor as icono
+        from ms_parametro mp1
+        inner join ms_parametro mp2 on
+        (mp2.idSucursal='1' and mp2.accion ='ICONO_DASHBOARD' and mp2.parametro = mp1.parametro )
+        where mp1.accion='CONFIG_DASHBOARD' and mp1.idSucursal=:idSucursal order by mp1.fechaActualizacion";
+        try{
+            $db=getConnection();
+            $sentencia = $db->prepare($query);
+            $sentencia->bindParam("idSucursal",$postrequest->idSucursal);
+            $ejecucion=$sentencia -> execute();
+            $resultado = $sentencia->fetchAll(PDO::FETCH_OBJ);
+            if($ejecucion){
+                $arreglo =
+                    [
+                        "estado" => 200,
+                        "success" => "ok",
+                        "data" => $resultado
+                    ];
+                return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
+            } else {
+                $arreglo =
+                    [
+                        "estado" => "warning",
+                        "mensaje" => "",
+                        "data" => $resultado
+                    ];
+                return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
+            }//else
+        }catch(PDOException $e){
+            $codigoDeError=$e->getCode();
+            $error =self::traducirMensaje($codigoDeError,$e);
+            $arreglo = [
+                "estado" =>$e -> getCode(),
+                "error" =>$error,
+                "data" => ""
+            ];
+            return $response->withJson($arreglo,400);
         }
     }
 }

@@ -7,7 +7,7 @@ $app->add(function ($request, $response, $next) {
     $Auth="";
 
                                                             /////cambiar a getPath()!='sucursal/login'
-    if($request->getUri()->getPath()!='usuario/login'&&$request->getUri()->getPath()=='sucursal/login'){
+    if($request->getUri()->getPath()!='usuario/login'&&$request->getUri()->getPath()!='sucursal/login'){
         foreach ($headers as $header => $value) {
             if($header=='Authorization'){
                 $Auth = $value;

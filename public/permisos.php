@@ -11,7 +11,7 @@ class Permisos
 
         //var_dump($wine);
         try {
-            $comando = "SELECT idNivelAutorizacion,descripcion FROM ms_nivelAutorizacion WHERE  idNivelAutorizacion>(select idNivelAutorizacion from ms_usuario WHERE usuario=:usuario)";
+            $comando = "SELECT idNivelAutorizacion,descripcion FROM ms_nivelAutorizacion WHERE  idNivelAutorizacion>(select idNivelAutorizacion from ms_usuario WHERE usuario=:usuario and idSucursal=1)";
             $db = getConnection();
             $sentencia = $db->prepare($comando);
             $sentencia->bindParam("usuario", $wine->usuario);

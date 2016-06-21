@@ -179,6 +179,10 @@ $app->post('/general/dashboard/actualizar',function(ServerRequestInterface $requ
 
     return exportar::actualizarDashBoard($request,$response);
 });
+$app->post('/general/dashboard/tiempo',function(ServerRequestInterface $request,ResponseInterface $response){
+
+    return exportar::GenerarDashBoardPorSucursal($request,$response);
+});
 
 
 
