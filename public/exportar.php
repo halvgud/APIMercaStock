@@ -42,11 +42,10 @@ class exportar
                 $codigo=400;
             }
         }catch(PDOException $e){
-            $codigoDeError=$e->getCode();
-            $error =LogIn::traducirMensaje($codigoDeError,$e);
+
             $arreglo = [
-                "estado" =>$e -> getCode(),
-                "error" =>$error,
+                "estado" => 400,
+                "error" => general::traducirMensaje($e->getCode(),$e),
                 "data" => json_encode($postrequest)
             ];
             $codigo=400;
@@ -86,7 +85,7 @@ class exportar
         } catch (PDOException $e) {
             $arreglo = [
                 "estado" => 400,
-                "error" => "Error al traer listado de Parametros",
+                "error" => general::traducirMensaje($e->getCode(),$e),
                 "datos" => $e->getMessage()
             ];
             $codigo=400;
@@ -98,35 +97,40 @@ class exportar
     }
     public static function actualizarInventario($request,$response){
         $postrequest = json_decode($request->getBody());
-        $db = getConnection();
+        $db=null;
+
         $comando2 = "UPDATE ms_inventario SET idEstado='E' WHERE idEstado='A' AND idSucursal=:idSucursal;";
         try{
+            $db = getConnection();
+            $db->beginTransaction();
             $sentencia = $db->prepare($comando2);
             $sentencia->bindParam("idSucursal", $postrequest->idSucursal);
             $resultado = $sentencia -> execute();
             if($resultado){
                  $arreglo =
-                            [
-                                "estado" => 200,
-                                "success" => "",
-                                "data" => $resultado
-                            ];
-                        return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
-                    } else {
-                        $arreglo =
-                            [
-                                "estado" => "warning",
-                                "mensaje" => "no se actualizo inventario",
-                                "data" => $resultado
-                            ];
-                        return $response->withJson($arreglo, 202, JSON_UNESCAPED_UNICODE);
-                      }//else
+                    [
+                        "estado" => 200,
+                        "success" => "",
+                        "data" => $resultado
+                    ];
+                    $db->commit();
+                return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
+            } else {
+                $db->rollBack();
+                $arreglo =
+                    [
+                        "estado" => "warning",
+                        "mensaje" => "no se actualizo inventario",
+                        "data" => $resultado
+                    ];
+                return $response->withJson($arreglo, 202, JSON_UNESCAPED_UNICODE);
+              }//else
         }catch(PDOException $e){
-            $codigoDeError=$e->getCode();
-            $error =LogIn::traducirMensaje($codigoDeError,$e);
+            $db->rollBack();
+
             $arreglo = [
-                "estado" =>$e -> getCode(),
-                "error" =>$error,
+                "estado" => 400,
+                "error" => general::traducirMensaje($e->getCode(),$e),
                 "data" => json_encode($postrequest)
             ];
             return $response->withJson($arreglo,400);
@@ -166,7 +170,7 @@ class exportar
         } catch (PDOException $e) {
             $arreglo = [
                 "estado" => 400,
-                "error" => "Error al traer listado de Inventario",
+                "error" => general::traducirMensaje($e->getCode(),$e),
                 "datos" => $e->getMessage()
             ];
             $codigo=400;
@@ -204,11 +208,9 @@ class exportar
                 $codigo=202;
             }
         }catch(PDOException $e){
-            $codigoDeError=$e->getCode();
-            $error =LogIn::traducirMensaje($codigoDeError,$e);
             $arreglo = [
-                "estado" =>$e -> getCode(),
-                "error" =>$error,
+                "estado" => 400,
+                "error" => general::traducirMensaje($e->getCode(),$e),
                 "data" => json_encode($postrequest)
             ];
             $codigo=400;
@@ -293,7 +295,7 @@ class exportar
                       }//else
         }catch(PDOException $e){
             $codigoDeError=$e->getCode();
-            $error =LogIn::traducirMensaje($codigoDeError,$e);
+            $error =general::traducirMensaje($codigoDeError,$e);
             $arreglo = [
                 "estado" =>$e -> getCode(),
                 "error" =>$error,

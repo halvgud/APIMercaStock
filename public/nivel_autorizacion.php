@@ -35,7 +35,7 @@ class nivel_autorizacion
         } catch (PDOException $e) {
             $arreglo = [
                 "estado" => 400,
-                "error" => "Error al traer listado de Sexo",
+                "error" => general::traducirMensaje($e->getCode(),$e),
                 "data" => $e->getMessage()
             ];
             return $response->withJson($arreglo, 400);

@@ -11,7 +11,7 @@ class Permisos
 
         //var_dump($wine);
         try {
-            $comando = "SELECT idNivelAutorizacion,descripcion FROM ms_nivelAutorizacion WHERE  idNivelAutorizacion>(select idNivelAutorizacion from ms_usuario WHERE usuario=:usuario and idSucursal=1)";
+            $comando = "SELECT idNivelAutorizacion,descripcion FROM ms_nivelAutorizacion WHERE  idNivelAutorizacion>(select idNivelAutorizacion from ms_usuario WHERE usuario=:usuario AND idSucursal=1)";
             $db = getConnection();
             $sentencia = $db->prepare($comando);
             $sentencia->bindParam("usuario", $wine->usuario);
@@ -34,7 +34,7 @@ class Permisos
             }
             return ($roles);
         } catch (PDOException $e) {
-            echo '{"error":{"text":' . $e->getMessage() . '}}';
+            echo general::traducirMensaje($e->getCode(),$e);
         }
         finally{
             $db=null;
@@ -44,12 +44,12 @@ class Permisos
     public static function actualizar($request, $response)
     {
         $bandera = false;
+        $postrequest = json_decode($request->getBody());
         $db = getConnection();
-        $rol = json_decode($request->getBody());
         $db->beginTransaction();
-        foreach ($rol->permisos as &$permiso) {
+        foreach ($postrequest->permisos as &$permiso) {
             $estado = $permiso->activo ? 'A' : 'I';
-            if (self::Bdactualizar($permiso, $rol->idNivelAutorizacion, $estado, $db)) {
+            if (self::Bdactualizar($permiso, $postrequest->idNivelAutorizacion, $estado, $db)) {
                 $bandera = true;
             } else {
                 $bandera = false;
@@ -58,12 +58,12 @@ class Permisos
             }
         }
         if ($bandera) {
-            $db->commit();
             $arreglo = [
                 "estado" => 200,
                 "success" => "La información de los permisos fue guardada con éxito",
                 "datos" => ""
             ];
+            $db->commit();
             return $response->withJson($arreglo,200);
         } else {
             $arreglo = [

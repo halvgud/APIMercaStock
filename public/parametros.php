@@ -35,7 +35,7 @@ class parametros
         } catch (PDOException $e) {
             $arreglo = [
                 "estado" => 400,
-                "error" => "Error al traer listado de Parametros",
+                "error" => general::traducirMensaje($e->getCode(),$e),
                 "datos" => $e->getMessage()
             ];
             return $response->withJson($arreglo, 400);
@@ -81,7 +81,7 @@ class parametros
         } catch (PDOException $e) {
             $arreglo = [
                 "estado" => 400,
-                "error" => "Error al traer listado de Parametros",
+                "error" => general::traducirMensaje($e->getCode(),$e),
                 "datos" => $e->getMessage()
             ];
             return $response->withJson($arreglo, 400);
@@ -127,7 +127,7 @@ class parametros
         } catch (PDOException $e) {
             $arreglo = [
                 "estado" => 400,
-                "error" => "Error al traer listado de Parametros",
+                "error" => general::traducirMensaje($e->getCode(),$e),
                 "datos" => $e->getMessage()
             ];
             return $response->withJson($arreglo, 400);
@@ -208,7 +208,7 @@ class parametros
         } catch (PDOException $e) {
             $arreglo = [
                 "estado" => 400,
-                "error" => "Error al traer listado de Parametros",
+                "error" => general::traducirMensaje($e->getCode(),$e),
                 "datos" => $e->getMessage()
             ];
             return $response->withJson($arreglo, 400);
@@ -221,9 +221,11 @@ class parametros
     public static function actualizar($request, $response)
     {
         $postrequest = json_decode($request->getBody());
+        $db=null;
         $query = "UPDATE ms_parametro SET valor=:valor,comentario=:comentario,usuario=:usuario,fechaActualizacion=NOW() WHERE idSucursal=:idSucursal AND accion=:accion AND parametro=:parametro";
         try {
             $db = getConnection();
+            $db->beginTransaction();
             $sentencia = $db->prepare($query);
             $sentencia ->bindParam("idSucursal",$postrequest->idSucursal,PDO::PARAM_INT);
             $sentencia->bindParam("accion", $postrequest->accion,PDO::PARAM_STR);
@@ -239,8 +241,10 @@ class parametros
                         "success" => "Se a actualizado el usuario con éxito",
                         "data" => $resultado
                     ];
+                $db->commit();
                 return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
             } else {
+                $db->rollBack();
                 $arreglo =
                     [
                         "estado" => "warning",
@@ -250,6 +254,7 @@ class parametros
                 return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
             }
         } catch (PDOException $e) {
+            $db->rollBack();
             $codigoDeError = $e->getCode();
             $error = self::traducirMensaje($codigoDeError, $e);
             $arreglo = [
@@ -267,6 +272,7 @@ class parametros
     public static function actualizarListaFija($request, $response)
     {
         $postrequest = json_decode($request->getBody());
+        $db=null;
         if(isset($postrequest->excluyente)){
             $query = "UPDATE ms_parametro SET comentario=:comentario WHERE valor=:valor AND parametro='BANDERA_LISTA_EXCLUYENTE_SUC'";
         }else{
@@ -274,6 +280,7 @@ class parametros
         }
         try {
             $db = getConnection();
+            $db->beginTransaction();
             $sentencia = $db->prepare($query);
             $sentencia->bindParam("valor", $postrequest->valor,PDO::PARAM_STR);
             $sentencia->bindParam("comentario", $postrequest->comentario,PDO::PARAM_STR);
@@ -285,8 +292,10 @@ class parametros
                         "success" => "Se a actualizado el usuario con éxito",
                         "data" => $resultado
                     ];
+                $db->commit();
                 return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
             } else {
+                $db->rollBack();
                 $arreglo =
                     [
                         "estado" => "warning",
@@ -296,6 +305,7 @@ class parametros
                 return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
             }
         } catch (PDOException $e) {
+            $db->rollBack();
             $codigoDeError = $e->getCode();
             $error = self::traducirMensaje($codigoDeError, $e);
             $arreglo = [
@@ -313,9 +323,11 @@ class parametros
     public static function actualizarListaExcluyente($request, $response)
     {
         $postrequest = json_decode($request->getBody());
+        $db=null;
         $query = "UPDATE ms_parametro SET comentario=:comentario WHERE valor=:valor AND parametro='BANDERA_LISTA_EXCLUYENTE_SUC'";
         try {
             $db = getConnection();
+            $db->beginTransaction();
             $sentencia = $db->prepare($query);
             $sentencia->bindParam("valor", $postrequest->valor,PDO::PARAM_STR);
             $sentencia->bindParam("comentario", $postrequest->comentario,PDO::PARAM_STR);
@@ -327,8 +339,10 @@ class parametros
                         "success" => "Se a actualizado el usuario con éxito",
                         "data" => $resultado
                     ];
+                $db->commit();
                 return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
             } else {
+                $db->rollBack();
                 $arreglo =
                     [
                         "estado" => "warning",
@@ -338,6 +352,7 @@ class parametros
                 return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
             }
         } catch (PDOException $e) {
+            $db->rollBack();
             $codigoDeError = $e->getCode();
             $error = self::traducirMensaje($codigoDeError, $e);
             $arreglo = [
@@ -355,6 +370,7 @@ class parametros
     public static function insertarListaFija($request, $response)
     {
         $postrequest = json_decode($request->getBody());
+        $db=null;
         if(isset($postrequest->excluyente)){
             $query = "INSERT INTO ms_parametro VALUES ('1','LISTA_RELACION_IDSUCURSAL_ARTID_EXCLUYENTE',:parametro,:valor,'',:usuario,NOW())";
         }else{
@@ -363,6 +379,7 @@ class parametros
 
         try {
             $db = getConnection();
+            $db->beginTransaction();
             $sentencia = $db->prepare($query);
             $sentencia->bindParam("parametro", $postrequest->parametro,PDO::PARAM_STR);
             $sentencia->bindParam("valor", $postrequest->valor,PDO::PARAM_STR);
@@ -375,8 +392,10 @@ class parametros
                         "success" => "Se a agregado con éxito",
                         "data" => $resultado
                     ];
+                $db->commit();
                 return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
             } else {
+                $db->rollBack();
                 $arreglo =
                     [
                         "estado" => "warning",
@@ -386,10 +405,10 @@ class parametros
                 return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
             }
         } catch (PDOException $e) {
-
+            $db->rollBack();
             $arreglo = [
                 "estado" => $e->getCode(),
-                "error" => 'Error',
+                "error" => general::traducirMensaje($e->getCode(),$e),
                 "data" => json_encode($postrequest)
             ];
             return $response->withJson($arreglo, 400);
@@ -402,6 +421,7 @@ class parametros
     public static function eliminarListaFija($request, $response)
     {
         $postrequest = json_decode($request->getBody());
+        $db=null;
         if(isset($postrequest->excluyente)){
             $query = "DELETE FROM  ms_parametro WHERE accion='LISTA_RELACION_IDSUCURSAL_ARTID_EXCLUYENTE' AND parametro=:parametro AND valor=:valor";
         }else{
@@ -410,6 +430,7 @@ class parametros
 
         try {
             $db = getConnection();
+            $db->beginTransaction();
             $sentencia = $db->prepare($query);
             $sentencia->bindParam("parametro", $postrequest->parametro,PDO::PARAM_STR);
             $sentencia->bindParam("valor", $postrequest->valor,PDO::PARAM_STR);
@@ -421,8 +442,10 @@ class parametros
                         "success" => "Se ha borrado el artículo con éxito",
                         "data" => $resultado
                     ];
+                $db->commit();
                 return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
             } else {
+                $db->rollBack();
                 $arreglo =
                     [
                         "estado" => "warning",
@@ -432,11 +455,12 @@ class parametros
                 return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
             }
         } catch (PDOException $e) {
+            $db->rollBack();
             $codigoDeError = $e->getCode();
             $error = logIn::traducirMensaje($codigoDeError, $e);
             $arreglo = [
                 "estado" => $e->getCode(),
-                "error" => $error,
+                "error" => general::traducirMensaje($e->getCode(),$e),
                 "data" => json_encode($postrequest)
             ];
             return $response->withJson($arreglo, 400);
@@ -481,7 +505,7 @@ class parametros
         } catch (PDOException $e) {
             $arreglo = [
                 "estado" => 400,
-                "error" => "Error al traer listado de Parametros",
+                "error" => general::traducirMensaje($e->getCode(),$e),
                 "datos" => $e->getMessage()
             ];
             return $response->withJson($arreglo, 400);

@@ -17,7 +17,6 @@ require __DIR__ . '/../src/middleware.php';
 require __DIR__ . '/../src/routes.php';
 require_once("usuario.php");
 require_once("sucursal.php");
-require_once("LogIn.php");
 require_once("MercaStock.php");
 require_once("departamento.php");
 require_once("categoria.php");
@@ -33,8 +32,10 @@ require_once("sexo.php");
 require_once("importar.php");
 require_once('exportar.php');
 require_once("concepto.php");
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Usuario
+require_once("tipo_pago.php");
+require_once("detalles_venta.php");
+require_once("general.php");
+//require_once("tipo_pago.php");
 
 $app->run();
 
