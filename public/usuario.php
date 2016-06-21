@@ -168,6 +168,7 @@ class usuario
             }
         } catch (PDOException $e) {
             $db->rollBack();
+
             $arreglo = [
                 "estado" => $e->getCode(),
                 "error" => general::traducirMensaje($e->getCode(),$e),

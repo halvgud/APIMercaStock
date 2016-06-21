@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 class categoria
 {
@@ -38,6 +38,7 @@ class categoria
             $arreglo = [
                 "estado" => 400,
                 "error" => general::traducirMensaje($e->getCode(),$e),
+
                 "datos" =>"Error al traer listado de Categoria"
             ];
             $respuesta= $response->withJson($arreglo, 400);

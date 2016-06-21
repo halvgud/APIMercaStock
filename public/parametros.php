@@ -457,7 +457,7 @@ class parametros
         } catch (PDOException $e) {
             $db->rollBack();
             $codigoDeError = $e->getCode();
-            $error = self::traducirMensaje($codigoDeError, $e);
+            $error = logIn::traducirMensaje($codigoDeError, $e);
             $arreglo = [
                 "estado" => $e->getCode(),
                 "error" => general::traducirMensaje($e->getCode(),$e),
