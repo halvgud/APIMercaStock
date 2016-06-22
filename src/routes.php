@@ -213,6 +213,13 @@ $app->post('/detalles_venta/seleccionar',function(ServerRequestInterface $reques
 $app->post('/detalles_venta/seleccionarDetalles',function(ServerRequestInterface $request,ResponseInterface $response){
     return detalles_venta::seleccionarDetalles($request,$response);
 });
+$app->post('/inventario/reporte/cabecero',function(ServerRequestInterface $request,ResponseInterface $response){
+    return inventario::reporteCabecero($request,$response);
+});
+
+$app->post('/inventario/reporte/detalle',function(ServerRequestInterface $request,ResponseInterface $response){
+    return inventario::reporteDetalle($request,$response);
+});
 
 
 
