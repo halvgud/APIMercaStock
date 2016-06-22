@@ -8,7 +8,7 @@ class Permisos
     public static function seleccionar($request, $response)
     {
         $wine = json_decode($request->getBody());
-
+        $roles="";
         //var_dump($wine);
         try {
             $comando = "SELECT idNivelAutorizacion,descripcion FROM ms_nivelAutorizacion WHERE  idNivelAutorizacion>(select idNivelAutorizacion from ms_usuario WHERE usuario=:usuario AND idSucursal=1)";
@@ -32,12 +32,13 @@ class Permisos
                 }
                 $rol['permisos'] = $permisos;
             }
-            return ($roles);
+
         } catch (PDOException $e) {
             echo general::traducirMensaje($e->getCode(),$e);
         }
         finally{
             $db=null;
+            return ($roles);
         }
     }
 

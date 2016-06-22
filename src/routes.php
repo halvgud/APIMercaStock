@@ -155,8 +155,21 @@ $app->post('/importar/inventario', function (ServerRequestInterface $request, Re
     return importar::importarInventarioAPI($request,$response);
 });
 
-$app->post('/exportar/venta/obtener/ultima',function(ServerRequestInterface $request,ResponseInterface $response){
-    return exportar::ultimaVenta($request,$response);
+$app->post('/exportar/venta/obtener/ultima/{opcion}',function(ServerRequestInterface $request,ResponseInterface $response){
+    $route = $request->getAttribute('route');
+    $courseId = $route->getArgument('opcion');
+    switch($courseId){
+        case "detalleventa":{
+            return exportar::ultimoDetalleVenta($request,$response);
+        }break;
+        case "ventatipopago":{
+            return exportar::ultimoVentaTipoPago($request,$response);
+        }break;
+        default:{
+            return exportar::ultimaVenta($request,$response);
+        }break;
+    }
+
 });
 
 $app->post('/importar/venta',function(ServerRequestInterface $request,ResponseInterface $response){
@@ -182,6 +195,11 @@ $app->post('/general/dashboard/actualizar',function(ServerRequestInterface $requ
 $app->post('/general/dashboard/tiempo',function(ServerRequestInterface $request,ResponseInterface $response){
 
     return exportar::GenerarDashBoardPorSucursal($request,$response);
+});
+
+$app->post('/importar/venta/tipo/pago',function(ServerRequestInterface $request,ResponseInterface $response){
+
+    return importar::VentaTipoPago($request,$response);
 });
 
 

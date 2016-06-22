@@ -444,6 +444,7 @@ class importar
     }
 
     public static function importarInventarioAPI($request, $response){
+        set_time_limit(0);
         $postrequest = json_decode($request->getBody());
         $db=null;
         try {
@@ -500,6 +501,68 @@ class importar
         }
         finally{
             $db=null;
+        }
+    }
+    public static function VentaTipoPago($request, $response)
+    {
+        set_time_limit(0);
+        $postrequest = json_decode($request->getBody());
+        $db=null;
+        try {
+            $db = getConnection();
+            $db->beginTransaction();
+            $banderaEjecucion=false;
+
+            foreach ($postrequest->data as $renglon ) {
+                $ven_id=$renglon->ven_id;
+                $tpa_id = $renglon->tpa_id;
+                $total = $renglon->total;
+                $monTotal = $renglon->monTotal;
+                $idSucursal = $renglon->idSucursal;
+                $comando="INSERT INTO ventatipopago (ven_id, tpa_id, total, monTotal,idSucursal) VALUES (:ven_id,:tpa_id,:total,:monTotal,:idSucursal) on
+                            duplicate key update total=:total,monTotal=:monTotal;";
+
+                $sentencia = $db->prepare($comando);
+
+                $sentencia->bindParam('ven_id', $ven_id);
+                $sentencia->bindParam('tpa_id', $tpa_id);
+                $sentencia->bindParam('total', $total);
+                $sentencia->bindParam('monTotal', $monTotal);
+                $sentencia->bindParam('idSucursal', $idSucursal);
+                $banderaEjecucion=$sentencia->execute();
+                if($banderaEjecucion==false){
+                    break;
+                }
+            }
+            if($banderaEjecucion){
+                $arreglo = [
+                    "estado" => 200,
+                    "success" => "Se a importado la informacion",
+                    "datos" => "ok"
+                ];
+                $db->commit();
+                $codigo=200;
+            }else{
+                $db->rollBack();
+                $arreglo = [
+                    "estado" => 400,
+                    "error" => "Error al Insertar o Actualizar un registro",
+                    "datos" => "error"
+                ];
+                $codigo=400;
+            }
+        } catch (PDOException $e) {
+            $db->rollBack();
+            $arreglo = [
+                "estado" => 400,
+                "error" => general::traducirMensaje($e->getCode(),$e),
+                "datos" => $e->getMessage()
+            ];
+            $codigo=400;
+        }
+        finally{
+            $db=null;
+            return $response->withJson($arreglo, $codigo);
         }
     }
 }

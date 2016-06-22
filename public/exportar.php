@@ -7,7 +7,7 @@ class exportar
     }
     public static function ultimaVenta($request,$response){
         $postrequest = json_decode($request->getBody());
-        $query = "select max(ven_idLocal) as ven_id from venta where idSucursal=:idSucursal";
+        $query = "select max(ven_id) as ven_id from venta where idSucursal=:idSucursal";
         try{
             $db=getConnection();
             $sentencia = $db->prepare($query);
@@ -55,6 +55,107 @@ class exportar
             return $response->withJson($arreglo,$codigo,JSON_UNESCAPED_UNICODE);
         }
     }
+    public static function ultimoDetalleVenta($request,$response){
+        $postrequest = json_decode($request->getBody());
+        $query = "select max(ven_idLocal) as ven_id from detallev where idSucursal=:idSucursal";
+        try{
+            $db=getConnection();
+            $sentencia = $db->prepare($query);
+            if(isset($postrequest->idSucursal)){
+                $sentencia->bindParam("idSucursal",$postrequest->idSucursal);
+                $sentencia -> execute();
+                $resultado = $sentencia->fetchAll(PDO::FETCH_OBJ);
+                if($sentencia){
+                    $arreglo =
+                        [
+                            "estado" => 200,
+                            "success" => "maxima id de detalle venta",
+                            "data" => $resultado
+                        ];
+                    $codigo=200;
+                } else {
+                    $arreglo =
+                        [
+                            "estado" => "warning",
+                            "mensaje" => "",
+                            "data" => $resultado
+                        ];
+                    $codigo=202;
+                }//else
+            }else{
+                $arreglo =
+                    [
+                        "estado" => 400,
+                        "error" => "id de Sucursal necesaria",
+                        "data" => $postrequest
+                    ];
+                $codigo=400;
+            }
+        }catch(PDOException $e){
+
+            $arreglo = [
+                "estado" => 400,
+                "error" => general::traducirMensaje($e->getCode(),$e),
+                "data" => json_encode($postrequest)
+            ];
+            $codigo=400;
+        }
+        finally{
+            $db=null;
+            return $response->withJson($arreglo,$codigo,JSON_UNESCAPED_UNICODE);
+        }
+    }
+    public static function ultimoVentaTipoPago($request,$response){
+        $postrequest = json_decode($request->getBody());
+        $query = "select max(ven_id) as ven_id from ventatipopago where idSucursal=:idSucursal";
+        try{
+            $db=getConnection();
+            $sentencia = $db->prepare($query);
+            if(isset($postrequest->idSucursal)){
+                $sentencia->bindParam("idSucursal",$postrequest->idSucursal);
+                $sentencia -> execute();
+                $resultado = $sentencia->fetchAll(PDO::FETCH_OBJ);
+                if($sentencia){
+                    $arreglo =
+                        [
+                            "estado" => 200,
+                            "success" => "maxima id de tipo pago",
+                            "data" => $resultado
+                        ];
+                    $codigo=200;
+                } else {
+                    $arreglo =
+                        [
+                            "estado" => "warning",
+                            "mensaje" => "",
+                            "data" => $resultado
+                        ];
+                    $codigo=202;
+                }//else
+            }else{
+                $arreglo =
+                    [
+                        "estado" => 400,
+                        "error" => "id de Sucursal necesaria",
+                        "data" => $postrequest
+                    ];
+                $codigo=400;
+            }
+        }catch(PDOException $e){
+
+            $arreglo = [
+                "estado" => 400,
+                "error" => general::traducirMensaje($e->getCode(),$e),
+                "data" => json_encode($postrequest)
+            ];
+            $codigo=400;
+        }
+        finally{
+            $db=null;
+            return $response->withJson($arreglo,$codigo,JSON_UNESCAPED_UNICODE);
+        }
+    }
+
     public static function Parametro($request,$response){
         $postrequest = json_decode($request->getBody());
 

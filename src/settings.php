@@ -1,9 +1,7 @@
 <?php
 return [
     'settings' => [
-        'determineRouteBeforeAppMiddleware' => true,
-        'displayErrorDetails' => true,
-        'addContentLengthHeader' => false,
+        'displayErrorDetails' => true, // set to false in production
 
         // Renderer settings
         'renderer' => [
