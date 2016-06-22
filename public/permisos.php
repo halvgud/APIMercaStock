@@ -32,13 +32,16 @@ class Permisos
                 }
                 $rol['permisos'] = $permisos;
             }
+            $db=null;
             return ($roles);
+
+
         } catch (PDOException $e) {
             echo general::traducirMensaje($e->getCode(),$e);
         }
-        finally{
-            $db=null;
-        }
+ /*       finally{
+
+        }*/
     }
 
     public static function actualizar($request, $response)

@@ -183,6 +183,14 @@ $app->post('/general/dashboard/tiempo',function(ServerRequestInterface $request,
 
     return exportar::GenerarDashBoardPorSucursal($request,$response);
 });
-
+$app->post('/tipo_pago/insertar',function(ServerRequestInterface $request,ResponseInterface $response){
+    return tipo_pago::insertar($request,$response);
+});
+$app->post('/detalles_venta/seleccionar',function(ServerRequestInterface $request,ResponseInterface $response){
+    return detalles_venta::seleccionar($request,$response);
+});
+$app->post('/detalles_venta/seleccionarDetalles',function(ServerRequestInterface $request,ResponseInterface $response){
+    return detalles_venta::seleccionarDetalles($request,$response);
+});
 
 

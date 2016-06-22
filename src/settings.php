@@ -3,7 +3,7 @@ return [
     'settings' => [
         'determineRouteBeforeAppMiddleware' => true,
         'displayErrorDetails' => true,
-        'addContentLengthHeader' => false,
+            'addContentLengthHeader' => false,
 
         // Renderer settings
         'renderer' => [
