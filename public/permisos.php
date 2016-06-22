@@ -31,11 +31,11 @@ class Permisos
                     }
                 }
                 $rol['permisos'] = $permisos;
-            }
-
+            }   
         } catch (PDOException $e) {
             echo general::traducirMensaje($e->getCode(),$e);
         }
+
         finally{
             $db=null;
             return ($roles);
