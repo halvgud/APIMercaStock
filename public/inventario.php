@@ -471,9 +471,12 @@ class inventario
     public static function reporteCabecero($request, $response)
     {
         $postrequest = json_decode($request->getBody());
-            $comando = "select msi.idSucursal, mss.nombre, date(msi.fechaSolicitud) as fecha, count(1) total, sum(case when existenciaRespuesta=existenciaEjecucion
+            $comando = "select msi.idSucursal, mss.nombre, date(msi.fechaSolicitud) as fecha, count(1) total,
+							sum(case when existenciaRespuesta=existenciaEjecucion and existenciaRespuesta!=0
                             then '1' else 0 end) as totalAcertado,sum(case when existenciaRespuesta!=existenciaEjecucion
-                            then '1' else 0 end) as totalFallado from
+                            then '1' else 0 end) as totalFallado,
+							(sum(case when existenciaEjecucion>=existenciaRespuesta then existenciaRespuesta/existenciaEjecucion
+            else existenciaEjecucion/existenciaRespuesta end)/count(*)) as bandera	from
                             ms_inventario msi
                             inner join ms_sucursal mss on (mss.idSucursal = msi.idSucursal and mss.idSucursal=:idSucursal)
                             where date(msi.fechaSolicitud)>=date(:fechaIni)
