@@ -325,7 +325,7 @@ class usuario
                             ];
                     } catch (PDOException $e) {
                         $codigoDeError=$e->getCode();
-                        $error =LogIn::traducirMensaje($codigoDeError,$e);
+                        $error =general::traducirMensaje($codigoDeError,$e);
                         $arreglo = [
                             "estado" =>$e -> getCode(),
                             "error" =>$error,
@@ -345,8 +345,6 @@ class usuario
             }
         } catch (PDOException $e) {
             $db=null;
-            $codigoDeError=$e->getCode();
-            $error =LogIn::traducirMensaje($codigoDeError,$e);
             $arreglo = [
                 "estado" =>$e -> getCode(),
                 "error" => general::traducirMensaje($e->getCode(),$e),
@@ -400,6 +398,52 @@ class usuario
             }
         }catch(PDOException $e){
             return false;
+        }
+    }
+    public static function seleccionarApi($request, $response)
+    {
+        $postrequest = json_decode($request->getBody());
+        //$codigo=200;
+       // var_dump($postrequest);
+        $arreglo=[];
+
+        $comando = "SELECT usuario FROM ms_usuario WHERE usuario=:usuario AND claveAPI=:claveApi";
+
+        try {
+            $db = getConnection();
+            $sentencia = $db->prepare($comando);
+            $sentencia->bindParam('usuario',$postrequest->datos->Usuario);
+            $sentencia->bindParam('claveApi',$postrequest->datos->ClaveAPI);
+            $sentencia->execute();
+            $resultado = $sentencia->fetchObject();
+
+            if ($resultado) {
+                $arreglo = [
+                    "estado" => 200,
+                    "success" => "OK",
+                    "data" => $resultado
+                ];
+              return  $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
+            } else {
+                $arreglo = [
+                    "estado" => 400,
+                    "success" => "Error al autenticarz",
+                    "data" => $postrequest->datos
+                ];;
+                return  $response->withJson($arreglo, 400, JSON_UNESCAPED_UNICODE);
+            }
+        } catch (PDOException $e) {
+            $arreglo = [
+                "estado" => 400,
+                "error" => general::traducirMensaje($e->getCode(),$e),
+                "data" => $e
+            ];
+            return  $response->withJson($arreglo, 400, JSON_UNESCAPED_UNICODE);
+
+        }
+        finally{
+            $db=null;
+            //return $response->withJson($arreglo, $codigo);
         }
     }
 }

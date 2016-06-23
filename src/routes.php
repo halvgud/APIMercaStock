@@ -31,6 +31,9 @@ $app->post('/usuario/permisos/obtener/{id}', function (ServerRequestInterface $r
     $newResponse = $response->withJson(PrivilegiosUsuario::obtenerPorUsuario($courseId),200);
     return ($newResponse);
 });
+$app->post('/usuario/seleccionarApi', function (ServerRequestInterface $request, ResponseInterface $response){
+    return usuario::seleccionarApi($request,$response);
+});
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Sucursal
 $app->post('/sucursal/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response){
     return sucursal::seleccionar($request,$response);
@@ -62,6 +65,12 @@ $app->post('/articulo/seleccionar', function (ServerRequestInterface $request, R
 });
 $app->post('/articulo/seleccionarListaFija', function (ServerRequestInterface $request, ResponseInterface $response){
     return articulo::seleccionarListaFija($request,$response);
+});
+$app->post('/articulo/seleccionarIndividualMovimiento', function (ServerRequestInterface $request, ResponseInterface $response) {
+    return articulo::seleccionarIndividualMovimiento($request, $response);
+});
+$app->post('/articulo/seleccionarIndividualMovimiento2', function (ServerRequestInterface $request, ResponseInterface $response) {
+    return articulo::seleccionarIndividualMovimiento2($request, $response);
 });
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Inventario
 $app->post('/inventario/seleccionarAzar', function (ServerRequestInterface $request, ResponseInterface $response){

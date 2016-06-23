@@ -149,4 +149,113 @@ class articulo
             $db=null;
         }
     }
+    public static function seleccionarIndividualMovimiento($request, $response)
+    {
+        $postrequest = json_decode($request->getBody());
+
+        $comando = "SELECT art_id,clave,descripcion,existencia FROM articulo WHERE idSucursal=:idSucursal AND clave=:input";
+        $comando2 = "SELECT art_id,clave,descripcion,existencia FROM articulo WHERE idSucursal=:idSucursal AND descripcion like  CONCAT('%',:input,'%')";
+        try {
+            $db = getConnection();
+            $db->query("SET NAMES 'utf8'");
+            $db->query("SET CHARACTER SET utf8");
+            $sentencia = $db->prepare($comando);
+
+            $sentencia->bindParam("idSucursal", $postrequest->idSucursal);
+            $sentencia->bindParam("input", $postrequest->input);
+            $sentencia->execute();
+            $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+            if($resultado) {
+                $arreglo = [
+                    "estado" => 200,
+                    "success"=>"OKo",
+                    "data" => $resultado
+                ];
+                return $response->withJson($arreglo,200);
+            } else {
+                $sentencia2 = $db->prepare($comando2);
+                $sentencia2->bindParam("idSucursal", $postrequest->idSucursal);
+                $sentencia2->bindParam("input", $postrequest->input);
+                $sentencia2->execute();
+                $resultado2 = $sentencia2->fetchAll(PDO::FETCH_ASSOC);
+                if($resultado2) {
+                    $arreglo = [
+                        "estado" => 200,
+                        "success"=>"OKp",
+                        "data" => $resultado2
+                    ];
+                    return $response->withJson($arreglo,200);
+                } else {
+
+                    $arreglo = [
+                        "estado" => 'warning',
+                        "success" => "Error al traer listado de Inventario Individual",
+                        "data" => $postrequest
+                    ];;
+                    return $response->withJson($arreglo, 200);
+
+                }
+            }
+        } catch (PDOException $e) {
+            $arreglo = [
+                "estado" => 400,
+                "error" => general::traducirMensaje($e->getCode(),$e),
+                "datos" => $e->getMessage()
+            ];
+            return $response->withJson($arreglo, 400);
+        }
+        finally{
+            $db=null;
+        }
+    }
+    public static function seleccionarIndividualMovimiento2($request, $response)
+    {
+        $postrequest = json_decode($request->getBody());
+
+        $comando = "SELECT dv.clave,dv.descripcion,dv.cantidad,v.fecha,dv.unidad,v.total
+                        FROM detallev dv INNER JOIN venta v on (dv.ven_idLocal=v.ven_id)
+                        WHERE dv.idSucursal=:idSucursal AND clave=:input2 AND v.fecha>=:fechaInicio AND v.fecha<=:fechaFin";
+        $fechaI = $postrequest->fechaInicio;
+        $fechaF = $postrequest->fechaFin;
+        $fechaI = $fechaI.' 00:00:00';
+        $fechaF = $fechaF.' 23:59:59';
+        try {
+            $db = getConnection();
+            $db->query("SET NAMES 'utf8'");
+            $db->query("SET CHARACTER SET utf8");
+            $sentencia = $db->prepare($comando);
+
+            $sentencia->bindParam("idSucursal", $postrequest->idSucursal);
+            $sentencia->bindParam("input2", $postrequest->input2);
+            $sentencia->bindParam('fechaInicio',$fechaI);
+            $sentencia->bindParam('fechaFin',$fechaF);
+            $sentencia->execute();
+            $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+            if($resultado) {
+                $arreglo = [
+                    "estado" => 200,
+                    "success"=>"OK",
+                    "data" => $resultado
+                ];
+                return $response->withJson($arreglo,200);
+            } else {
+                $arreglo = [
+                    "estado" => 'warning',
+                    "success" => "Error al traer listado de Inventario Individual",
+                    "data" => $postrequest
+                ];;
+                return $response->withJson($arreglo, 200);
+            }
+        } catch (PDOException $e) {
+            $arreglo = [
+                "estado" => 400,
+                "error" => general::traducirMensaje($e->getCode(),$e),
+                "datos" => $e->getMessage()
+            ];
+            return $response->withJson($arreglo, 400);
+        }
+        finally{
+            $db=null;
+        }
+    }
 }
