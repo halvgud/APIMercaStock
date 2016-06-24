@@ -15,12 +15,18 @@ $app->add(function ($request, $response, $next) {
        }
 
         if(usuario::revisarToken($Auth)){
+
+            //$newResponse4 = $response->withHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers,Authorization, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
+
             return $response = $next($request, $response);
         }else{
-            $arreglo=["estado"=>"-1","error"=>"no autenticado","data"=>$headers];
+            $arreglo=["estado"=>"-1","error"=>"no autenticado","apache_request"=>$headers,"phpserver"=>$_SERVER,"getallheaders"=>getallheaders()];
             return $response->withJson($arreglo,401);
         }
     }else{
-        return $response = $next($request, $response);
+
+        $newResponse4 = $response->withHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers,Authorization, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
+
+        return $response = $next($request, $newResponse4);
     }
 });

@@ -533,7 +533,7 @@ class inventario
             ms_inventario msi inner join articulo a on (a.art_id = msi.art_id and
             a.idSucursal = msi.idSucursal)
                     where msi.idSucursal =:idSucursal
-                    and date(msi.fechaSolicitud)=date(:fecha)";
+                    and date(msi.fechaSolicitud)=date(:fecha);";
         try {
             $db = getConnection();
             $db->query("SET NAMES 'utf8'");
