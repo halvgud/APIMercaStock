@@ -214,11 +214,11 @@ class importar
         try {
             $db = getConnection();
             $db->beginTransaction();
-            if (isset($postrequest[0]->data) && gettype($postrequest[0]->data) == 'array') {
+            if (isset($postrequest->data) && gettype($postrequest->data) == 'array') {
                 $comando = "insert into venta(ven_id, ven_idLocal, fecha, subtotal0, subtotal, descuento, total, cambio, letra, monSubtotal0, monSubtotal, monDescuento, monTotal, monCambio, monLetra, monAbr, monTipoCambio, comentario, decimales, porPeriodo, ventaPorAjuste, puntos, monedas, status, tic_id, not_id, rem_id, caj_id, mon_id, rcc_id, can_caj_id, can_rcc_id, vnd_id, idSucursal)
-                values(0,:ven_id,:fecha,:subtotal0,:subtotal,:descuento,:total,:cambio,:letra,:monSubtotal0, :monSubtotal, :monDescuento, :monTotal,:monCambio, :monLetra, :monAbr, :monTipoCambio, :comentario, :decimales, :porPeriodo, :ventaPorAjuste, :puntos, :monedas, :status, :tic_id, :not_id, :rem_id, :caj_id, :mon_id, :rcc_id, :can_caj_id, :can_rcc_id, :vnd_id, :idSucursal)
+                values(:ven_id,:ven_id,:fecha,:subtotal0,:subtotal,:descuento,:total,:cambio,:letra,:monSubtotal0, :monSubtotal, :monDescuento, :monTotal,:monCambio, :monLetra, :monAbr, :monTipoCambio, :comentario, :decimales, :porPeriodo, :ventaPorAjuste, :puntos, :monedas, :status, :tic_id, :not_id, :rem_id, :caj_id, :mon_id, :rcc_id, :can_caj_id, :can_rcc_id, :vnd_id, :idSucursal)
                 on duplicate key update ven_idLocal=:ven_id,fecha=:fecha,subtotal0=:subtotal0,subtotal=:subtotal,descuento=:descuento,total=:total,cambio=:cambio,letra=:letra,monSubtotal0=:monSubtotal0,monSubtotal=:monSubtotal,monDescuento=:monDescuento,monTotal=:monTotal,monCambio=:monCambio,monLetra=:monLetra,monAbr=:monAbr,monTipoCambio=:monTipoCambio,comentario=:comentario,decimales=:decimales,porPeriodo=:porPeriodo,ventaPorAjuste=:ventaPorAjuste,puntos=:puntos,monedas=:monedas,status=:status,tic_id=:tic_id,not_id=:not_id,rem_id=:rem_id,caj_id=:caj_id,mon_id=:mon_id,rcc_id=:rcc_id,can_caj_id=:can_caj_id,can_rcc_id=:can_rcc_id,vnd_id=:vnd_id,idSucursal=:idSucursal";
-                foreach ($postrequest[0]->data as $renglon) {
+                foreach ($postrequest->data as $renglon) {
                     $contador++;
                     $sentencia = $db->prepare($comando);
                     $sentencia->bindParam("ven_id",$renglon->ven_id);
@@ -415,22 +415,22 @@ class importar
             }
 
             if($resultado){
-                 $arreglo =
-                            [
-                                "estado" => 200,
-                                "success" => "",
-                                "data" => $resultado
-                            ];
-                        return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
-                    } else {
-                        $arreglo =
-                            [
-                                "estado" => "warning",
-                                "mensaje" => "",
-                                "data" => $resultado
-                            ];
-                        return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
-                      }//else
+                $arreglo =
+                    [
+                        "estado" => 200,
+                        "success" => "",
+                        "data" => $resultado
+                    ];
+                return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
+            } else {
+                $arreglo =
+                    [
+                        "estado" => "warning",
+                        "mensaje" => "",
+                        "data" => $resultado
+                    ];
+                return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
+            }//else
         }catch(PDOException $e){
             $codigoDeError=$e->getCode();
             $error =logIn::traducirMensaje($codigoDeError,$e);

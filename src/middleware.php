@@ -1,23 +1,34 @@
 <?php
 // Application middleware
+/*
+$corsOptions = array(
+     "origin" => "mercastock.mercatto.mx",
+    "Credentials "=>"true",
+    "exposeHeaders" => array("Content-Type", "X-Requested-With", "X-authentication", "X-client","Authorization"),
+    "maxAge" => 1728000,
+    "allowCredentials" => True,
+    "allowMethods" => array("POST, GET"),
+    "allowHeaders" => array("Authorization")
+);
+$cors = new \CorsSlim\CorsSlim($corsOptions);
 
-
+$app->add($cors);*/
 $app->add(function ($request, $response, $next) {
-    $headers = apache_request_headers();
+    $headers =getallheaders();
     $Auth="";
 
-                                                            /////cambiar a getPath()!='sucursal/login'
+    /////cambiar a getPath()!='sucursal/login'
     if($request->getUri()->getPath()!='usuario/login'&&$request->getUri()->getPath()!='sucursal/login'){
         foreach ($headers as $header => $value) {
             if($header=='Authorization'){
                 $Auth = $value;
-         }
-       }
+            }
+        }
 
         if(usuario::revisarToken($Auth)){
             return $response = $next($request, $response);
         }else{
-            $arreglo=["estado"=>"-1","error"=>"no autenticado","data"=>$headers];
+            $arreglo=["estado"=>"-1","error"=>"no autenticado","apache_request"=>$headers,"phpserver"=>$_SERVER,"getallheaders"=>getallheaders(),"SLIM"=>$headers ];
             return $response->withJson($arreglo,401);
         }
     }else{

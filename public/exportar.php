@@ -7,7 +7,7 @@ class exportar
     }
     public static function ultimaVenta($request,$response){
         $postrequest = json_decode($request->getBody());
-        $query = "select max(ven_id) as ven_id from venta where idSucursal=:idSucursal";
+        $query = "select (case when max(ven_id) is null then 0 else max(ven_id) end) as ven_id from venta where idSucursal=:idSucursal";
         try{
             $db=getConnection();
             $sentencia = $db->prepare($query);
@@ -16,22 +16,22 @@ class exportar
                 $sentencia -> execute();
                 $resultado = $sentencia->fetchAll(PDO::FETCH_OBJ);
                 if($sentencia){
-                     $arreglo =
-                                [
-                                    "estado" => 200,
-                                    "success" => "maxima id de venta",
-                                    "data" => $resultado
-                                ];
-                            $codigo=200;
-                        } else {
-                            $arreglo =
-                                [
-                                    "estado" => "warning",
-                                    "mensaje" => "",
-                                    "data" => $resultado
-                                ];
-                            $codigo=202;
-                          }//else
+                    $arreglo =
+                        [
+                            "estado" => 200,
+                            "success" => "maxima id de venta",
+                            "data" => $resultado
+                        ];
+                    $codigo=200;
+                } else {
+                    $arreglo =
+                        [
+                            "estado" => "warning",
+                            "mensaje" => "",
+                            "data" => $resultado
+                        ];
+                    $codigo=202;
+                }//else
             }else{
                 $arreglo =
                     [
@@ -57,7 +57,7 @@ class exportar
     }
     public static function ultimoDetalleVenta($request,$response){
         $postrequest = json_decode($request->getBody());
-        $query = "select max(ven_idLocal) as ven_id from detallev where idSucursal=:idSucursal";
+        $query = "select (case when max(ven_idLocal) is null then 0 else max(ven_idLocal) end) as ven_id from detallev where idSucursal=:idSucursal";
         try{
             $db=getConnection();
             $sentencia = $db->prepare($query);
@@ -174,7 +174,7 @@ class exportar
                     "success"=>"OK",
                     "data" => $resultado
                 ];
-               $codigo=200;
+                $codigo=200;
             } else {
                 $arreglo = [
                     "estado" => 202,
@@ -208,13 +208,13 @@ class exportar
             $sentencia->bindParam("idSucursal", $postrequest->idSucursal);
             $resultado = $sentencia -> execute();
             if($resultado){
-                 $arreglo =
+                $arreglo =
                     [
                         "estado" => 200,
                         "success" => "",
                         "data" => $resultado
                     ];
-                    $db->commit();
+                $db->commit();
                 return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
             } else {
                 $db->rollBack();
@@ -225,7 +225,7 @@ class exportar
                         "data" => $resultado
                     ];
                 return $response->withJson($arreglo, 202, JSON_UNESCAPED_UNICODE);
-              }//else
+            }//else
         }catch(PDOException $e){
             $db->rollBack();
 
@@ -253,12 +253,12 @@ class exportar
             $sentencia->execute();
             $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
             if($resultado){
-                    $arreglo = [
-                        "estado" => 200,
-                        "success"=>"OK",
-                        "data" => $resultado
-                    ];
-                    $codigo=200;
+                $arreglo = [
+                    "estado" => 200,
+                    "success"=>"OK",
+                    "data" => $resultado
+                ];
+                $codigo=200;
             }
             else {
                 $arreglo = [
@@ -336,22 +336,22 @@ class exportar
             $ejecucion=$sentencia -> execute();
             $resultado = $sentencia->fetchAll(PDO::FETCH_OBJ);
             if($ejecucion){
-                 $arreglo =
-                            [
-                                "estado" => 200,
-                                "success" => "ok",
-                                "data" => $resultado
-                            ];
-                        return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
-                    } else {
-                        $arreglo =
-                            [
-                                "estado" => "warning",
-                                "mensaje" => "",
-                                "data" => $resultado
-                            ];
-                        return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
-                      }//else
+                $arreglo =
+                    [
+                        "estado" => 200,
+                        "success" => "ok",
+                        "data" => $resultado
+                    ];
+                return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
+            } else {
+                $arreglo =
+                    [
+                        "estado" => "warning",
+                        "mensaje" => "",
+                        "data" => $resultado
+                    ];
+                return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
+            }//else
         }catch(PDOException $e){
             $codigoDeError=$e->getCode();
             $error =self::traducirMensaje($codigoDeError,$e);
@@ -378,22 +378,22 @@ class exportar
             $sentencia->bindParam("parametro", $postrequest->parametro);
             $resultado = $sentencia -> execute();
             if($resultado){
-                 $arreglo =
-                            [
-                                "estado" => 200,
-                                "success" => "",
-                                "data" => $resultado
-                            ];
-                        return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
-                    } else {
-                        $arreglo =
-                            [
-                                "estado" => "warning",
-                                "mensaje" => "",
-                                "data" => $resultado
-                            ];
-                        return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
-                      }//else
+                $arreglo =
+                    [
+                        "estado" => 200,
+                        "success" => "",
+                        "data" => $resultado
+                    ];
+                return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
+            } else {
+                $arreglo =
+                    [
+                        "estado" => "warning",
+                        "mensaje" => "",
+                        "data" => $resultado
+                    ];
+                return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
+            }//else
         }catch(PDOException $e){
             $codigoDeError=$e->getCode();
             $error =general::traducirMensaje($codigoDeError,$e);
