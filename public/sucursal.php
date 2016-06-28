@@ -279,7 +279,7 @@ class sucursal
 
     private static function autenticar($usuario, $contrasena,$idSucursal,$postrequest)
     {
-        $comando = "SELECT idSucursal,password,usuario, claveAPI,nombre FROM ms_sucursal where usuario=:usuario and idSucursal=:idSucursal";
+        $comando = "SELECT idSucursal,password,usuario, claveAPI,nombre,contacto as host FROM ms_sucursal where usuario=:usuario and idSucursal=:idSucursal";
         try {
             $db = getConnection();
             $sentencia = $db->prepare($comando);
@@ -298,7 +298,7 @@ class sucursal
                                 "mensaje" => "OK",
                                 "datos" => ["idSucursal"=>$resultado->idSucursal,"claveAPI"=>self::$claveNuevaAPI,
                                             "password"=>$resultado->password,"usuario"=>$resultado->usuario,
-                                            "nombre"=>$resultado->nombre]
+                                            "nombre"=>$resultado->nombre, "host"=>$resultado->host]
                             ];
                     } catch (PDOException $e) {
                         throw new ExcepcionApi(2, $e->getMessage());

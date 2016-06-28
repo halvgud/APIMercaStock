@@ -25,8 +25,8 @@ class detalles_venta
         $fechaF = $fechaF.' 23:59:59';
         try {
             $db = getConnection();
-            //$db->query("SET NAMES 'utf8'");
-            //$db->query("SET CHARACTER SET utf8");
+            $db->query("SET NAMES 'utf8'");
+            $db->query("SET CHARACTER SET utf8");
             $sentencia = $db->prepare($comando);
             $sentencia->bindParam('idSucursal',$postrequest->idSucursal);
             $sentencia->bindParam('fechaInicio',$fechaI);

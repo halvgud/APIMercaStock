@@ -107,7 +107,7 @@ class exportar
     }
     public static function ultimoVentaTipoPago($request,$response){
         $postrequest = json_decode($request->getBody());
-        $query = "select max(ven_id) as ven_id from ventatipopago where idSucursal=:idSucursal";
+        $query = "select (case when max(ven_id) is null then 0 else max(ven_id) end) as ven_id from ventatipopago where idSucursal=:idSucursal";
         try{
             $db=getConnection();
             $sentencia = $db->prepare($query);
@@ -159,7 +159,8 @@ class exportar
     public static function Parametro($request,$response){
         $postrequest = json_decode($request->getBody());
 
-        $comando = "SELECT idSucursal, accion, parametro, valor, comentario, usuario, fechaActualizacion FROM ms_parametro WHERE idSucursal=:idSucursal";
+        $comando = "SELECT idSucursal, accion, parametro, valor, comentario, usuario, fechaActualizacion FROM ms_parametro WHERE idSucursal=:idSucursal
+                    and accion!='CONFIG_DASHBOARD'";
 
         try {
             $idSucursal=$postrequest->idSucursal;
@@ -324,8 +325,8 @@ class exportar
         $postrequest = json_decode($request->getBody());
         $query = "select ms.idSucursal,ms.nombre as nombreSucursal,
                     sum(case when mi.idEstado='P' then 1 else 0 end) as inventarioActual,
-                    sum(case when mi.idEstado='E' then 1 else 0 end) as inventarioTotal,
-                    (sum(case when mi.idEstado='P' then 1 else 0 end)/sum(case when mi.idEstado='E' then 1 else 0 end))*100 as porcentaje
+                    sum(case when mi.idEstado in ('E','P') then 1 else 0 end) as inventarioTotal,
+                    (sum(case when mi.idEstado='P' then 1 else 0 end)/sum(case when mi.idEstado in ('P','E') then 1 else 0 end))*100 as porcentaje
                     from ms_inventario mi
                     inner join ms_sucursal ms on (ms.idSucursal=mi.idSucursal)
                     group by ms.idSucursal";

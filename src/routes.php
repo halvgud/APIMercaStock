@@ -22,6 +22,10 @@ $app->post('/exportar/usuario',function(ServerRequestInterface $request,Response
     return exportar::usuario($request,$response);
 
 });
+$app->post('/usuario/seleccionarApi',function(ServerRequestInterface $request,ResponseInterface $response){
+    return sucursal::seleccionar($request,$response);
+
+});
 $app->post('/usuario/login', function (ServerRequestInterface $request, ResponseInterface $response){
     return usuario::logIn($request,$response);
 });

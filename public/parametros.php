@@ -101,6 +101,13 @@ class parametros
                         WHERE
                         msp1.accion = 'CONFIG_GENERAR_INVENTARIO' AND msp1.parametro='BANDERA_LISTA_FIJA_SUC'
                         AND msp3.accion='LISTA_RELACION_IDSUCURSAL_ARTID'
+                        and a.art_id not in (
+                        select ms.art_id from ms_inventario ms where ms.idSucursal=:idSucursal
+                        and ms.idEstado in ('A')
+                        union ALL
+                        select ms.art_id from ms_inventario ms where ms.idSucursal=:idSucursal
+                        and ms.idEstado in ('E') and ms.fechaSolicitud>CURDATE() - INTERVAL 1 DAY
+                        )
                         AND a.idSucursal=:idSucursal";
         try {
             $idSucursal=$postrequest->idSucursal;

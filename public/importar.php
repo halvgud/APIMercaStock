@@ -302,11 +302,11 @@ class importar
             $db = getConnection();
             $db->beginTransaction();
             //var_dump($postrequest[0]->data);
-            if (isset($postrequest[0]->data) && gettype($postrequest[0]->data) == 'array') {
+            if (isset($postrequest->data) && gettype($postrequest->data) == 'array') {
                 $comando = "insert into  detallev (ven_idLocal, idSucursal, art_id, clave, descripcion, cantidad, unidad, precioNorSin, precioNorCon, precioSin, precioCon, importeNorSin, importeNorCon, importeSin, importeCon, descPorcentaje, descTotal, precioCompra, importeCompra, sinGravar, caracteristicas, orden, detImp, iepsActivo, cuotaIeps, cuentaPredial, movVen, movVenC, monPrecioNorSin, monPrecioNorCon, monPrecioSin, monPrecioCon, monImporteNorSin, monImporteNorCon, monImporteSin, monImporteCon, nombreAduana, fechaDocAduanero, numeroDocAduanero, lote, receta, tipo, trr_id, ncr_id)
                 values(:ven_id,:idSucursal,:art_id,:clave,:descripcion,:cantidad,:unidad,:precioNorSin,:precioNorCon,:precioSin,:precioCon,:importeNorSin,:importeNorCon,:importeSin,:importeCon,:descPorcentaje,:descTotal,:precioCompra,:importeCompra,:sinGravar,:caracteristicas,:orden,:detImp,:iepsActivo,:cuotaIeps,:cuentaPredial,:movVen,:movVenC,:monPrecioNorSin,:monPrecioNorCon,:monPrecioSin,:monPrecioCon,:monImporteNorSin,:monImporteNorCon,:monImporteSin,:monImporteCon,:nombreAduana,:fechaDocAduanero,:numeroDocAduanero,:lote,:receta,:tipo,:trr_id,:ncr_id)
                 on duplicate key update art_id=:art_id,clave=:clave,descripcion=:descripcion,cantidad=:cantidad,unidad=:unidad,precioNorSin=:precioNorSin,precioNorCon=:precioNorCon,precioSin=:precioSin,precioCon=:precioCon,importeNorSin=:importeNorSin,importeNorCon=:importeNorCon,importeSin=:importeSin,importeCon=:importeCon,descPorcentaje=:descPorcentaje,descTotal=:descTotal,precioCompra=:precioCompra,importeCompra=:importeCompra,sinGravar=:sinGravar,caracteristicas=:caracteristicas,orden=:orden,detImp=:detImp,iepsActivo=:iepsActivo,cuotaIeps=:cuotaIeps,cuentaPredial=:cuentaPredial,movVen=:movVen,movVenC=:movVenC,monPrecioNorSin=:monPrecioNorSin,monPrecioNorCon=:monPrecioNorCon,monPrecioSin=:monPrecioSin,monPrecioCon=:monPrecioCon,monImporteNorSin=:monImporteNorSin,monImporteNorCon=:monImporteNorCon,monImporteSin=:monImporteSin,monImporteCon=:monImporteCon,nombreAduana=:nombreAduana,fechaDocAduanero=:fechaDocAduanero,numeroDocAduanero=:numeroDocAduanero,lote=:lote,receta=:receta,tipo=:tipo,trr_id=:trr_id,ncr_id=:ncr_id";
-                foreach ($postrequest[0]->data as $renglon) {
+                foreach ($postrequest->data as $renglon) {
                     $contador++;
                     $sentencia = $db->prepare($comando);
                     $sentencia->bindParam("ven_id",$renglon->ven_id);
@@ -450,7 +450,7 @@ class importar
         try {
             $db = getConnection();
             $db->beginTransaction();
-            $query = "UPDATE ms_inventario SET idInventarioLocal=:idInventarioLocal, existenciaSolicitud=:existenciaSolicitud, existenciaRespuesta=:existenciaRespuesta, idUsuario=:idUsuario, fechaSolicitud=:fechaSolicitud, fechaRespuesta=:fechaRespuesta, existenciaEjecucion=:existenciaEjecucion, idEstado=:idEstado
+            $query = "UPDATE ms_inventario SET idInventarioLocal=:idInventario, existenciaSolicitud=:existenciaSolicitud, existenciaRespuesta=:existenciaRespuesta, idUsuario=:idUsuario, fechaSolicitud=:fechaSolicitud, fechaRespuesta=:fechaRespuesta, existenciaEjecucion=:existenciaEjecucion, idEstado=:idEstado
 
                     WHERE idInventario=:idInventario AND art_id=:art_id AND ms_inventario.idSucursal=:idSucursal ;";
             $sentencia = $db->prepare($query);

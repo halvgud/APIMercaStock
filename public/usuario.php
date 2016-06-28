@@ -6,15 +6,18 @@ class usuario
     }
 
     public static function seleccionar($request,$response){
-        $comando = "SELECT mu.idUsuario,mu.usuario,'DEFAULTMERCASTOCK' as password,mu.nombre,mu.apellido,mu.idNivelAutorizacion,mu.idSucursal,mu.sexo,mu.idEstado,mu.contacto,mn.descripcion FROM ms_usuario mu INNER JOIN ms_nivelAutorizacion mn ON (mn.idNivelAutorizacion = mu.idNivelAutorizacion)
+        $comando = "SELECT mu.idUsuario,mu.usuario,'DEFAULTMERCASTOCK' as password,mu.nombre,mu.apellido,mu.idNivelAutorizacion,mu.idSucursal,mss.nombre as descripcionSucursal,mu.sexo,mu.idEstado,mu.contacto,mn.descripcion
+                    FROM ms_usuario mu INNER JOIN ms_nivelAutorizacion mn ON (mn.idNivelAutorizacion = mu.idNivelAutorizacion)
+                                       inner join ms_sucursal mss on (mss.idSucursal = mu.idSucursal)
         WHERE mu.idNivelAutorizacion>0";// mayor que superadmin
         try {
             $db = getConnection();
             $sentencia = $db->prepare($comando);
             $sentencia->execute();
             $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+            $arreglo=null;
             if ($resultado) {
-                $arreglo="";
+
                 return $response->withJson($resultado, 200);
             } else {
                 $arreglo = [
