@@ -268,7 +268,7 @@ class sucursal
                 $datos=$autenticar;
                 $codigo = 401;
             }
-            return $response->withJson($datos, $codigo);;
+            return $response->withJson($datos, $codigo);
         } catch (PDOException $e) {
             echo '{"error":{"text":' . $e->getMessage() . '}}';
         }
@@ -279,7 +279,7 @@ class sucursal
 
     private static function autenticar($usuario, $contrasena,$idSucursal,$postrequest)
     {
-        $comando = "SELECT idSucursal,password,usuario, claveAPI,nombre,contacto as host FROM ms_sucursal where usuario=:usuario and idSucursal=:idSucursal";
+        $comando = "SELECT idSucursal,password,usuario, claveAPI,nombre,contacto as host,domicilio as url FROM ms_sucursal where usuario=:usuario and idSucursal=:idSucursal";
         try {
             $db = getConnection();
             $sentencia = $db->prepare($comando);
@@ -298,7 +298,7 @@ class sucursal
                                 "mensaje" => "OK",
                                 "datos" => ["idSucursal"=>$resultado->idSucursal,"claveAPI"=>self::$claveNuevaAPI,
                                             "password"=>$resultado->password,"usuario"=>$resultado->usuario,
-                                            "nombre"=>$resultado->nombre, "host"=>$resultado->host]
+                                            "nombre"=>$resultado->nombre, "host"=>$resultado->host,"url"=>$resultado->url]
                             ];
                     } catch (PDOException $e) {
                         throw new ExcepcionApi(2, $e->getMessage());

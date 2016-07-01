@@ -8,15 +8,15 @@ class detalles_venta
     public static function seleccionar($request, $response)
     {
         $postrequest = json_decode($request->getBody());
-        $comando = "SELECT (mp.metodo), SUM(v.total) as 'Total', mp.mpa_id
+        $comando = "SELECT (mp.nombre) as metodo, SUM(v.total) as 'Total', mp.tpa_id as mpa_id
                     FROM venta v
                     INNER JOIN detallev dv ON (v.ven_id=dv.ven_idLocal)
                     INNER JOIN ventatipopago vtp ON (v.ven_id=vtp.ven_id)
-                    INNER JOIN metodopago mp ON (mp.mpa_id=vtp.tpa_id)
+                    INNER JOIN tipopago mp ON (mp.tpa_id=vtp.tpa_id)
                     WHERE
                     v.fecha>= :fechaInicio AND v.fecha<= :fechaFin AND v.idSucursal= :idSucursal
                     AND v.idSucursal=dv.idSucursal
-                    GROUP BY mp.metodo
+                    GROUP BY mp.nombre
                     ";
        // var_dump($postrequest);
         $fechaI = $postrequest->fechaInicio;

@@ -112,6 +112,7 @@ class articulo
         try {
             $db = getConnection();
             $db->beginTransaction();
+            $banderaEjecucion=true;
             foreach ($postrequest->datos as $renglon ) {
                 $art_id=$renglon->art_id;
                 $imp_id = $renglon->imp_id;
@@ -212,7 +213,7 @@ class articulo
     {
         $postrequest = json_decode($request->getBody());
 
-        $comando = "SELECT dv.clave,dv.descripcion,dv.cantidad,v.fecha,dv.unidad,v.total
+        $comando = "SELECT dv.clave,dv.descripcion,dv.cantidad,v.fecha,dv.unidad,dv.monImporteCon as total
                         FROM detallev dv INNER JOIN venta v on (dv.ven_idLocal=v.ven_id)
                         WHERE dv.idSucursal=:idSucursal AND clave=:input2 AND v.fecha>=:fechaInicio AND v.fecha<=:fechaFin";
         $fechaI = $postrequest->fechaInicio;

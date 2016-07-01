@@ -545,11 +545,11 @@ class importar
             }else{
                 $db->rollBack();
                 $arreglo = [
-                    "estado" => 400,
+                    "estado" => 202,
                     "error" => "Error al Insertar o Actualizar un registro",
                     "datos" => "error"
                 ];
-                $codigo=400;
+                $codigo=202;
             }
         } catch (PDOException $e) {
             $db->rollBack();
