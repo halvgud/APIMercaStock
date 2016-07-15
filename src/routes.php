@@ -216,6 +216,10 @@ $app->post('/importar/venta/tipo/pago',function(ServerRequestInterface $request,
 
     return importar::VentaTipoPago($request,$response);
 });
+$app->post('/importar/venta/cancelacion',function(ServerRequestInterface $request,ResponseInterface $response){
+
+    return importar::cancelacion($request,$response);
+});
 
 /*
 $app->post('/tipo_pago/insertar',function(ServerRequestInterface $request,ResponseInterface $response){

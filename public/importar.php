@@ -565,4 +565,56 @@ class importar
             return $response->withJson($arreglo, $codigo);
         }
     }
+    public static function cancelacion($request, $response){
+        set_time_limit(0);
+        $postrequest = json_decode($request->getBody());
+        $db=null;
+        $resultado = false;
+        try {
+            $db = getConnection();
+            $db->beginTransaction();
+            $query = "UPDATE venta set status ='-1' where ven_id=:ven_id and idSucursal=:idSucursal ;";
+            $sentencia = $db->prepare($query);
+
+            foreach ($postrequest->data as $renglon ) {
+                $sentencia->bindParam("ven_id", $renglon->ven_id);
+                $sentencia->bindParam("idSucursal", $renglon->idSucursal);
+                $resultado = $sentencia->execute();
+                if(!$resultado){
+                    break;
+                }
+            }
+            if ($resultado) {
+                $arreglo =
+                    [
+                        "estado" => 200,
+                        "success" => "Se a actualizado con éxito",
+                        "data" => $resultado
+                    ];
+                $db->commit();
+                return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
+            } else {
+                $db->rollBack();
+                $arreglo =
+                    [
+                        "estado" => "warning",
+                        "mensaje" => "No se cambió ningún dato",
+                        "data" => $resultado
+                    ];
+                return $response->withJson($arreglo, 200, JSON_UNESCAPED_UNICODE);
+            }
+        } catch (PDOException $e) {
+            $db->rollBack();
+            $arreglo = [
+                "estado" => 400,
+                "error" => general::traducirMensaje($e->getCode(),$e),
+
+                "data" => json_encode($postrequest)
+            ];
+            return $response->withJson($arreglo, 400);
+        }
+        finally{
+            $db=null;
+        }
+    }
 }

@@ -10,12 +10,13 @@ class detalles_venta
         $postrequest = json_decode($request->getBody());
         $comando = "SELECT (mp.nombre) as metodo, SUM(v.total) as 'Total', mp.tpa_id as mpa_id
                     FROM venta v
-                    INNER JOIN detallev dv ON (v.ven_id=dv.ven_idLocal)
+                    /*INNER JOIN detallev dv ON (v.ven_id=dv.ven_idLocal)*/
                     INNER JOIN ventatipopago vtp ON (v.ven_id=vtp.ven_id)
                     INNER JOIN tipopago mp ON (mp.tpa_id=vtp.tpa_id)
                     WHERE
-                    v.fecha>= :fechaInicio AND v.fecha<= :fechaFin AND v.idSucursal= :idSucursal
-                    AND v.idSucursal=dv.idSucursal
+                    v.fecha>= '2016-07-12 01:01:27' AND v.fecha<='2016-07-12 23:59:27' AND v.idSucursal='2'
+                   /* AND v.idSucursal=dv.idSucursal*/
+                    and v.status='1'
                     GROUP BY mp.nombre
                     ";
        // var_dump($postrequest);
