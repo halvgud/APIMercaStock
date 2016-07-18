@@ -10,7 +10,7 @@ class articulo
         if($postrequest->dep_id!='%'){
             $comando = "SELECT a.clave, a.descripcion, a.margen1, a.precio1, a.existencia  FROM articulo a inner join categoria c on (c.cat_id=a.cat_id) inner join departamento dp on (dp.dep_id=c.dep_id ) where a.idSucursal=:idSucursal and dp.idSucursal=:idSucursal and c.idSucursal=:idSucursal and dp.dep_id=:dep_id and c.cat_id=:cat_id ";
         }else{
-            $comando = "SELECT a.clave, a.descripcion, a.margen1, a.precio1, a.existencia  FROM articulo a inner join categoria c on (c.cat_id=a.cat_id)  where a.idSucursal=:idSucursal and  dp.idSucursal=:idSucursal and c.idSucursal=:idSucursal and c.cat_id=:cat_id ";
+            $comando = "SELECT a.clave, a.descripcion, a.margen1, a.precio1, a.existencia  FROM articulo a inner join categoria c on (c.cat_id=a.cat_id)  where a.idSucursal=:idSucursal and c.idSucursal=:idSucursal and c.cat_id=:cat_id ";
         }
         try {
             $db = getConnection();
@@ -52,7 +52,7 @@ class articulo
     }
     public static function seleccionarListaFija($request, $response){
         $postrequest = json_decode($request->getBody());
-
+        $resultado=null;
         $comando = "SELECT art_id,clave, descripcion FROM articulo where idSucursal=:idSucursal and clave=:clave
                           and articulo.existencia>0
                           and clave not in (select a.clave from ms_parametro p INNER join articulo a on p.valor=a.art_id)

@@ -63,14 +63,13 @@ class usuario
             $stmt->bindParam(":apellido", $postrequest->apellido, PDO::PARAM_STR);
             $stmt->bindParam(":sexo", $postrequest->sexo, PDO::PARAM_STR);
             $stmt->bindParam(":contacto", $postrequest->contacto, PDO::PARAM_INT);
-            $stmt->bindParam(":idSucursal", $claveGCM, PDO::PARAM_INT);
+            $stmt->bindParam(":idSucursal", $postrequest->idSucursal, PDO::PARAM_INT);
             $stmt->bindParam(":claveAPI", $claveApi);
             $stmt->bindParam(":idEstado", $idEstado);
             $stmt->bindParam(":claveGCM", $claveGCM);
             $stmt->bindParam(":idNivelAutorizacion", $postrequest->idNivelAutorizacion, PDO::PARAM_INT);
             $stmt->execute();
             $postrequest->id = $db->lastInsertId();
-            $db = null;
             if ($postrequest->idUsuario > 0) {
                 $arreglo = [
                     "estado" => 200,
@@ -94,7 +93,7 @@ class usuario
             $arreglo = [
                 "estado" => $e->getCode(),
                 "error" => general::traducirMensaje($e->getCode(),$e),
-                "datos" => json_encode($postrequest)
+                "datos" => ($postrequest)
             ];
             $codigo=400;
         }
@@ -118,7 +117,7 @@ class usuario
         }
         finally{
             $db=null;
-            return null;
+            //return null;
         }
     }
 
