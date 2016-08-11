@@ -23,7 +23,7 @@ $app->post('/exportar/usuario',function(ServerRequestInterface $request,Response
 
 });
 $app->post('/usuario/seleccionarApi',function(ServerRequestInterface $request,ResponseInterface $response){
-    return sucursal::seleccionar($request,$response);
+    return usuario::seleccionarApi($request,$response);
 
 });
 $app->post('/usuario/login', function (ServerRequestInterface $request, ResponseInterface $response){
@@ -74,8 +74,8 @@ $app->post('/articulo/seleccionarListaFija', function (ServerRequestInterface $r
 $app->post('/articulo/seleccionarIndividualMovimiento', function (ServerRequestInterface $request, ResponseInterface $response) {
     return articulo::seleccionarIndividualMovimiento($request, $response);
 });
-$app->post('/articulo/seleccionarIndividualMovimiento2', function (ServerRequestInterface $request, ResponseInterface $response) {
-    return articulo::seleccionarIndividualMovimiento2($request, $response);
+$app->post('/articulo/reporte/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response) {
+    return articulo::reporteMovimiento($request, $response);
 });
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Inventario
 $app->post('/inventario/seleccionarAzar', function (ServerRequestInterface $request, ResponseInterface $response){
@@ -238,6 +238,23 @@ $app->post('/inventario/reporte/cabecero',function(ServerRequestInterface $reque
 $app->post('/inventario/reporte/detalle',function(ServerRequestInterface $request,ResponseInterface $response){
     return inventario::reporteDetalle($request,$response);
 });
+$app->post('/perdidas/reporte/cabecero',function(ServerRequestInterface $request, ResponseInterface $response){
+    return perdidas::reporteCabecero($request,$response);
+});
 
-
-
+$app->post('/reporte/perdidas/detalle',function(ServerRequestInterface $request,ResponseInterface $response){
+    return perdidas::reporteDetalle($request,$response);
+});
+/************************************************************************************************************/
+$app->post('/ajuste/seleccionar/cabecero',function(ServerRequestInterface $request, ResponseInterface $response){
+    return ajuste::seleccionar($request,$response);
+});
+$app->post('/ajuste/seleccionar/detalle',function(ServerRequestInterface $request, ResponseInterface $response){
+    return ajuste::detalle($request,$response);
+});
+$app->post('/ajuste/insertar',function(ServerRequestInterface $request, ResponseInterface $response){
+    return ajuste::insertar($request,$response);
+});
+$app->post('/exportar/ajuste',function(ServerRequestInterface $request,ResponseInterface $response){
+    return exportar::exportarAjuste($request,$response);
+});

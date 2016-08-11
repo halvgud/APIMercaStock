@@ -9,11 +9,11 @@ class sucursal
         $postrequest = json_decode($request->getBody());
         $codigo=200;
         $arreglo=[];
-            if (isset($postrequest->banderaSucursal)) {
+            if (isset($postrequest->banderaSucursal)) {/*todas las sucursales, exceptuando el sistema*/
                 $comando = "SELECT idSucursal,nombre,usuario, domicilio, contacto, idEstado,'DEFAULTMERCASTOCK' AS password FROM ms_sucursal where idSucursal>1";
-        }else if(isset($postrequest->idGenerico)){
+        }else if(isset($postrequest->idGenerico)){/*Todas las sucursales activas, y que sean distintas al sistema*/
                 $comando = "SELECT idSucursal,nombre,usuario, domicilio, contacto, idEstado,'DEFAULTMERCASTOCK' AS password FROM ms_sucursal WHERE idEstado>0 and idSucursal>1";
-        }else{
+        }else{/*todas las sucursales activas*/
                 $comando = "SELECT idSucursal,nombre,usuario, domicilio, contacto, idEstado,'DEFAULTMERCASTOCK' AS password FROM ms_sucursal WHERE idEstado>0";
             }
         try {

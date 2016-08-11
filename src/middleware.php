@@ -14,7 +14,7 @@ $cors = new \CorsSlim\CorsSlim($corsOptions);
 
 $app->add($cors);*/
 $app->add(function ($request, $response, $next) {
-    $headers =getallheaders();
+    $headers =apache_request_headers();
     $Auth="";
 
     /////cambiar a getPath()!='sucursal/login'
@@ -22,7 +22,7 @@ $app->add(function ($request, $response, $next) {
         &&$request->getUri()->getPath()!='sucursal/login'
         &&$request->getUri()->getPath()!='usuario/seleccionarApi'){
         foreach ($headers as $header => $value) {
-            if($header=='Authorization'){
+            if($header=='Auth'){
                 $Auth = $value;
             }
         }
@@ -30,7 +30,8 @@ $app->add(function ($request, $response, $next) {
         if(usuario::revisarToken($Auth)){
             return $response = $next($request, $response);
         }else{
-            $arreglo=["estado"=>"-1","error"=>"no autenticado","apache_request"=>$headers,"phpserver"=>$_SERVER,"getallheaders"=>getallheaders(),"SLIM"=>$headers ];
+            $arreglo=["estado"=>"-1","error"=>"no autenticado","apache_request"=>$request->getUri()->getPath()
+                ,"token"=>$headers ];
             return $response->withJson($arreglo,401);
         }
     }else{

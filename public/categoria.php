@@ -8,7 +8,7 @@ class categoria
     public static function seleccionar($request, $response)
     {
         $postrequest = json_decode($request->getBody());
-        $comando = "SELECT cat_id, cat_id_Local,idSucursal,nombre,dep_id
+        $comando = "SELECT cat_id,idSucursal,nombre,dep_id
                         FROM categoria
                         WHERE idSucursal LIKE :idSucursal
                           AND dep_id LIKE :dep_id and status=1";

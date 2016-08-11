@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="DataSourceManagerImpl" format="xml" hash="1670018524">
+  <component name="DataSourceManagerImpl" format="xml" hash="2566658823">
     <data-source source="LOCAL" name="MySQL-APIMS" uuid="7967d91a-189c-4458-b3dc-dcdce7543464">
       <driver-ref>mysql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://50.62.209.162:3306/mercatto_mstock</jdbc-url>
+      <jdbc-url>jdbc:mysql://198.71.241.19:3306/mercatto_mstock</jdbc-url>
       <driver-properties>
         <property name="zeroDateTimeBehavior" value="convertToNull" />
         <property name="tinyInt1isBit" value="false" />

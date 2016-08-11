@@ -23,7 +23,11 @@
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
-    <loaded-nodes />
+    <loaded-nodes>
+      <connection connection-id="3954130b-a7ef-4dab-8187-4b38d9f307af">
+        <schema name="mercatto_mstock" object-types="function, procedure, table, view" />
+      </connection>
+    </loaded-nodes>
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="3954130b-a7ef-4dab-8187-4b38d9f307af">
@@ -59,12 +63,12 @@
           <description value="ApiMercaStock" />
           <database-type value="MYSQL" />
           <config-type value="BASIC" />
-          <database-version value="5.5" />
+          <database-version value="5.6" />
           <driver-source value="BUILTIN" />
           <driver-library value="" />
           <driver value="" />
           <url-type value="DATABASE" />
-          <host value="50.62.209.162" />
+          <host value="198.71.241.19" />
           <port value="3306" />
           <database value="mercatto_mstock" />
           <os-authentication value="false" />

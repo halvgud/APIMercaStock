@@ -8,16 +8,29 @@ class detalles_venta
     public static function seleccionar($request, $response)
     {
         $postrequest = json_decode($request->getBody());
-        $comando = "SELECT (mp.nombre) as metodo, SUM(vtp.total-v.cambio) as 'Total', mp.tpa_id as mpa_id
-                    FROM venta v
-                    /*INNER JOIN detallev dv ON (v.ven_id=dv.ven_idLocal)*/
-                    INNER JOIN ventatipopago vtp ON (v.ven_id=vtp.ven_id)
-                    INNER JOIN tipopago mp ON (mp.tpa_id=vtp.tpa_id)
-                    WHERE
-                    v.fecha>=:fechaInicio AND v.fecha<=:fechaFin AND v.idSucursal=:idSucursal
-                   /* AND v.idSucursal=dv.idSucursal*/
-                    and v.status='1'
-                    GROUP BY mp.nombre
+        $comando = "SELECT *
+                            FROM
+                              (SELECT (mp.nombre) AS metodo,
+                                                     SUM(vtp.total-v.cambio) AS 'Total',
+                                                                                mp.tpa_id AS mpa_id
+                               FROM venta v
+                               INNER JOIN ventatipopago vtp ON (v.ven_id=vtp.ven_id)
+                               INNER JOIN tipopago mp ON (mp.tpa_id=vtp.tpa_id)
+                               WHERE v.fecha>=:fechaInicio
+                                 AND v.fecha<=:fechaFin
+                                 AND v.idSucursal like :idSucursal
+                                 AND v.status='1'
+                               GROUP BY mp.nombre
+                               UNION ALL SELECT 'TOTAL' AS metodo,
+                                                           sum(vtp.total-v.cambio) AS 'Total',
+                                                                                      '%' AS mpa_id
+                               FROM venta v
+                               INNER JOIN ventatipopago vtp ON (v.ven_id = vtp.ven_id)
+                               WHERE v.fecha>=:fechaInicio
+                                 AND v.fecha<=:fechaFin
+                                 AND v.idSucursal like :idSucursal
+                                 AND v.status='1') tt
+                            ORDER BY tt.mpa_id desc ;
                     ";
        // var_dump($postrequest);
         $fechaI = $postrequest->fechaInicio;
@@ -65,13 +78,13 @@ class detalles_venta
         $postrequest = json_decode($request->getBody());
         //var_dump($postrequest);
         $comando = "select v.tic_id, dv.descripcion, v.fecha, v.total from venta v
-inner join detallev dv on (v.ven_id=dv.ven_idLocal)
-inner join ventatipopago vtp on (v.ven_id=vtp.ven_id)
-where vtp.tpa_id=:idMetodo
-and v.fecha>=:fechaInicio
-and v.fecha<=:fechaFin
-and dv.idSucursal=:idSucursal
-and vtp.idSucursal=:idSucursal;";
+                    inner join detallev dv on (v.ven_id=dv.ven_id)
+                    inner join ventatipopago vtp on (v.ven_id=vtp.ven_id)
+                    where vtp.tpa_id like :idMetodo
+                    and v.fecha>=:fechaInicio
+                    and v.fecha<=:fechaFin
+                    and dv.idSucursal like :idSucursal
+                    and vtp.idSucursal like :idSucursal;";
 
         $fechaI = $postrequest->fechaInicio;
         $fechaF = $postrequest->fechaFin;

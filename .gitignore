@@ -1,3 +1,6 @@
 .idea/workspace.xml
 .idea/workspace.xml
 logs.zip
+.idea/dataSources.ids
+*.xml
+templates.zip

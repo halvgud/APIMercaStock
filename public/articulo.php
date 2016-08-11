@@ -182,7 +182,7 @@ class articulo
                 if($resultado2) {
                     $arreglo = [
                         "estado" => 200,
-                        "success"=>"OKp",
+                        "success"=>"OK",
                         "data" => $resultado2
                     ];
                     return $response->withJson($arreglo,200);
@@ -209,13 +209,14 @@ class articulo
             $db=null;
         }
     }
-    public static function seleccionarIndividualMovimiento2($request, $response)
+    public static function reporteMovimiento($request, $response)
     {
         $postrequest = json_decode($request->getBody());
 
-        $comando = "SELECT dv.clave,dv.descripcion,dv.cantidad,v.fecha,dv.unidad,dv.monImporteCon as total
-                        FROM detallev dv INNER JOIN venta v on (dv.ven_idLocal=v.ven_id)
-                        WHERE dv.idSucursal=:idSucursal AND clave=:input2 AND v.fecha>=:fechaInicio AND v.fecha<=:fechaFin";
+        $comando = "SELECT dv.clave,dv.descripcion,dv.cantidad,date(v.fecha) as fecha,dv.unidad,dv.monImporteCon as total
+                        FROM detallev dv INNER JOIN venta v on (dv.ven_id=v.ven_id)
+                        WHERE dv.idSucursal=:idSucursal AND clave=:input2 AND v.fecha>=:fechaInicio AND v.fecha<=:fechaFin
+                        group by date(fecha)";
         $fechaI = $postrequest->fechaInicio;
         $fechaF = $postrequest->fechaFin;
         $fechaI = $fechaI.' 00:00:00';

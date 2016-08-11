@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component name="dataSourceStorage">
   <data-source name="MySQL-APIMS" uuid="7967d91a-189c-4458-b3dc-dcdce7543464">
-    <database-info product="MySQL" version="5.5.43-37.2-log" jdbc-version="4.0" driver-name="MySQL Connector Java" driver-version="mysql-connector-java-5.1.35 ( Revision: 5fb9c5849535c13917c2cf9baaece6ef9693ef27 )">
+    <database-info product="MySQL" version="5.6.26-cll-lve" jdbc-version="4.0" driver-name="MySQL Connector Java" driver-version="mysql-connector-java-5.1.35 ( Revision: 5fb9c5849535c13917c2cf9baaece6ef9693ef27 )">
       <extra-name-characters>#@</extra-name-characters>
       <identifier-quote-string>`</identifier-quote-string>
     </database-info>
@@ -9,706 +9,965 @@
     <database-model serializer="dbm" rdbms="MYSQL" format-version="2.2">
       <schema id="1" name="mercatto_mstock"/>
       <table id="2" parent="1" name="articulo"/>
-      <table id="3" parent="1" name="categoria"/>
-      <table id="4" parent="1" name="departamento"/>
-      <table id="5" parent="1" name="detallev"/>
-      <table id="6" parent="1" name="ms_inventario"/>
-      <table id="7" parent="1" name="ms_nivelAutorizacion"/>
-      <table id="8" parent="1" name="ms_opcion"/>
-      <table id="9" parent="1" name="ms_parametro"/>
-      <table id="10" parent="1" name="ms_permiso"/>
-      <table id="11" parent="1" name="ms_sucursal"/>
-      <table id="12" parent="1" name="ms_usuario"/>
-      <table id="13" parent="1" name="venta"/>
-      <table id="14" parent="1" name="ms_Sexo"/>
-      <column id="15" parent="2" name="art_id">
+      <table id="3" parent="1" name="articuloimpuesto"/>
+      <table id="4" parent="1" name="categoria"/>
+      <table id="5" parent="1" name="departamento"/>
+      <table id="6" parent="1" name="detallev"/>
+      <table id="7" parent="1" name="ms_concepto"/>
+      <table id="8" parent="1" name="ms_inventario"/>
+      <table id="9" parent="1" name="ms_nivelAutorizacion"/>
+      <table id="10" parent="1" name="ms_opcion"/>
+      <table id="11" parent="1" name="ms_parametro"/>
+      <table id="12" parent="1" name="ms_permiso"/>
+      <table id="13" parent="1" name="ms_sucursal"/>
+      <table id="14" parent="1" name="ms_usuario"/>
+      <table id="15" parent="1" name="venta"/>
+      <table id="16" parent="1" name="ventatipopago"/>
+      <table id="17" parent="1" name="ms_ajuste"/>
+      <table id="18" parent="1" name="ms_sexo"/>
+      <table id="19" parent="1" name="proveedor"/>
+      <table id="20" parent="1" name="proveedorarticulo"/>
+      <column id="21" parent="2" name="art_id">
         <mandatory>1</mandatory>
         <data-type>int(11)</data-type>
       </column>
-      <column id="16" parent="2" name="art_idLocal">
+      <column id="22" parent="2" name="idSucursal">
         <mandatory>1</mandatory>
         <data-type>int(11)</data-type>
       </column>
-      <column id="17" parent="2" name="idSucursal">
-        <mandatory>1</mandatory>
-        <data-type>int(11)</data-type>
-      </column>
-      <column id="18" parent="2" name="clave">
+      <column id="23" parent="2" name="clave">
         <mandatory>1</mandatory>
         <data-type>varchar(45)</data-type>
       </column>
-      <column id="19" parent="2" name="claveAlterna">
+      <column id="24" parent="2" name="claveAlterna">
         <mandatory>1</mandatory>
         <data-type>varchar(45)</data-type>
       </column>
-      <column id="20" parent="2" name="descripcion">
-        <mandatory>1</mandatory>
-        <data-type>varchar(255)</data-type>
-      </column>
-      <column id="21" parent="2" name="servicio">
-        <mandatory>1</mandatory>
-        <data-type>tinyint(4)</data-type>
-      </column>
-      <column id="22" parent="2" name="invMin">
-        <mandatory>1</mandatory>
-        <data-type>int(11)</data-type>
-      </column>
-      <column id="23" parent="2" name="invMax">
-        <mandatory>1</mandatory>
-        <data-type>int(11)</data-type>
-      </column>
-      <column id="24" parent="2" name="factor">
-        <mandatory>1</mandatory>
-        <data-type>decimal(20,3)</data-type>
-      </column>
-      <column id="25" parent="2" name="precioCompra">
-        <mandatory>1</mandatory>
-        <data-type>decimal(20,3)</data-type>
-      </column>
-      <column id="26" parent="2" name="precioCompraProm">
-        <mandatory>1</mandatory>
-        <data-type>decimal(20,3)</data-type>
-      </column>
-      <column id="27" parent="2" name="margen1">
-        <mandatory>1</mandatory>
-        <data-type>decimal(20,3)</data-type>
-      </column>
-      <column id="28" parent="2" name="precio1">
-        <mandatory>1</mandatory>
-        <data-type>decimal(20,6)</data-type>
-      </column>
-      <column id="29" parent="2" name="existencia">
-        <mandatory>1</mandatory>
-        <data-type>decimal(20,4)</data-type>
-      </column>
-      <column id="30" parent="2" name="lote">
-        <mandatory>1</mandatory>
-        <data-type>tinyint(4)</data-type>
-      </column>
-      <column id="31" parent="2" name="receta">
-        <mandatory>1</mandatory>
-        <data-type>tinyint(4)</data-type>
-      </column>
-      <column id="32" parent="2" name="granel">
-        <mandatory>1</mandatory>
-        <data-type>tinyint(4)</data-type>
-      </column>
-      <column id="33" parent="2" name="tipo">
-        <mandatory>1</mandatory>
-        <data-type>int(11)</data-type>
-      </column>
-      <column id="34" parent="2" name="status">
-        <mandatory>1</mandatory>
-        <data-type>int(11)</data-type>
-      </column>
-      <column id="35" parent="2" name="unidadCompra">
-        <mandatory>1</mandatory>
-        <data-type>int(11)</data-type>
-      </column>
-      <column id="36" parent="2" name="unidadVenta">
-        <mandatory>1</mandatory>
-        <data-type>int(11)</data-type>
-      </column>
-      <column id="37" parent="2" name="cat_id">
-        <mandatory>1</mandatory>
-        <data-type>int(11)</data-type>
-      </column>
-      <column id="38" parent="2" name="srp_id">
-        <mandatory>1</mandatory>
-        <data-type>int(11)</data-type>
-      </column>
-      <key id="39" parent="2" name="PRIMARY">
-        <columns>art_id</columns>
-        <primary>1</primary>
-      </key>
-      <column id="40" parent="3" name="cat_id">
-        <mandatory>1</mandatory>
-        <data-type>int(11)</data-type>
-      </column>
-      <column id="41" parent="3" name="cat_id_Local">
-        <mandatory>1</mandatory>
-        <data-type>int(11)</data-type>
-      </column>
-      <column id="42" parent="3" name="idSucursal">
-        <mandatory>1</mandatory>
-        <data-type>int(11)</data-type>
-      </column>
-      <column id="43" parent="3" name="nombre">
-        <mandatory>1</mandatory>
-        <data-type>varchar(45)</data-type>
-      </column>
-      <column id="44" parent="3" name="status">
-        <mandatory>1</mandatory>
-        <data-type>int(11)</data-type>
-      </column>
-      <column id="45" parent="3" name="dep_id">
-        <mandatory>1</mandatory>
-        <data-type>int(11)</data-type>
-      </column>
-      <column id="46" parent="4" name="dep_id">
-        <mandatory>1</mandatory>
-        <data-type>int(11)</data-type>
-      </column>
-      <column id="47" parent="4" name="dep_idLocal">
-        <mandatory>1</mandatory>
-        <data-type>int(11)</data-type>
-      </column>
-      <column id="48" parent="4" name="idSucursal">
-        <mandatory>1</mandatory>
-        <data-type>int(11)</data-type>
-      </column>
-      <column id="49" parent="4" name="nombre">
-        <mandatory>1</mandatory>
-        <data-type>varchar(45)</data-type>
-      </column>
-      <column id="50" parent="4" name="restringido">
-        <mandatory>1</mandatory>
-        <data-type>tinyint(1)</data-type>
-      </column>
-      <column id="51" parent="4" name="porcentaje">
-        <mandatory>1</mandatory>
-        <data-type>decimal(20,2)</data-type>
-      </column>
-      <column id="52" parent="4" name="status">
-        <mandatory>1</mandatory>
-        <data-type>int(11)</data-type>
-      </column>
-      <key id="53" parent="4" name="PRIMARY">
-        <columns>dep_id</columns>
-        <primary>1</primary>
-      </key>
-      <column id="54" parent="5" name="ven_id">
-        <mandatory>1</mandatory>
-        <data-type>bigint(20)</data-type>
-      </column>
-      <column id="55" parent="5" name="ven_idLocal">
-        <mandatory>1</mandatory>
-        <data-type>bigint(20)</data-type>
-      </column>
-      <column id="56" parent="5" name="idSucursal">
-        <mandatory>1</mandatory>
-        <data-type>int(11)</data-type>
-      </column>
-      <column id="57" parent="5" name="art_id">
-        <mandatory>1</mandatory>
-        <data-type>int(11)</data-type>
-      </column>
-      <column id="58" parent="5" name="clave">
-        <mandatory>1</mandatory>
-        <data-type>varchar(45)</data-type>
-      </column>
-      <column id="59" parent="5" name="descripcion">
+      <column id="25" parent="2" name="descripcion">
         <mandatory>1</mandatory>
         <data-type>varchar(255)</data-type>
         <default-expression>&apos;&apos;</default-expression>
       </column>
-      <column id="60" parent="5" name="cantidad">
-        <mandatory>1</mandatory>
-        <data-type>decimal(20,4)</data-type>
-        <default-expression>&apos;0.0000&apos;</default-expression>
-      </column>
-      <column id="61" parent="5" name="unidad">
-        <mandatory>1</mandatory>
-        <data-type>varchar(5)</data-type>
-      </column>
-      <column id="62" parent="5" name="precioNorSin">
-        <mandatory>1</mandatory>
-        <data-type>decimal(20,6)</data-type>
-        <default-expression>&apos;0.000000&apos;</default-expression>
-      </column>
-      <column id="63" parent="5" name="precioNorCon">
-        <mandatory>1</mandatory>
-        <data-type>decimal(20,6)</data-type>
-        <default-expression>&apos;0.000000&apos;</default-expression>
-      </column>
-      <column id="64" parent="5" name="precioSin">
-        <mandatory>1</mandatory>
-        <data-type>decimal(20,6)</data-type>
-        <default-expression>&apos;0.000000&apos;</default-expression>
-      </column>
-      <column id="65" parent="5" name="precioCon">
-        <mandatory>1</mandatory>
-        <data-type>decimal(20,6)</data-type>
-        <default-expression>&apos;0.000000&apos;</default-expression>
-      </column>
-      <column id="66" parent="5" name="importeNorSin">
-        <mandatory>1</mandatory>
-        <data-type>decimal(20,2)</data-type>
-      </column>
-      <column id="67" parent="5" name="importeNorCon">
-        <mandatory>1</mandatory>
-        <data-type>decimal(20,2)</data-type>
-      </column>
-      <column id="68" parent="5" name="importeSin">
-        <mandatory>1</mandatory>
-        <data-type>decimal(20,2)</data-type>
-      </column>
-      <column id="69" parent="5" name="importeCon">
-        <mandatory>1</mandatory>
-        <data-type>decimal(20,2)</data-type>
-      </column>
-      <column id="70" parent="5" name="descPorcentaje">
-        <mandatory>1</mandatory>
-        <data-type>decimal(20,2)</data-type>
-      </column>
-      <column id="71" parent="5" name="descTotal">
-        <mandatory>1</mandatory>
-        <data-type>decimal(20,2)</data-type>
-      </column>
-      <column id="72" parent="5" name="precioCompra">
-        <mandatory>1</mandatory>
-        <data-type>decimal(20,2)</data-type>
-      </column>
-      <column id="73" parent="5" name="importeCompra">
-        <mandatory>1</mandatory>
-        <data-type>decimal(20,2)</data-type>
-      </column>
-      <column id="74" parent="5" name="sinGravar">
+      <column id="26" parent="2" name="servicio">
         <mandatory>1</mandatory>
         <data-type>tinyint(1)</data-type>
       </column>
-      <column id="75" parent="5" name="caracteristicas">
-        <mandatory>1</mandatory>
-        <data-type>text</data-type>
-      </column>
-      <column id="76" parent="5" name="orden">
+      <column id="27" parent="2" name="invMin">
         <mandatory>1</mandatory>
         <data-type>int(11)</data-type>
       </column>
-      <column id="77" parent="5" name="detImp">
+      <column id="28" parent="2" name="invMax">
         <mandatory>1</mandatory>
-        <data-type>tinyint(1)</data-type>
-        <default-expression>&apos;0&apos;</default-expression>
+        <data-type>int(11)</data-type>
       </column>
-      <column id="78" parent="5" name="iepsActivo">
+      <column id="29" parent="2" name="factor">
         <mandatory>1</mandatory>
-        <data-type>tinyint(1)</data-type>
-        <default-expression>&apos;0&apos;</default-expression>
+        <data-type>decimal(20,3)</data-type>
       </column>
-      <column id="79" parent="5" name="cuotaIeps">
+      <column id="30" parent="2" name="precioCompra">
+        <mandatory>1</mandatory>
+        <data-type>decimal(20,3)</data-type>
+      </column>
+      <column id="31" parent="2" name="precioCompraProm">
+        <mandatory>1</mandatory>
+        <data-type>decimal(20,3)</data-type>
+      </column>
+      <column id="32" parent="2" name="margen1">
+        <mandatory>1</mandatory>
+        <data-type>decimal(20,3)</data-type>
+      </column>
+      <column id="33" parent="2" name="precio1">
+        <mandatory>1</mandatory>
+        <data-type>decimal(20,6)</data-type>
+        <default-expression>&apos;0.000000&apos;</default-expression>
+      </column>
+      <column id="34" parent="2" name="existencia">
         <mandatory>1</mandatory>
         <data-type>decimal(20,4)</data-type>
-        <default-expression>&apos;0.0000&apos;</default-expression>
       </column>
-      <column id="80" parent="5" name="cuentaPredial">
+      <column id="35" parent="2" name="lote">
+        <mandatory>1</mandatory>
+        <data-type>tinyint(1)</data-type>
+        <default-expression>&apos;0&apos;</default-expression>
+      </column>
+      <column id="36" parent="2" name="receta">
+        <mandatory>1</mandatory>
+        <data-type>tinyint(1)</data-type>
+        <default-expression>&apos;0&apos;</default-expression>
+      </column>
+      <column id="37" parent="2" name="granel">
+        <mandatory>1</mandatory>
+        <data-type>tinyint(1)</data-type>
+        <default-expression>&apos;1&apos;</default-expression>
+      </column>
+      <column id="38" parent="2" name="tipo">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+        <default-expression>&apos;0&apos;</default-expression>
+      </column>
+      <column id="39" parent="2" name="status">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+      </column>
+      <column id="40" parent="2" name="unidadCompra">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+      </column>
+      <column id="41" parent="2" name="unidadVenta">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+      </column>
+      <column id="42" parent="2" name="cat_id">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+      </column>
+      <column id="43" parent="2" name="srp_id">
+        <data-type>int(11)</data-type>
+      </column>
+      <key id="44" parent="2" name="PRIMARY">
+        <columns>art_id
+idSucursal</columns>
+        <primary>1</primary>
+      </key>
+      <column id="45" parent="3" name="art_id">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+      </column>
+      <column id="46" parent="3" name="imp_id">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+      </column>
+      <column id="47" parent="3" name="idSucursal">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+      </column>
+      <key id="48" parent="3" name="PRIMARY">
+        <columns>art_id
+idSucursal</columns>
+        <primary>1</primary>
+      </key>
+      <column id="49" parent="4" name="cat_id">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+      </column>
+      <column id="50" parent="4" name="nombre">
         <mandatory>1</mandatory>
         <data-type>varchar(45)</data-type>
       </column>
-      <column id="81" parent="5" name="movVen">
+      <column id="51" parent="4" name="status">
         <mandatory>1</mandatory>
         <data-type>int(11)</data-type>
-        <default-expression>&apos;-1&apos;</default-expression>
       </column>
-      <column id="82" parent="5" name="movVenC">
+      <column id="52" parent="4" name="dep_id">
         <mandatory>1</mandatory>
         <data-type>int(11)</data-type>
-        <default-expression>&apos;-1&apos;</default-expression>
       </column>
-      <column id="83" parent="5" name="monPrecioNorSin">
-        <data-type>decimal(20,6)</data-type>
+      <column id="53" parent="4" name="idSucursal">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
       </column>
-      <column id="84" parent="5" name="monPrecioNorCon">
-        <data-type>decimal(20,6)</data-type>
+      <key id="54" parent="4" name="PRIMARY">
+        <columns>cat_id
+idSucursal</columns>
+        <primary>1</primary>
+      </key>
+      <column id="55" parent="5" name="dep_id">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
       </column>
-      <column id="85" parent="5" name="monPrecioSin">
-        <data-type>decimal(20,6)</data-type>
+      <column id="56" parent="5" name="nombre">
+        <mandatory>1</mandatory>
+        <data-type>varchar(45)</data-type>
       </column>
-      <column id="86" parent="5" name="monPrecioCon">
-        <data-type>decimal(20,6)</data-type>
-      </column>
-      <column id="87" parent="5" name="monImporteNorSin">
-        <data-type>decimal(20,2)</data-type>
-      </column>
-      <column id="88" parent="5" name="monImporteNorCon">
-        <data-type>decimal(20,2)</data-type>
-      </column>
-      <column id="89" parent="5" name="monImporteSin">
-        <data-type>decimal(20,2)</data-type>
-      </column>
-      <column id="90" parent="5" name="monImporteCon">
-        <data-type>decimal(20,2)</data-type>
-      </column>
-      <column id="91" parent="5" name="nombreAduana">
-        <data-type>varchar(512)</data-type>
-      </column>
-      <column id="92" parent="5" name="fechaDocAduanero">
-        <data-type>date</data-type>
-      </column>
-      <column id="93" parent="5" name="numeroDocAduanero">
-        <data-type>varchar(128)</data-type>
-      </column>
-      <column id="94" parent="5" name="lote">
+      <column id="57" parent="5" name="restringido">
         <mandatory>1</mandatory>
         <data-type>tinyint(1)</data-type>
-        <default-expression>&apos;0&apos;</default-expression>
       </column>
-      <column id="95" parent="5" name="receta">
+      <column id="58" parent="5" name="porcentaje">
         <mandatory>1</mandatory>
-        <data-type>tinyint(1)</data-type>
-        <default-expression>&apos;0&apos;</default-expression>
+        <data-type>decimal(10)</data-type>
       </column>
-      <column id="96" parent="5" name="tipo">
+      <column id="59" parent="5" name="status">
         <mandatory>1</mandatory>
         <data-type>int(11)</data-type>
-        <default-expression>&apos;0&apos;</default-expression>
       </column>
-      <column id="97" parent="5" name="trr_id">
+      <column id="60" parent="5" name="idSucursal">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+      </column>
+      <key id="61" parent="5" name="PRIMARY">
+        <columns>dep_id
+idSucursal</columns>
+        <primary>1</primary>
+      </key>
+      <column id="62" parent="6" name="ven_id">
+        <mandatory>1</mandatory>
         <data-type>bigint(20)</data-type>
       </column>
-      <column id="98" parent="5" name="ncr_id">
-        <data-type>bigint(20)</data-type>
-      </column>
-      <key id="99" parent="5" name="PRIMARY">
-        <columns>ven_id
-art_id</columns>
-        <primary>1</primary>
-      </key>
-      <column id="100" parent="6" name="idInventario">
+      <column id="63" parent="6" name="idSucursal">
         <mandatory>1</mandatory>
         <data-type>int(11)</data-type>
       </column>
-      <column id="101" parent="6" name="idInventarioLocal">
+      <column id="64" parent="6" name="art_id">
         <mandatory>1</mandatory>
         <data-type>int(11)</data-type>
       </column>
-      <column id="102" parent="6" name="idSucursal">
+      <column id="65" parent="6" name="clave">
         <mandatory>1</mandatory>
-        <data-type>int(11)</data-type>
+        <data-type>varchar(45)</data-type>
       </column>
-      <column id="103" parent="6" name="art_id">
+      <column id="66" parent="6" name="descripcion">
         <mandatory>1</mandatory>
-        <data-type>int(11)</data-type>
+        <data-type>varchar(255)</data-type>
+        <default-expression>&apos;&apos;</default-expression>
       </column>
-      <column id="104" parent="6" name="existenciaSolicitud">
+      <column id="67" parent="6" name="cantidad">
         <mandatory>1</mandatory>
-        <data-type>double</data-type>
+        <data-type>decimal(20,4)</data-type>
+        <default-expression>&apos;0.0000&apos;</default-expression>
       </column>
-      <column id="105" parent="6" name="existenciaRespuesta">
-        <mandatory>1</mandatory>
-        <data-type>double</data-type>
-      </column>
-      <column id="106" parent="6" name="idUsuario">
-        <mandatory>1</mandatory>
-        <data-type>int(11)</data-type>
-      </column>
-      <column id="107" parent="6" name="fechaSolicitud">
-        <mandatory>1</mandatory>
-        <data-type>datetime</data-type>
-      </column>
-      <column id="108" parent="6" name="fechaRespuesta">
-        <mandatory>1</mandatory>
-        <data-type>datetime</data-type>
-      </column>
-      <column id="109" parent="6" name="existenciaEjecucion">
-        <mandatory>1</mandatory>
-        <data-type>double</data-type>
-      </column>
-      <column id="110" parent="6" name="idEstado">
-        <mandatory>1</mandatory>
-        <data-type>varchar(1)</data-type>
-      </column>
-      <key id="111" parent="6" name="PRIMARY">
-        <columns>idInventario</columns>
-        <primary>1</primary>
-      </key>
-      <column id="112" parent="7" name="idNivelAutorizacion">
-        <mandatory>1</mandatory>
-        <data-type>int(11)</data-type>
-      </column>
-      <column id="113" parent="7" name="descripcion">
-        <data-type>varchar(25)</data-type>
-      </column>
-      <column id="114" parent="7" name="idEstado">
-        <data-type>char(1)</data-type>
-      </column>
-      <key id="115" parent="7" name="PRIMARY">
-        <columns>idNivelAutorizacion</columns>
-        <primary>1</primary>
-      </key>
-      <column id="116" parent="8" name="idOpcion">
-        <mandatory>1</mandatory>
-        <data-type>int(11)</data-type>
-      </column>
-      <column id="117" parent="8" name="descripcion">
-        <data-type>varchar(50)</data-type>
-      </column>
-      <column id="118" parent="8" name="valor">
-        <data-type>varchar(150)</data-type>
-      </column>
-      <column id="119" parent="8" name="idEstado">
-        <data-type>char(1)</data-type>
-      </column>
-      <key id="120" parent="8" name="PRIMARY">
-        <columns>idOpcion</columns>
-        <primary>1</primary>
-      </key>
-      <column id="121" parent="9" name="idSucursal">
-        <mandatory>1</mandatory>
-        <data-type>int(11)</data-type>
-      </column>
-      <column id="122" parent="9" name="accion">
-        <mandatory>1</mandatory>
-        <data-type>varchar(50)</data-type>
-      </column>
-      <column id="123" parent="9" name="parametro">
-        <mandatory>1</mandatory>
-        <data-type>varchar(50)</data-type>
-      </column>
-      <column id="124" parent="9" name="valor">
-        <mandatory>1</mandatory>
-        <data-type>varchar(100)</data-type>
-      </column>
-      <column id="125" parent="9" name="comentario">
-        <mandatory>1</mandatory>
-        <data-type>varchar(250)</data-type>
-      </column>
-      <column id="126" parent="9" name="usuario">
-        <mandatory>1</mandatory>
-        <data-type>varchar(25)</data-type>
-      </column>
-      <column id="127" parent="9" name="fechaActualizacion">
-        <mandatory>1</mandatory>
-        <data-type>datetime</data-type>
-      </column>
-      <column id="128" parent="10" name="idPermiso">
-        <mandatory>1</mandatory>
-        <data-type>int(11)</data-type>
-      </column>
-      <column id="129" parent="10" name="idNivelAutorizacion">
-        <data-type>int(11)</data-type>
-      </column>
-      <column id="130" parent="10" name="idOpcion">
-        <data-type>int(11)</data-type>
-      </column>
-      <column id="131" parent="10" name="idEstado">
-        <data-type>char(1)</data-type>
-      </column>
-      <key id="132" parent="10" name="PRIMARY">
-        <columns>idPermiso</columns>
-        <primary>1</primary>
-      </key>
-      <column id="133" parent="11" name="idSucursal">
-        <mandatory>1</mandatory>
-        <data-type>int(11)</data-type>
-      </column>
-      <column id="134" parent="11" name="nombre">
-        <mandatory>1</mandatory>
-        <data-type>varchar(50)</data-type>
-      </column>
-      <column id="135" parent="11" name="usuario">
-        <mandatory>1</mandatory>
-        <data-type>varchar(15)</data-type>
-      </column>
-      <column id="136" parent="11" name="password">
-        <mandatory>1</mandatory>
-        <data-type>varchar(50)</data-type>
-      </column>
-      <column id="137" parent="11" name="claveAPI">
-        <mandatory>1</mandatory>
-        <data-type>varchar(75)</data-type>
-      </column>
-      <column id="138" parent="11" name="domicilio">
-        <data-type>varchar(30)</data-type>
-      </column>
-      <column id="139" parent="11" name="contacto">
-        <data-type>varchar(10)</data-type>
-      </column>
-      <key id="140" parent="11" name="PRIMARY">
-        <columns>idSucursal</columns>
-        <primary>1</primary>
-      </key>
-      <column id="141" parent="12" name="idUsuario">
-        <mandatory>1</mandatory>
-        <data-type>int(11)</data-type>
-      </column>
-      <column id="142" parent="12" name="usuario">
-        <mandatory>1</mandatory>
-        <data-type>varchar(10)</data-type>
-      </column>
-      <column id="143" parent="12" name="password">
-        <mandatory>1</mandatory>
-        <data-type>varchar(100)</data-type>
-      </column>
-      <column id="144" parent="12" name="nombre">
-        <mandatory>1</mandatory>
-        <data-type>varchar(50)</data-type>
-      </column>
-      <column id="145" parent="12" name="apellido">
-        <mandatory>1</mandatory>
-        <data-type>varchar(50)</data-type>
-      </column>
-      <column id="146" parent="12" name="sexo">
-        <mandatory>1</mandatory>
-        <data-type>char(1)</data-type>
-      </column>
-      <column id="147" parent="12" name="contacto">
-        <mandatory>1</mandatory>
-        <data-type>varchar(50)</data-type>
-      </column>
-      <column id="148" parent="12" name="idSucursal">
-        <mandatory>1</mandatory>
-        <data-type>int(11)</data-type>
-      </column>
-      <column id="149" parent="12" name="claveAPI">
-        <mandatory>1</mandatory>
-        <data-type>varchar(75)</data-type>
-      </column>
-      <column id="150" parent="12" name="idEstado">
-        <mandatory>1</mandatory>
-        <data-type>int(11)</data-type>
-      </column>
-      <column id="151" parent="12" name="fechaEstado">
-        <mandatory>1</mandatory>
-        <data-type>datetime</data-type>
-      </column>
-      <column id="152" parent="12" name="fechaSesion">
-        <mandatory>1</mandatory>
-        <data-type>datetime</data-type>
-      </column>
-      <column id="153" parent="12" name="claveGCM">
-        <mandatory>1</mandatory>
-        <data-type>varchar(75)</data-type>
-      </column>
-      <column id="154" parent="12" name="idNivelAutorizacion">
-        <data-type>int(11)</data-type>
-        <default-expression>&apos;1&apos;</default-expression>
-      </column>
-      <key id="155" parent="12" name="PRIMARY">
-        <columns>idUsuario</columns>
-        <primary>1</primary>
-      </key>
-      <column id="156" parent="13" name="ven_id">
-        <mandatory>1</mandatory>
-        <data-type>int(11)</data-type>
-      </column>
-      <column id="157" parent="13" name="ven_idLocal">
-        <data-type>int(11)</data-type>
-      </column>
-      <column id="158" parent="13" name="fecha">
-        <mandatory>1</mandatory>
-        <data-type>datetime</data-type>
-      </column>
-      <column id="159" parent="13" name="subtotal0">
-        <mandatory>1</mandatory>
-        <data-type>decimal(20,2)</data-type>
-      </column>
-      <column id="160" parent="13" name="subtotal">
-        <mandatory>1</mandatory>
-        <data-type>decimal(20,2)</data-type>
-      </column>
-      <column id="161" parent="13" name="descuento">
-        <mandatory>1</mandatory>
-        <data-type>decimal(20,2)</data-type>
-      </column>
-      <column id="162" parent="13" name="total">
-        <mandatory>1</mandatory>
-        <data-type>decimal(20,2)</data-type>
-      </column>
-      <column id="163" parent="13" name="cambio">
-        <mandatory>1</mandatory>
-        <data-type>decimal(20,2)</data-type>
-      </column>
-      <column id="164" parent="13" name="letra">
-        <mandatory>1</mandatory>
-        <data-type>varchar(150)</data-type>
-      </column>
-      <column id="165" parent="13" name="monSubtotal0">
-        <data-type>decimal(20,2)</data-type>
-      </column>
-      <column id="166" parent="13" name="monSubtotal">
-        <data-type>decimal(20,2)</data-type>
-      </column>
-      <column id="167" parent="13" name="monDescuento">
-        <data-type>decimal(20,2)</data-type>
-      </column>
-      <column id="168" parent="13" name="monTotal">
-        <data-type>decimal(20,2)</data-type>
-      </column>
-      <column id="169" parent="13" name="monCambio">
-        <data-type>decimal(20,2)</data-type>
-      </column>
-      <column id="170" parent="13" name="monLetra">
-        <data-type>varchar(150)</data-type>
-      </column>
-      <column id="171" parent="13" name="monAbr">
+      <column id="68" parent="6" name="unidad">
         <mandatory>1</mandatory>
         <data-type>varchar(5)</data-type>
       </column>
-      <column id="172" parent="13" name="monTipoCambio">
+      <column id="69" parent="6" name="precioNorSin">
+        <mandatory>1</mandatory>
+        <data-type>decimal(20,6)</data-type>
+        <default-expression>&apos;0.000000&apos;</default-expression>
+      </column>
+      <column id="70" parent="6" name="precioNorCon">
+        <mandatory>1</mandatory>
+        <data-type>decimal(20,6)</data-type>
+        <default-expression>&apos;0.000000&apos;</default-expression>
+      </column>
+      <column id="71" parent="6" name="precioSin">
+        <mandatory>1</mandatory>
+        <data-type>decimal(20,6)</data-type>
+        <default-expression>&apos;0.000000&apos;</default-expression>
+      </column>
+      <column id="72" parent="6" name="precioCon">
+        <mandatory>1</mandatory>
+        <data-type>decimal(20,6)</data-type>
+        <default-expression>&apos;0.000000&apos;</default-expression>
+      </column>
+      <column id="73" parent="6" name="importeNorSin">
+        <mandatory>1</mandatory>
+        <data-type>decimal(20,2)</data-type>
+      </column>
+      <column id="74" parent="6" name="importeNorCon">
+        <mandatory>1</mandatory>
+        <data-type>decimal(20,2)</data-type>
+      </column>
+      <column id="75" parent="6" name="importeSin">
+        <mandatory>1</mandatory>
+        <data-type>decimal(20,2)</data-type>
+      </column>
+      <column id="76" parent="6" name="importeCon">
+        <mandatory>1</mandatory>
+        <data-type>decimal(20,2)</data-type>
+      </column>
+      <column id="77" parent="6" name="descPorcentaje">
+        <mandatory>1</mandatory>
+        <data-type>decimal(20,2)</data-type>
+      </column>
+      <column id="78" parent="6" name="descTotal">
+        <mandatory>1</mandatory>
+        <data-type>decimal(20,2)</data-type>
+      </column>
+      <column id="79" parent="6" name="precioCompra">
+        <mandatory>1</mandatory>
+        <data-type>decimal(20,2)</data-type>
+      </column>
+      <column id="80" parent="6" name="importeCompra">
+        <mandatory>1</mandatory>
+        <data-type>decimal(20,2)</data-type>
+      </column>
+      <column id="81" parent="6" name="sinGravar">
+        <mandatory>1</mandatory>
+        <data-type>tinyint(1)</data-type>
+      </column>
+      <column id="82" parent="6" name="caracteristicas">
+        <mandatory>1</mandatory>
+        <data-type>text</data-type>
+      </column>
+      <column id="83" parent="6" name="orden">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+      </column>
+      <column id="84" parent="6" name="detImp">
+        <mandatory>1</mandatory>
+        <data-type>tinyint(1)</data-type>
+        <default-expression>&apos;0&apos;</default-expression>
+      </column>
+      <column id="85" parent="6" name="iepsActivo">
+        <mandatory>1</mandatory>
+        <data-type>tinyint(1)</data-type>
+        <default-expression>&apos;0&apos;</default-expression>
+      </column>
+      <column id="86" parent="6" name="cuotaIeps">
         <mandatory>1</mandatory>
         <data-type>decimal(20,4)</data-type>
+        <default-expression>&apos;0.0000&apos;</default-expression>
       </column>
-      <column id="173" parent="13" name="comentario">
+      <column id="87" parent="6" name="cuentaPredial">
+        <mandatory>1</mandatory>
+        <data-type>varchar(45)</data-type>
+      </column>
+      <column id="88" parent="6" name="movVen">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+        <default-expression>&apos;-1&apos;</default-expression>
+      </column>
+      <column id="89" parent="6" name="movVenC">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+        <default-expression>&apos;-1&apos;</default-expression>
+      </column>
+      <column id="90" parent="6" name="monPrecioNorSin">
+        <data-type>decimal(20,6)</data-type>
+      </column>
+      <column id="91" parent="6" name="monPrecioNorCon">
+        <data-type>decimal(20,6)</data-type>
+      </column>
+      <column id="92" parent="6" name="monPrecioSin">
+        <data-type>decimal(20,6)</data-type>
+      </column>
+      <column id="93" parent="6" name="monPrecioCon">
+        <data-type>decimal(20,6)</data-type>
+      </column>
+      <column id="94" parent="6" name="monImporteNorSin">
+        <data-type>decimal(20,2)</data-type>
+      </column>
+      <column id="95" parent="6" name="monImporteNorCon">
+        <data-type>decimal(20,2)</data-type>
+      </column>
+      <column id="96" parent="6" name="monImporteSin">
+        <data-type>decimal(20,2)</data-type>
+      </column>
+      <column id="97" parent="6" name="monImporteCon">
+        <data-type>decimal(20,2)</data-type>
+      </column>
+      <column id="98" parent="6" name="nombreAduana">
+        <data-type>varchar(512)</data-type>
+      </column>
+      <column id="99" parent="6" name="fechaDocAduanero">
+        <data-type>date</data-type>
+      </column>
+      <column id="100" parent="6" name="numeroDocAduanero">
+        <data-type>varchar(128)</data-type>
+      </column>
+      <column id="101" parent="6" name="lote">
+        <mandatory>1</mandatory>
+        <data-type>tinyint(1)</data-type>
+        <default-expression>&apos;0&apos;</default-expression>
+      </column>
+      <column id="102" parent="6" name="receta">
+        <mandatory>1</mandatory>
+        <data-type>tinyint(1)</data-type>
+        <default-expression>&apos;0&apos;</default-expression>
+      </column>
+      <column id="103" parent="6" name="tipo">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+        <default-expression>&apos;0&apos;</default-expression>
+      </column>
+      <column id="104" parent="6" name="trr_id">
+        <data-type>bigint(20)</data-type>
+      </column>
+      <column id="105" parent="6" name="ncr_id">
+        <data-type>bigint(20)</data-type>
+      </column>
+      <key id="106" parent="6" name="PRIMARY">
+        <columns>ven_id
+art_id
+idSucursal</columns>
+        <primary>1</primary>
+      </key>
+      <column id="107" parent="7" name="idConcepto">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+      </column>
+      <column id="108" parent="7" name="descripcion">
+        <mandatory>1</mandatory>
+        <data-type>varchar(45)</data-type>
+      </column>
+      <column id="109" parent="7" name="idEstado">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+      </column>
+      <key id="110" parent="7" name="PRIMARY">
+        <columns>idConcepto</columns>
+        <primary>1</primary>
+      </key>
+      <column id="111" parent="8" name="idInventario">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+      </column>
+      <column id="112" parent="8" name="idInventarioLocal">
+        <data-type>int(11)</data-type>
+      </column>
+      <column id="113" parent="8" name="idSucursal">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+      </column>
+      <column id="114" parent="8" name="art_id">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+      </column>
+      <column id="115" parent="8" name="existenciaSolicitud">
+        <mandatory>1</mandatory>
+        <data-type>double</data-type>
+      </column>
+      <column id="116" parent="8" name="existenciaRespuesta">
+        <mandatory>1</mandatory>
+        <data-type>double</data-type>
+      </column>
+      <column id="117" parent="8" name="idUsuario">
+        <data-type>int(11)</data-type>
+      </column>
+      <column id="118" parent="8" name="fechaSolicitud">
+        <data-type>datetime</data-type>
+      </column>
+      <column id="119" parent="8" name="fechaRespuesta">
+        <data-type>datetime</data-type>
+      </column>
+      <column id="120" parent="8" name="existenciaEjecucion">
+        <data-type>double</data-type>
+      </column>
+      <column id="121" parent="8" name="idEstado">
+        <mandatory>1</mandatory>
+        <data-type>varchar(1)</data-type>
+      </column>
+      <column id="122" parent="8" name="idInventarioExterno">
+        <data-type>int(11)</data-type>
+      </column>
+      <index id="123" parent="8" name="idInventario_UNIQUE">
+        <columns>idInventario</columns>
+        <unique>1</unique>
+      </index>
+      <key id="124" parent="8" name="idInventario_UNIQUE">
+        <columns>idInventario</columns>
+        <underlying-index>idInventario_UNIQUE</underlying-index>
+      </key>
+      <key id="125" parent="8" name="PRIMARY">
+        <columns>idInventario</columns>
+        <primary>1</primary>
+      </key>
+      <column id="126" parent="9" name="idNivelAutorizacion">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+      </column>
+      <column id="127" parent="9" name="descripcion">
+        <mandatory>1</mandatory>
+        <data-type>varchar(100)</data-type>
+      </column>
+      <key id="128" parent="9" name="PRIMARY">
+        <columns>idNivelAutorizacion</columns>
+        <primary>1</primary>
+      </key>
+      <column id="129" parent="10" name="idOpcion">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+      </column>
+      <column id="130" parent="10" name="descripcion">
+        <mandatory>1</mandatory>
+        <data-type>varchar(100)</data-type>
+      </column>
+      <column id="131" parent="10" name="valor">
+        <mandatory>1</mandatory>
+        <data-type>varchar(100)</data-type>
+      </column>
+      <column id="132" parent="11" name="accion">
+        <mandatory>1</mandatory>
+        <data-type>varchar(50)</data-type>
+      </column>
+      <column id="133" parent="11" name="parametro">
+        <mandatory>1</mandatory>
+        <data-type>varchar(50)</data-type>
+      </column>
+      <column id="134" parent="11" name="valor">
+        <mandatory>1</mandatory>
+        <data-type>varchar(100)</data-type>
+      </column>
+      <column id="135" parent="11" name="comentario">
+        <data-type>varchar(250)</data-type>
+      </column>
+      <column id="136" parent="11" name="usuario">
+        <mandatory>1</mandatory>
+        <data-type>varchar(25)</data-type>
+      </column>
+      <column id="137" parent="11" name="fechaActualizacion">
+        <mandatory>1</mandatory>
+        <data-type>datetime</data-type>
+      </column>
+      <column id="138" parent="11" name="idSucursal">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+      </column>
+      <key id="139" parent="11" name="PRIMARY">
+        <columns>accion
+parametro
+valor</columns>
+        <primary>1</primary>
+      </key>
+      <column id="140" parent="12" name="idNivelAutorizacion">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+      </column>
+      <column id="141" parent="12" name="idOpcion">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+      </column>
+      <column id="142" parent="12" name="idEstado">
+        <mandatory>1</mandatory>
+        <data-type>varchar(5)</data-type>
+      </column>
+      <column id="143" parent="13" name="idSucursal">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+      </column>
+      <column id="144" parent="13" name="nombre">
+        <data-type>varchar(150)</data-type>
+      </column>
+      <column id="145" parent="13" name="direccion">
+        <data-type>varchar(200)</data-type>
+      </column>
+      <column id="146" parent="13" name="domicilio">
+        <mandatory>1</mandatory>
+        <data-type>varchar(100)</data-type>
+      </column>
+      <column id="147" parent="13" name="contacto">
+        <mandatory>1</mandatory>
+        <data-type>varchar(100)</data-type>
+      </column>
+      <column id="148" parent="13" name="usuario">
+        <data-type>varchar(50)</data-type>
+      </column>
+      <column id="149" parent="13" name="password">
+        <data-type>varchar(100)</data-type>
+      </column>
+      <column id="150" parent="13" name="claveAPI">
+        <data-type>varchar(150)</data-type>
+      </column>
+      <column id="151" parent="13" name="idEstado">
+        <data-type>char(1)</data-type>
+        <default-expression>&apos;1&apos;</default-expression>
+      </column>
+      <key id="152" parent="13" name="PRIMARY">
+        <columns>idSucursal</columns>
+        <primary>1</primary>
+      </key>
+      <column id="153" parent="14" name="idUsuario">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+      </column>
+      <column id="154" parent="14" name="usuario">
+        <mandatory>1</mandatory>
+        <data-type>varchar(100)</data-type>
+      </column>
+      <column id="155" parent="14" name="password">
+        <mandatory>1</mandatory>
+        <data-type>varchar(100)</data-type>
+      </column>
+      <column id="156" parent="14" name="nombre">
+        <data-type>varchar(50)</data-type>
+      </column>
+      <column id="157" parent="14" name="apellido">
+        <data-type>varchar(100)</data-type>
+      </column>
+      <column id="158" parent="14" name="sexo">
+        <data-type>char(1)</data-type>
+      </column>
+      <column id="159" parent="14" name="contacto">
+        <data-type>varchar(20)</data-type>
+      </column>
+      <column id="160" parent="14" name="idSucursal">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+        <default-expression>&apos;0&apos;</default-expression>
+      </column>
+      <column id="161" parent="14" name="ClaveAPI">
+        <data-type>varchar(100)</data-type>
+      </column>
+      <column id="162" parent="14" name="idNivelAutorizacion">
+        <mandatory>1</mandatory>
+        <data-type>varchar(1)</data-type>
+      </column>
+      <column id="163" parent="14" name="idEstado">
+        <mandatory>1</mandatory>
+        <data-type>varchar(1)</data-type>
+      </column>
+      <column id="164" parent="14" name="fechaEstado">
+        <mandatory>1</mandatory>
+        <data-type>datetime</data-type>
+      </column>
+      <column id="165" parent="14" name="fechaSesion">
+        <mandatory>1</mandatory>
+        <data-type>datetime</data-type>
+      </column>
+      <column id="166" parent="14" name="claveGCM">
+        <data-type>varchar(200)</data-type>
+      </column>
+      <index id="167" parent="14" name="idUsuario_UNIQUE">
+        <columns>idUsuario</columns>
+        <unique>1</unique>
+      </index>
+      <key id="168" parent="14" name="idUsuario_UNIQUE">
+        <columns>idUsuario</columns>
+        <underlying-index>idUsuario_UNIQUE</underlying-index>
+      </key>
+      <key id="169" parent="14" name="PRIMARY">
+        <columns>idSucursal
+idUsuario
+usuario</columns>
+        <primary>1</primary>
+      </key>
+      <column id="170" parent="15" name="ven_id">
+        <mandatory>1</mandatory>
+        <data-type>bigint(20)</data-type>
+      </column>
+      <column id="171" parent="15" name="idSucursal">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+      </column>
+      <column id="172" parent="15" name="fecha">
+        <mandatory>1</mandatory>
+        <data-type>datetime</data-type>
+      </column>
+      <column id="173" parent="15" name="subtotal0">
+        <mandatory>1</mandatory>
+        <data-type>decimal(20,2)</data-type>
+      </column>
+      <column id="174" parent="15" name="subtotal">
+        <mandatory>1</mandatory>
+        <data-type>decimal(20,2)</data-type>
+      </column>
+      <column id="175" parent="15" name="descuento">
+        <mandatory>1</mandatory>
+        <data-type>decimal(20,2)</data-type>
+      </column>
+      <column id="176" parent="15" name="total">
+        <mandatory>1</mandatory>
+        <data-type>decimal(20,2)</data-type>
+      </column>
+      <column id="177" parent="15" name="cambio">
+        <mandatory>1</mandatory>
+        <data-type>decimal(20,2)</data-type>
+      </column>
+      <column id="178" parent="15" name="letra">
+        <mandatory>1</mandatory>
+        <data-type>varchar(150)</data-type>
+      </column>
+      <column id="179" parent="15" name="monSubtotal0">
+        <data-type>decimal(20,2)</data-type>
+      </column>
+      <column id="180" parent="15" name="monSubtotal">
+        <data-type>decimal(20,2)</data-type>
+      </column>
+      <column id="181" parent="15" name="monDescuento">
+        <data-type>decimal(20,2)</data-type>
+      </column>
+      <column id="182" parent="15" name="monTotal">
+        <data-type>decimal(20,2)</data-type>
+      </column>
+      <column id="183" parent="15" name="monCambio">
+        <data-type>decimal(20,2)</data-type>
+      </column>
+      <column id="184" parent="15" name="monLetra">
+        <data-type>varchar(150)</data-type>
+      </column>
+      <column id="185" parent="15" name="monAbr">
+        <mandatory>1</mandatory>
+        <data-type>varchar(5)</data-type>
+        <default-expression>&apos;MXN&apos;</default-expression>
+      </column>
+      <column id="186" parent="15" name="monTipoCambio">
+        <mandatory>1</mandatory>
+        <data-type>decimal(20,4)</data-type>
+        <default-expression>&apos;1.0000&apos;</default-expression>
+      </column>
+      <column id="187" parent="15" name="comentario">
+        <mandatory>1</mandatory>
+        <data-type>varchar(255)</data-type>
+        <default-expression>&apos;&apos;</default-expression>
+      </column>
+      <column id="188" parent="15" name="decimales">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+        <default-expression>&apos;2&apos;</default-expression>
+      </column>
+      <column id="189" parent="15" name="porPeriodo">
+        <mandatory>1</mandatory>
+        <data-type>tinyint(1)</data-type>
+        <default-expression>&apos;0&apos;</default-expression>
+      </column>
+      <column id="190" parent="15" name="ventaPorAjuste">
+        <mandatory>1</mandatory>
+        <data-type>tinyint(1)</data-type>
+        <default-expression>&apos;0&apos;</default-expression>
+      </column>
+      <column id="191" parent="15" name="puntos">
+        <data-type>bigint(20)</data-type>
+      </column>
+      <column id="192" parent="15" name="monedas">
+        <data-type>decimal(20,2)</data-type>
+      </column>
+      <column id="193" parent="15" name="status">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+      </column>
+      <column id="194" parent="15" name="tic_id">
+        <data-type>bigint(20)</data-type>
+      </column>
+      <column id="195" parent="15" name="not_id">
+        <data-type>bigint(20)</data-type>
+      </column>
+      <column id="196" parent="15" name="rem_id">
+        <data-type>bigint(20)</data-type>
+      </column>
+      <column id="197" parent="15" name="caj_id">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+        <default-expression>&apos;1&apos;</default-expression>
+      </column>
+      <column id="198" parent="15" name="mon_id">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+        <default-expression>&apos;1&apos;</default-expression>
+      </column>
+      <column id="199" parent="15" name="rcc_id">
+        <data-type>bigint(20)</data-type>
+      </column>
+      <column id="200" parent="15" name="can_caj_id">
+        <data-type>int(11)</data-type>
+      </column>
+      <column id="201" parent="15" name="can_rcc_id">
+        <data-type>bigint(20)</data-type>
+      </column>
+      <column id="202" parent="15" name="vnd_id">
+        <data-type>int(11)</data-type>
+      </column>
+      <key id="203" parent="15" name="PRIMARY">
+        <columns>ven_id
+idSucursal</columns>
+        <primary>1</primary>
+      </key>
+      <column id="204" parent="16" name="ven_id">
+        <mandatory>1</mandatory>
+        <data-type>bigint(20)</data-type>
+      </column>
+      <column id="205" parent="16" name="tpa_id">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+      </column>
+      <column id="206" parent="16" name="total">
+        <mandatory>1</mandatory>
+        <data-type>decimal(20,2)</data-type>
+      </column>
+      <column id="207" parent="16" name="monTotal">
+        <mandatory>1</mandatory>
+        <data-type>decimal(20,2)</data-type>
+        <default-expression>&apos;0.00&apos;</default-expression>
+      </column>
+      <column id="208" parent="16" name="idSucursal">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+      </column>
+      <key id="209" parent="16" name="PRIMARY">
+        <columns>ven_id
+tpa_id
+idSucursal</columns>
+        <primary>1</primary>
+      </key>
+      <column id="210" parent="17" name="idAjuste">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+      </column>
+      <column id="211" parent="17" name="idInventario">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+      </column>
+      <column id="212" parent="17" name="fecha">
+        <mandatory>1</mandatory>
+        <data-type>datetime</data-type>
+      </column>
+      <column id="213" parent="17" name="idUsuario">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+      </column>
+      <column id="214" parent="17" name="clave">
+        <mandatory>1</mandatory>
+        <data-type>varchar(30)</data-type>
+      </column>
+      <column id="215" parent="17" name="precioCompra">
+        <mandatory>1</mandatory>
+        <data-type>double</data-type>
+      </column>
+      <column id="216" parent="17" name="factor">
+        <mandatory>1</mandatory>
+        <data-type>double</data-type>
+      </column>
+      <column id="217" parent="17" name="cantidadAnterior">
+        <mandatory>1</mandatory>
+        <data-type>double</data-type>
+      </column>
+      <column id="218" parent="17" name="cantidadAjuste">
+        <mandatory>1</mandatory>
+        <data-type>double</data-type>
+      </column>
+      <column id="219" parent="17" name="idEstado">
+        <mandatory>1</mandatory>
+        <data-type>varchar(1)</data-type>
+      </column>
+      <key id="220" parent="17" name="PRIMARY">
+        <columns>idAjuste</columns>
+        <primary>1</primary>
+      </key>
+      <column id="221" parent="18" name="idSexo">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+      </column>
+      <column id="222" parent="18" name="descripcion">
+        <mandatory>1</mandatory>
+        <data-type>varchar(45)</data-type>
+      </column>
+      <column id="223" parent="18" name="idEstado">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+      </column>
+      <key id="224" parent="18" name="PRIMARY">
+        <columns>idSexo</columns>
+        <primary>1</primary>
+      </key>
+      <column id="225" parent="19" name="pro_id">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+      </column>
+      <column id="226" parent="19" name="idSucursal">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+      </column>
+      <column id="227" parent="19" name="nombre">
+        <mandatory>1</mandatory>
+        <data-type>varchar(120)</data-type>
+      </column>
+      <column id="228" parent="19" name="representante">
+        <mandatory>1</mandatory>
+        <data-type>varchar(120)</data-type>
+      </column>
+      <column id="229" parent="19" name="alias">
+        <mandatory>1</mandatory>
+        <data-type>varchar(15)</data-type>
+        <default-expression>&apos;&apos;</default-expression>
+      </column>
+      <column id="230" parent="19" name="domicilio">
+        <mandatory>1</mandatory>
+        <data-type>varchar(120)</data-type>
+      </column>
+      <column id="231" parent="19" name="noExt">
+        <mandatory>1</mandatory>
+        <data-type>varchar(45)</data-type>
+      </column>
+      <column id="232" parent="19" name="noInt">
+        <mandatory>1</mandatory>
+        <data-type>varchar(45)</data-type>
+      </column>
+      <column id="233" parent="19" name="localidad">
+        <mandatory>1</mandatory>
+        <data-type>varchar(120)</data-type>
+      </column>
+      <column id="234" parent="19" name="ciudad">
+        <mandatory>1</mandatory>
+        <data-type>varchar(120)</data-type>
+      </column>
+      <column id="235" parent="19" name="estado">
+        <mandatory>1</mandatory>
+        <data-type>varchar(45)</data-type>
+      </column>
+      <column id="236" parent="19" name="pais">
+        <mandatory>1</mandatory>
+        <data-type>varchar(45)</data-type>
+      </column>
+      <column id="237" parent="19" name="codigoPostal">
+        <mandatory>1</mandatory>
+        <data-type>varchar(10)</data-type>
+      </column>
+      <column id="238" parent="19" name="colonia">
+        <mandatory>1</mandatory>
+        <data-type>varchar(45)</data-type>
+      </column>
+      <column id="239" parent="19" name="rfc">
+        <mandatory>1</mandatory>
+        <data-type>varchar(45)</data-type>
+      </column>
+      <column id="240" parent="19" name="curp">
+        <mandatory>1</mandatory>
+        <data-type>varchar(45)</data-type>
+      </column>
+      <column id="241" parent="19" name="telefono">
+        <mandatory>1</mandatory>
+        <data-type>varchar(45)</data-type>
+      </column>
+      <column id="242" parent="19" name="celular">
+        <mandatory>1</mandatory>
+        <data-type>varchar(45)</data-type>
+      </column>
+      <column id="243" parent="19" name="mail">
         <mandatory>1</mandatory>
         <data-type>varchar(255)</data-type>
       </column>
-      <column id="174" parent="13" name="decimales">
+      <column id="244" parent="19" name="comentario">
+        <mandatory>1</mandatory>
+        <data-type>varchar(255)</data-type>
+      </column>
+      <column id="245" parent="19" name="status">
         <mandatory>1</mandatory>
         <data-type>int(11)</data-type>
       </column>
-      <column id="175" parent="13" name="porPeriodo">
+      <column id="246" parent="19" name="limite">
         <mandatory>1</mandatory>
-        <data-type>tinyint(4)</data-type>
-      </column>
-      <column id="176" parent="13" name="ventaPorAjuste">
-        <mandatory>1</mandatory>
-        <data-type>tinyint(4)</data-type>
-      </column>
-      <column id="177" parent="13" name="puntos">
-        <data-type>bigint(20)</data-type>
-      </column>
-      <column id="178" parent="13" name="monedas">
         <data-type>decimal(20,2)</data-type>
       </column>
-      <column id="179" parent="13" name="status">
+      <column id="247" parent="19" name="diasCredito">
         <mandatory>1</mandatory>
         <data-type>int(11)</data-type>
       </column>
-      <column id="180" parent="13" name="tic_id">
-        <data-type>bigint(20)</data-type>
+      <column id="248" parent="19" name="foto">
+        <data-type>longblob</data-type>
       </column>
-      <column id="181" parent="13" name="not_id">
-        <data-type>bigint(20)</data-type>
-      </column>
-      <column id="182" parent="13" name="rem_id">
-        <data-type>bigint(20)</data-type>
-      </column>
-      <column id="183" parent="13" name="caj_id">
-        <mandatory>1</mandatory>
-        <data-type>int(11)</data-type>
-      </column>
-      <column id="184" parent="13" name="mon_id">
-        <mandatory>1</mandatory>
-        <data-type>int(11)</data-type>
-      </column>
-      <column id="185" parent="13" name="rcc_id">
-        <data-type>bigint(20)</data-type>
-      </column>
-      <column id="186" parent="13" name="can_caj_id">
-        <data-type>int(11)</data-type>
-      </column>
-      <column id="187" parent="13" name="can_rcc_id">
-        <data-type>bigint(20)</data-type>
-      </column>
-      <column id="188" parent="13" name="vnd_id">
-        <data-type>int(11)</data-type>
-      </column>
-      <column id="189" parent="13" name="idSucursal">
-        <data-type>int(11)</data-type>
-      </column>
-      <key id="190" parent="13" name="PRIMARY">
-        <columns>ven_id</columns>
+      <key id="249" parent="19" name="PRIMARY">
+        <columns>pro_id
+idSucursal</columns>
         <primary>1</primary>
       </key>
-      <column id="191" parent="14" name="idSexo">
+      <column id="250" parent="20" name="pro_id">
         <mandatory>1</mandatory>
-        <data-type>char(1)</data-type>
+        <data-type>int(11)</data-type>
       </column>
-      <column id="192" parent="14" name="descripcion">
-        <data-type>varchar(20)</data-type>
+      <column id="251" parent="20" name="idSucursal">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
       </column>
-      <key id="193" parent="14" name="PRIMARY">
-        <columns>idSexo</columns>
+      <column id="252" parent="20" name="art_id">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+      </column>
+      <column id="253" parent="20" name="claveProveedor">
+        <mandatory>1</mandatory>
+        <data-type>varchar(45)</data-type>
+      </column>
+      <column id="254" parent="20" name="precioCompra">
+        <mandatory>1</mandatory>
+        <data-type>decimal(20,6)</data-type>
+      </column>
+      <column id="255" parent="20" name="fecha">
+        <mandatory>1</mandatory>
+        <data-type>datetime</data-type>
+      </column>
+      <key id="256" parent="20" name="PRIMARY">
+        <columns>pro_id
+art_id
+idSucursal</columns>
         <primary>1</primary>
       </key>
     </database-model>

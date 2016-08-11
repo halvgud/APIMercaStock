@@ -203,21 +203,20 @@ class importar
             $db=null;
         }
     }
-
-
     public static function Venta($request,$response)
     {
         set_time_limit(0);
         $contador=0;
         $postrequest = json_decode($request->getBody());
+        $codigo=200;
         $db=null;
         try {
             $db = getConnection();
             $db->beginTransaction();
             if (isset($postrequest->data) && gettype($postrequest->data) == 'array') {
-                $comando = "insert into venta(ven_id, ven_idLocal, fecha, subtotal0, subtotal, descuento, total, cambio, letra, monSubtotal0, monSubtotal, monDescuento, monTotal, monCambio, monLetra, monAbr, monTipoCambio, comentario, decimales, porPeriodo, ventaPorAjuste, puntos, monedas, status, tic_id, not_id, rem_id, caj_id, mon_id, rcc_id, can_caj_id, can_rcc_id, vnd_id, idSucursal)
-                values(:ven_id,:ven_id,:fecha,:subtotal0,:subtotal,:descuento,:total,:cambio,:letra,:monSubtotal0, :monSubtotal, :monDescuento, :monTotal,:monCambio, :monLetra, :monAbr, :monTipoCambio, :comentario, :decimales, :porPeriodo, :ventaPorAjuste, :puntos, :monedas, :status, :tic_id, :not_id, :rem_id, :caj_id, :mon_id, :rcc_id, :can_caj_id, :can_rcc_id, :vnd_id, :idSucursal)
-                on duplicate key update ven_idLocal=:ven_id,fecha=:fecha,subtotal0=:subtotal0,subtotal=:subtotal,descuento=:descuento,total=:total,cambio=:cambio,letra=:letra,monSubtotal0=:monSubtotal0,monSubtotal=:monSubtotal,monDescuento=:monDescuento,monTotal=:monTotal,monCambio=:monCambio,monLetra=:monLetra,monAbr=:monAbr,monTipoCambio=:monTipoCambio,comentario=:comentario,decimales=:decimales,porPeriodo=:porPeriodo,ventaPorAjuste=:ventaPorAjuste,puntos=:puntos,monedas=:monedas,status=:status,tic_id=:tic_id,not_id=:not_id,rem_id=:rem_id,caj_id=:caj_id,mon_id=:mon_id,rcc_id=:rcc_id,can_caj_id=:can_caj_id,can_rcc_id=:can_rcc_id,vnd_id=:vnd_id,idSucursal=:idSucursal";
+                $comando = "insert into venta(ven_id, fecha, subtotal0, subtotal, descuento, total, cambio, letra, monSubtotal0, monSubtotal, monDescuento, monTotal, monCambio, monLetra, monAbr, monTipoCambio, comentario, decimales, porPeriodo, ventaPorAjuste, puntos, monedas, status, tic_id, not_id, rem_id, caj_id, mon_id, rcc_id, can_caj_id, can_rcc_id, vnd_id, idSucursal)
+                values(:ven_id,:fecha,:subtotal0,:subtotal,:descuento,:total,:cambio,:letra,:monSubtotal0, :monSubtotal, :monDescuento, :monTotal,:monCambio, :monLetra, :monAbr, :monTipoCambio, :comentario, :decimales, :porPeriodo, :ventaPorAjuste, :puntos, :monedas, :status, :tic_id, :not_id, :rem_id, :caj_id, :mon_id, :rcc_id, :can_caj_id, :can_rcc_id, :vnd_id, :idSucursal)
+                on duplicate key update fecha=:fecha,subtotal0=:subtotal0,subtotal=:subtotal,descuento=:descuento,total=:total,cambio=:cambio,letra=:letra,monSubtotal0=:monSubtotal0,monSubtotal=:monSubtotal,monDescuento=:monDescuento,monTotal=:monTotal,monCambio=:monCambio,monLetra=:monLetra,monAbr=:monAbr,monTipoCambio=:monTipoCambio,comentario=:comentario,decimales=:decimales,porPeriodo=:porPeriodo,ventaPorAjuste=:ventaPorAjuste,puntos=:puntos,monedas=:monedas,status=:status,tic_id=:tic_id,not_id=:not_id,rem_id=:rem_id,caj_id=:caj_id,mon_id=:mon_id,rcc_id=:rcc_id,can_caj_id=:can_caj_id,can_rcc_id=:can_rcc_id,vnd_id=:vnd_id,idSucursal=:idSucursal";
                 foreach ($postrequest->data as $renglon) {
                     $contador++;
                     $sentencia = $db->prepare($comando);
@@ -266,14 +265,14 @@ class importar
                     "datos" => $contador
                 ];
                 $db->commit();
-                return $response->withJson($arreglo, 200);
+                return $response->withJson($arreglo, $codigo);
             }else{
                 $db->rollBack();
                 $arreglo=[
                     "estado"=>"400",
                     "error"=>"error de formato",
                     "datos"=>$postrequest];
-                return $response->withJson($arreglo,400);
+                $codigo=400;
             }
         }
         catch (PDOException $e) {
@@ -283,15 +282,14 @@ class importar
                 "error" => general::traducirMensaje($e->getCode(),$e),
                 "datos" => $e->getMessage()
             ];
-            return $response->withJson($arreglo, 400);
+            $codigo=400;
         }
         finally{
             $db=null;
-            return $response->withJson($arreglo, 200);
+            return $response->withJson($arreglo, $codigo);
         }
 
     }
-
     public static function DetalleVenta($request,$response)
     {
         set_time_limit(0);
@@ -303,7 +301,7 @@ class importar
             $db->beginTransaction();
             //var_dump($postrequest[0]->data);
             if (isset($postrequest->data) && gettype($postrequest->data) == 'array') {
-                $comando = "insert into  detallev (ven_idLocal, idSucursal, art_id, clave, descripcion, cantidad, unidad, precioNorSin, precioNorCon, precioSin, precioCon, importeNorSin, importeNorCon, importeSin, importeCon, descPorcentaje, descTotal, precioCompra, importeCompra, sinGravar, caracteristicas, orden, detImp, iepsActivo, cuotaIeps, cuentaPredial, movVen, movVenC, monPrecioNorSin, monPrecioNorCon, monPrecioSin, monPrecioCon, monImporteNorSin, monImporteNorCon, monImporteSin, monImporteCon, nombreAduana, fechaDocAduanero, numeroDocAduanero, lote, receta, tipo, trr_id, ncr_id)
+                $comando = "insert into  detallev (ven_id, idSucursal, art_id, clave, descripcion, cantidad, unidad, precioNorSin, precioNorCon, precioSin, precioCon, importeNorSin, importeNorCon, importeSin, importeCon, descPorcentaje, descTotal, precioCompra, importeCompra, sinGravar, caracteristicas, orden, detImp, iepsActivo, cuotaIeps, cuentaPredial, movVen, movVenC, monPrecioNorSin, monPrecioNorCon, monPrecioSin, monPrecioCon, monImporteNorSin, monImporteNorCon, monImporteSin, monImporteCon, nombreAduana, fechaDocAduanero, numeroDocAduanero, lote, receta, tipo, trr_id, ncr_id)
                 values(:ven_id,:idSucursal,:art_id,:clave,:descripcion,:cantidad,:unidad,:precioNorSin,:precioNorCon,:precioSin,:precioCon,:importeNorSin,:importeNorCon,:importeSin,:importeCon,:descPorcentaje,:descTotal,:precioCompra,:importeCompra,:sinGravar,:caracteristicas,:orden,:detImp,:iepsActivo,:cuotaIeps,:cuentaPredial,:movVen,:movVenC,:monPrecioNorSin,:monPrecioNorCon,:monPrecioSin,:monPrecioCon,:monImporteNorSin,:monImporteNorCon,:monImporteSin,:monImporteCon,:nombreAduana,:fechaDocAduanero,:numeroDocAduanero,:lote,:receta,:tipo,:trr_id,:ncr_id)
                 on duplicate key update art_id=:art_id,clave=:clave,descripcion=:descripcion,cantidad=:cantidad,unidad=:unidad,precioNorSin=:precioNorSin,precioNorCon=:precioNorCon,precioSin=:precioSin,precioCon=:precioCon,importeNorSin=:importeNorSin,importeNorCon=:importeNorCon,importeSin=:importeSin,importeCon=:importeCon,descPorcentaje=:descPorcentaje,descTotal=:descTotal,precioCompra=:precioCompra,importeCompra=:importeCompra,sinGravar=:sinGravar,caracteristicas=:caracteristicas,orden=:orden,detImp=:detImp,iepsActivo=:iepsActivo,cuotaIeps=:cuotaIeps,cuentaPredial=:cuentaPredial,movVen=:movVen,movVenC=:movVenC,monPrecioNorSin=:monPrecioNorSin,monPrecioNorCon=:monPrecioNorCon,monPrecioSin=:monPrecioSin,monPrecioCon=:monPrecioCon,monImporteNorSin=:monImporteNorSin,monImporteNorCon=:monImporteNorCon,monImporteSin=:monImporteSin,monImporteCon=:monImporteCon,nombreAduana=:nombreAduana,fechaDocAduanero=:fechaDocAduanero,numeroDocAduanero=:numeroDocAduanero,lote=:lote,receta=:receta,tipo=:tipo,trr_id=:trr_id,ncr_id=:ncr_id";
                 foreach ($postrequest->data as $renglon) {
@@ -385,7 +383,6 @@ class importar
         }
 
     }
-
     public static function importarUsuarios($request,$response){
         $postrequest = json_decode($request->getBody());
         $query = "insert into ms_usuario values(:idUsuario,:usuario,:password,:nombre,:apellido,:sexo,:contacto,:idSucursal,:claveApi,:idEstado,:fechaEstado,
@@ -442,7 +439,6 @@ class importar
             return $response->withJson($arreglo,400);
         }
     }
-
     public static function importarInventarioAPI($request, $response){
         set_time_limit(0);
         $postrequest = json_decode($request->getBody());
@@ -610,6 +606,104 @@ class importar
                 "error" => general::traducirMensaje($e->getCode(),$e),
 
                 "data" => json_encode($postrequest)
+            ];
+            return $response->withJson($arreglo, 400);
+        }
+        finally{
+            $db=null;
+        }
+    }
+    public static function proveedor($request,$response){
+
+    }
+    public static function proveedorarticulo($request,$response){
+        $postrequest = json_decode($request->getBody());
+        $db=null;
+        $codigo=400;
+        $arreglo=[];
+        try {
+            $db = getConnection();
+            $db->beginTransaction();
+            $comando="INSERT INTO proveedor(pro_id, idSucursal, nombre, representante,
+                                                alias, domicilio, noExt, noInt, localidad,
+                                                ciudad, estado, pais, codigoPostal, colonia,
+                                                rfc, curp, telefono, celular, mail, comentario,
+                                                status, limite, diasCredito, foto)
+                                        VALUES ( :pro_id,
+                                                 :idSucursal,
+                                                 :nombre,
+                                                 :representante,
+                                                 :alias,
+                                                 :domicilio,
+                                                 :noExt,
+                                                 :noInt,
+                                                 :localidad,
+                                                 :ciudad,
+                                                 :estado,
+                                                 :pais,
+                                                 :codigoPostal,
+                                                 :colonia,
+                                                 :rfc,
+                                                 :curp,
+                                                 :telefono,
+                                                 :celular,
+                                                 :mail,
+                                                 :comentario,
+                                                 :status,
+                                                 :limite,
+                                                 :diasCredito,
+                                                 :foto ) on duplicate key update
+                                                 pro_id=:pro_id,idSucursal=:idSucursal,nombre=:nombre,
+                                                representante=:representante,alias=:alias,domicilio=:domicilio,
+                                                noExt=:noExt,noInt=:noInt,localidad=:localidad,ciudad=:ciudad,
+                                                estado=:estado,pais=:pais,codigoPostal=:codigoPostal,
+                                                colonia=:colonia,rfc=:rfc,curp=:curp,telefono=:telefono,
+                                                celular=:celular,mail=:mail,comentario=:comentario,
+                                                status=:status,limite=:limite,diasCredito=:diasCredito,foto=:foto";
+            foreach ($postrequest->data as $renglon ) {
+                $sentencia = $db->prepare($comando);
+                $sentencia->bindParam('pro_id',$renglon->pro_id);
+                $sentencia->bindParam('idSucursal',$renglon->idSucursal);
+                $sentencia->bindParam('nombre',$renglon->nombre);
+                $sentencia->bindParam('representante',$renglon->representante);
+                $sentencia->bindParam('alias',$renglon->alias);
+                $sentencia->bindParam('domicilio',$renglon->domicilio);
+                $sentencia->bindParam('noExt',$renglon->noExt);
+                $sentencia->bindParam('noInt',$renglon->noInt);
+                $sentencia->bindParam('localidad',$renglon->localidad);
+                $sentencia->bindParam('ciudad',$renglon->ciudad);
+                $sentencia->bindParam('estado',$renglon->estado);
+                $sentencia->bindParam('pais',$renglon->pais);
+                $sentencia->bindParam('codigoPostal',$renglon->codigoPostal);
+                $sentencia->bindParam('colonia',$renglon->colonia);
+                $sentencia->bindParam('rfc',$renglon->rfc);
+                $sentencia->bindParam('curp',$renglon->curp);
+                $sentencia->bindParam('telefono',$renglon->telefono);
+                $sentencia->bindParam('celular',$renglon->celular);
+                $sentencia->bindParam('mail',$renglon->mail);
+                $sentencia->bindParam('comentario',$renglon->comentario);
+                $sentencia->bindParam('status',$renglon->status);
+                $sentencia->bindParam('limite',$renglon->limite);
+                $sentencia->bindParam('diasCredito',$renglon->diasCredito);
+                $sentencia->bindParam('foto',$renglon->foto);
+                $sentencia->execute();
+                $comandoauto="ALTER TABLE proveedor AUTO_INCREMENT = 1";
+                $sentencia2=$db->prepare($comandoauto);
+                $sentencia2->execute();
+            }   
+            $arreglo = [
+                "estado" => 200,
+                "success" => "Se a importado la informacion",
+                "datos" => $db->rowCount()
+            ];
+            $db->commit();
+            return $response->withJson($arreglo, 200);
+        } catch (PDOException $e) {
+            $db->rollBack();
+            $arreglo = [
+                "estado" => 400,
+                "error" => general::traducirMensaje($e->getCode(),$e),
+                "datos" => $e->getMessage()
             ];
             return $response->withJson($arreglo, 400);
         }

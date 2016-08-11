@@ -13,23 +13,45 @@ class inventario
             $new_arr[] = $category;
         }
         $res_arr=!isset($new_arr)?'0':implode(',',$new_arr);
-            $comando = "select art_id,clave,descripcion,existencia from articulo a
-                        INNER JOIN categoria c on (a.cat_id=c.cat_id and c.idSucursal=:idSucursal)
-                        INNER JOIN departamento d on (d.dep_id=c.dep_id and d.idSucursal=:idSucursal)
-                     where a.servicio!=1  and a.cat_id like :cat_id and d.dep_id like :dep_id and a.idSucursal like :idSucursal and art_id not in (".$res_arr.") and art_id not in (select art_id from ms_inventario where fechaSolicitud>curdate())
-                      and a.existencia>0
-                      and a.art_id NOT IN (
-                            SELECT msp33.valor FROM ms_parametro msp11
-
-                        INNER JOIN ms_parametro msp22 ON (msp22.accion=msp11.accion AND msp22.parametro='_COMPONENTE_LISTADO_EXCLUYENTE')
-                        INNER JOIN ms_parametro msp33 ON (msp22.valor=msp33.accion AND msp33.parametro=msp11.valor)
-                        WHERE
-                        msp11.accion = 'CONFIG_GENERAR_INVENTARIO' AND msp11.parametro='BANDERA_LISTA_EXCLUYENTE_SUC'
-                        AND msp33.accion='LISTA_RELACION_IDSUCURSAL_ARTID_EXCLUYENTE'
-                        and msp11.comentario='TRUE'
-                        and msp33.parametro=:idSucursal)
-                        AND a.idSucursal=:idSucursal
-                        order by rand() limit :sta1;";
+            $comando = "SELECT art_id,
+                               clave,
+                               descripcion,
+                               existencia
+                        FROM articulo a
+                        INNER JOIN categoria c ON (a.cat_id=c.cat_id
+                                                   AND c.idSucursal=:idSucursal)
+                        INNER JOIN departamento d ON (d.dep_id=c.dep_id
+                                                      AND d.idSucursal=:idSucursal)
+                        WHERE a.servicio!=1
+                          AND a.cat_id LIKE :cat_id
+                          AND d.dep_id LIKE :dep_id
+                          AND a.idSucursal LIKE :idSucursal
+                          AND art_id NOT IN (".$res_arr.")
+                          AND art_id NOT IN
+                            (SELECT art_id
+                             FROM ms_inventario
+                             WHERE fechaSolicitud>curdate()-7
+                               AND idEstado NOT IN ('E',
+                                                    'A')
+                             union all
+                             select art_id
+                             from ms_inventario
+                             where idEstado in ('E','A')
+                            )
+                          AND a.art_id NOT IN
+                            ( SELECT msp33.valor
+                             FROM ms_parametro msp11
+                             INNER JOIN ms_parametro msp22 ON (msp22.accion=msp11.accion
+                                                               AND msp22.parametro='_COMPONENTE_LISTADO_EXCLUYENTE')
+                             INNER JOIN ms_parametro msp33 ON (msp22.valor=msp33.accion
+                                                               AND msp33.parametro=msp11.valor)
+                             WHERE msp11.accion = 'CONFIG_GENERAR_INVENTARIO'
+                               AND msp11.parametro='BANDERA_LISTA_EXCLUYENTE_SUC'
+                               AND msp33.accion='LISTA_RELACION_IDSUCURSAL_ARTID_EXCLUYENTE'
+                               AND msp11.comentario='TRUE'
+                               AND msp33.parametro=:idSucursal)
+                          AND a.idSucursal=:idSucursal
+                        ORDER BY rand() LIMIT :sta1;";
 
         try {
             $db = getConnection();
@@ -86,13 +108,15 @@ class inventario
                                existencia
                         FROM articulo a
                         WHERE a.servicio!=1
-                          AND a.existencia>0
+
                           AND (a.clave=:input
                                OR descripcion LIKE CONCAT('%',:input,'%'))
                           AND a.art_id NOT IN
-                            (SELECT art_id
-                             FROM ms_inventario
-                             WHERE fechaSolicitud>curdate())
+                            (
+                             select art_id
+                             from ms_inventario
+                             where idEstado in ('E','A')
+                            )
                           AND art_id NOT IN ($res_arr)
                           AND a.art_id NOT IN
                             ( SELECT msp33.valor
@@ -157,7 +181,7 @@ class inventario
         }
         $res_arr=!isset($new_arr)?'0':implode(',',$new_arr);
             $comando = "select a.art_id,a.clave,a.descripcion,a.existencia from venta v
-                                inner join detallev dv on (dv.ven_idLocal = v.ven_id)
+                                inner join detallev dv on (dv.ven_id = v.ven_id)
                                 inner join articulo a on (a.art_id = dv.art_id)
                                 inner join categoria c on (c.cat_id = a.cat_id)
                       INNER JOIN departamento d on (d.dep_id=c.dep_id)
@@ -166,9 +190,19 @@ class inventario
                                 v.fecha>=:fechaInicio
                                 and v.fecha<=:fechaFin
                                 and c.cat_id like :cat_id
-                                and a.existencia>0
+
                                 and a.art_id not in ($res_arr)
-                                and a.art_id not in (select art_id from ms_inventario where fechaSolicitud>curdate())
+                                and a.art_id not in
+                                (SELECT art_id
+                             FROM ms_inventario
+                             WHERE fechaSolicitud>curdate()-7
+                               AND idEstado NOT IN ('E',
+                                                    'A')
+                             union all
+                             select art_id
+                             from ms_inventario
+                             where idEstado in ('E','A')
+                            )
                                  and a.art_id NOT IN (
                             SELECT msp33.valor FROM ms_parametro msp11
 
@@ -311,11 +345,21 @@ class inventario
                                 where
                                 msi.fechaSolicitud>=:fechaInicio
                                 and msi.fechaSolicitud<=:fechaFin
-                                and a.existencia>0
+
                                 and msi.existenciaRespuesta!=msi.existenciaEjecucion
                                 and c.cat_id like :cat_id
                                 and a.art_id not in ($res_arr)
-                                and msi.art_id not in (select msi.art_id from ms_inventario msi where fechaSolicitud>curdate() and idEstado='A')
+                                and msi.art_id not in
+                                (SELECT art_id
+                             FROM ms_inventario
+                             WHERE fechaSolicitud>curdate()-7
+                               AND idEstado NOT IN ('E',
+                                                    'A')
+                             union all
+                             select art_id
+                             from ms_inventario
+                             where idEstado in ('E','A')
+                            )
                                  and a.art_id NOT IN (
                             SELECT msp33.valor FROM ms_parametro msp11
 
@@ -381,14 +425,19 @@ class inventario
 							sum(case when existenciaRespuesta=existenciaEjecucion and existenciaRespuesta!=0
                             then '1' else 0 end) as totalAcertado,sum(case when existenciaRespuesta!=existenciaEjecucion
                             then '1' else 0 end) as totalFallado,
-							(sum(case when existenciaEjecucion>=existenciaRespuesta then existenciaRespuesta/existenciaEjecucion
-            else existenciaEjecucion/existenciaRespuesta end)/count(*)) as bandera	from
+                            round(sum(case when existenciaRespuesta!=existenciaEjecucion then
+                                    (precioCompra/factor)*(existenciaRespuesta-existenciaEjecucion) else 0 end),2) as costo,
+							round((sum(case when existenciaEjecucion>=existenciaRespuesta then existenciaRespuesta/existenciaEjecucion
+            else existenciaEjecucion/existenciaRespuesta end)/count(*)),2) as bandera
+            	             from
                             ms_inventario msi
                             inner join ms_sucursal mss on (mss.idSucursal = msi.idSucursal and mss.idSucursal=:idSucursal)
+                            INNER JOIN articulo a ON (a.art_id = msi.art_id
+                                              AND a.idSucursal = msi.idSucursal)
                             where date(msi.fechaSolicitud)>=date(:fechaIni)
                             and date(msi.fechaRespuesta)<=date(:fechaFin)
                             group by msi.idsucursal, fecha
-                            order by fecha";
+                            order by fecha,a.art_id";
         try {
             $db = getConnection();
             $db->query("SET NAMES 'utf8'");
@@ -436,13 +485,32 @@ class inventario
         $postrequest = json_decode($request->getBody());
         $arreglo=null;
         $codigo=200;
-        $comando = "select msi.fechaSolicitud, a.clave,a.descripcion, msi.existenciaSolicitud,msi.existenciaEjecucion,
-            msi.existenciaRespuesta,(case when existenciaEjecucion>=existenciaRespuesta then existenciaRespuesta/existenciaEjecucion
+        /*$comando = "select msi.fechaSolicitud, a.clave,a.descripcion, msi.existenciaSolicitud,msi.existenciaEjecucion,
+            msi.existenciaRespuesta,(msi.existenciaRespuesta-msi.existenciaEjecucion) as diferencia,(case when existenciaEjecucion>=existenciaRespuesta then existenciaRespuesta/existenciaEjecucion
             else existenciaEjecucion/existenciaRespuesta end) as bandera from
             ms_inventario msi inner join articulo a on (a.art_id = msi.art_id and
             a.idSucursal = msi.idSucursal)
                     where msi.idSucursal =:idSucursal
-                    and date(msi.fechaSolicitud)=date(:fecha);";
+                    and date(msi.fechaSolicitud)=date(:fecha);";*/
+        $comando = "SELECT msi.fechaRespuesta as fechaSolicitud,
+                           a.clave,a.descripcion,
+                           msi.existenciaSolicitud,
+                           msi.existenciaEjecucion,
+                           msi.existenciaRespuesta,
+                           round((msi.existenciaRespuesta-msi.existenciaEjecucion),2) AS diferencia,
+                           round((CASE
+                              WHEN existenciaEjecucion>=existenciaRespuesta THEN
+                              existenciaRespuesta/existenciaEjecucion ELSE
+                              existenciaEjecucion/existenciaRespuesta
+                            END),2) AS bandera,
+                           round((precioCompra/factor)*(existenciaRespuesta-existenciaEjecucion),2) as costo
+                    FROM ms_inventario msi
+                    INNER JOIN articulo a ON (a.art_id = msi.art_id
+                                              AND a.idSucursal = msi.idSucursal)
+                    WHERE msi.idSucursal =:idSucursal
+                      AND date(msi.fechaSolicitud)=:fecha
+                    GROUP BY msi.idSucursal,
+                             a.art_id;";
         try {
             $db = getConnection();
             $db->query("SET NAMES 'utf8'");
@@ -480,4 +548,8 @@ class inventario
             return $response->withJson($arreglo, $codigo);
         }
     }
+
+
+
+
 }

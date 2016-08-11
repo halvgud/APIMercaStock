@@ -2,8 +2,8 @@
 <project version="4">
   <component name="WebServers">
     <option name="servers">
-      <webServer id="57ed5022-2c84-4ff1-8f23-dc130f8a308e" name="apimercastock" url="http://50.62.169.116">
-        <fileTransfer host="50.62.169.116" port="21" password="dff8dfcfdfd9dfcbdfc9dfc5dfd9dfc3dfd2df98df9adf9bdf8b" username="mercattoadmin">
+      <webServer id="57ed5022-2c84-4ff1-8f23-dc130f8a308e" name="apimercastock" url="http://mercatto.mx">
+        <fileTransfer host="mercatto.mx" port="21" rootFolder="/home/wolffhelm/public_html/mercastock/api/" password="dff9dfd3dfd9dfcbdfcedfc7dfc3dfc4df9bdf9bdfea" username="wolffhelm">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" />
           </advancedOptions>

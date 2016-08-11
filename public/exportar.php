@@ -57,7 +57,7 @@ class exportar
     }
     public static function ultimoDetalleVenta($request,$response){
         $postrequest = json_decode($request->getBody());
-        $query = "select (case when max(ven_idLocal) is null then 0 else max(ven_idLocal) end) as ven_id from detallev where idSucursal=:idSucursal";
+        $query = "select (case when max(ven_id) is null then 0 else max(ven_id) end) as ven_id from detallev where idSucursal=:idSucursal";
         try{
             $db=getConnection();
             $sentencia = $db->prepare($query);
@@ -355,7 +355,7 @@ class exportar
             }//else
         }catch(PDOException $e){
             $codigoDeError=$e->getCode();
-            $error =self::traducirMensaje($codigoDeError,$e);
+            $error =general::traducirMensaje($codigoDeError,$e);
             $arreglo = [
                 "estado" =>$e -> getCode(),
                 "error" =>$error,
@@ -447,6 +447,99 @@ class exportar
                 "data" => ""
             ];
             return $response->withJson($arreglo,400);
+        }
+    }
+
+    public static function exportarAjuste($request,$response){
+        $postrequest = json_decode($request->getBody());
+
+        $comando = "SELECT  msa.idAjuste,
+                            msa.idInventario,
+                            msa.fecha,
+                            msa.idUsuario,
+                            msa.clave,
+                            msa.precioCompra,
+                            msa.factor,
+                            msa.cantidadAnterior,
+                            msa.cantidadAjuste,
+                            msa.idEstado
+                            from ms_ajuste msa
+                             inner join ms_inventario msi on (msi.idInventario=msa.idInventario)
+                              where msi.idSucursal=:idSucursal
+                              and msa.idEstado='A'";
+
+        try {
+            $idSucursal=$postrequest->idSucursal;
+            $db = getConnection();
+            $sentencia = $db->prepare($comando);
+            $sentencia->bindParam('idSucursal',$idSucursal );
+            $sentencia->execute();
+            $resultado = $sentencia->fetchAll(PDO::FETCH_OBJ);
+            if ($resultado) {
+                $arreglo = [
+                    "estado" => 200,
+                    "success"=>"OK",
+                    "data" => $resultado
+                ];
+                $codigo=200;
+            } else {
+                $arreglo = [
+                    "estado" => 202,
+                    "error" => "Error al traer listado de ajustes",
+                    "data" => $idSucursal
+                ];
+                $codigo=202;
+            }
+        } catch (PDOException $e) {
+            $arreglo = [
+                "estado" => 400,
+                "error" => general::traducirMensaje($e->getCode(),$e),
+                "datos" => $e->getMessage()
+            ];
+            $codigo=400;
+        }
+        finally{
+            $db=null;
+            return $response->withJson($arreglo, $codigo);
+        }
+    }
+
+    public static function ActualizarAjuste($request, $response)
+    {
+        set_time_limit(0);
+        $postrequest = json_decode($request->getBody());
+        $db=null;
+        $contador=0;
+        try {
+            $db = getConnection();
+            $db->beginTransaction();
+            foreach ($postrequest->data as $renglon) {
+                $contador++;
+                $idInventario = $renglon->idInventario!=''?$renglon->idInventario:null;
+                $comando = "UPDATE ms_ajuste SET idEstado='E' WHERE idEstado='A' AND idInventario=:idInventario;";
+                $sentencia = $db->prepare($comando);
+                $sentencia->bindParam('idInventario', $idInventario);
+                $sentencia->execute();
+            }
+            $arreglo = [
+                "estado" => 200,
+                "success" => "Se a importado la informacion: ".$contador,
+                "datos" => $contador
+            ];
+            $db->commit();
+            return $response->withJson($arreglo, 200);
+        }
+        catch (PDOException $e) {
+            $db->rollBack();
+            $arreglo = [
+                "estado" => 400,
+                "error" => general::traducirMensaje($e->getCode(),$e),
+                "datos" => $e->getMessage()
+            ];
+            return $response->withJson($arreglo, 400);
+        }
+        finally{
+            $db=null;
         }
     }
 }
