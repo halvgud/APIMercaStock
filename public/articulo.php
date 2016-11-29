@@ -7,10 +7,17 @@ class articulo
 
     public static function seleccionar($request, $response){
         $postrequest = json_decode($request->getBody());
+        $edicion=(isset($postrequest->edicion)?',"'.$postrequest->edicion.'" as '.$postrequest->edicion:'');
         if($postrequest->dep_id!='%'){
-            $comando = "SELECT a.clave, a.descripcion, a.margen1, a.precio1, a.existencia  FROM articulo a inner join categoria c on (c.cat_id=a.cat_id) inner join departamento dp on (dp.dep_id=c.dep_id ) where a.idSucursal=:idSucursal and dp.idSucursal=:idSucursal and c.idSucursal=:idSucursal and dp.dep_id=:dep_id and c.cat_id=:cat_id ";
+            $comando = "SELECT a.art_id,a.clave, a.descripcion, a.margen1, a.precio1, a.existencia $edicion
+                          FROM articulo a inner join categoria c on (c.cat_id=a.cat_id)
+                          inner join departamento dp on (dp.dep_id=c.dep_id )
+                          where a.idSucursal=:idSucursal and dp.idSucursal=:idSucursal
+                          and c.idSucursal=:idSucursal and dp.dep_id like :dep_id and c.cat_id like :cat_id ";
         }else{
-            $comando = "SELECT a.clave, a.descripcion, a.margen1, a.precio1, a.existencia  FROM articulo a inner join categoria c on (c.cat_id=a.cat_id)  where a.idSucursal=:idSucursal and c.idSucursal=:idSucursal and c.cat_id=:cat_id ";
+            $comando = "SELECT a.art_id,a.clave, a.descripcion, a.margen1, a.precio1, a.existencia $edicion
+                          FROM articulo a inner join categoria c on (c.cat_id=a.cat_id)
+                          where a.idSucursal=:idSucursal  and c.cat_id like :cat_id ";
         }
         try {
             $db = getConnection();
@@ -34,7 +41,7 @@ class articulo
                 $arreglo = [
                     "estado" => 'warning',
                     "success" => "No se encontraron artículos con los parámetros de búsqueda",
-                    "datos" => $resultado
+                    "datos" => $postrequest
                 ];
                 return $response->withJson($arreglo, 200);
             }
@@ -42,7 +49,7 @@ class articulo
             $arreglo = [
                 "estado" => 400,
                 "error" => general::traducirMensaje($e->getCode(),$e),
-                "datos" => $e->getMessage()
+                "datos" => $comando
             ];
             return $response->withJson($arreglo, 400);
         }

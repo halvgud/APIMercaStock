@@ -8,6 +8,143 @@
  */
 class ajuste
 {
+    public static function  seleccionarOpcionMostrar($request,$response)
+    {
+        $postrequest= json_decode($request->getBody());
+        $arreglo=null;
+        $codigo=200;
+        $db=null;
+        $comando = "SELECT comentario as idMostrar,valor as nombre from ms_parametro where accion='AJUSTE_INVENTARIO_PARAMETROS'
+                    and parametro = 'MOSTRAR_POR' and idSucursal=1 order by cast(comentario as unsigned) asc";
+        try
+        {
+            $db = getConnection();
+            $db->query("SET NAMES 'utf8'");
+            $db->query("SET CHARACTER SET utf8");
+            $sentencia = $db->prepare($comando);
+            $sentencia->execute();
+            $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+            if ($resultado) {
+                $arreglo = [
+                    "estado" => 200,
+                    "success"=>"OK",
+                    "data" => [$resultado]
+                ];
+
+            } else {
+                $arreglo = [
+                    "estado" => 'warning',
+                    "success" => "Error al traer listado de opciones",
+                    "data" => $resultado
+                ];
+                $codigo=202;
+            }
+        } catch (PDOException $e) {
+            $arreglo = [
+                "estado" => 400,
+                "error" => general::traducirMensaje($e->getCode(),$e),
+                "datos" => $e->getMessage()
+            ];
+            $codigo=400;
+        }
+        finally{
+            $db=null;
+            return $response->withJson($arreglo, $codigo);
+        }
+    }
+    public static function seleccionarTodo($request,$response){
+        $postrequest = json_decode($request->getBody());
+        $arreglo=null;
+        $codigo=200;
+        $db=null;
+        $comando = "select msi.fechaRespuesta as fechaSolicitud,
+                           msi.idInventario,
+                           d.dep_id as idDepartamento,
+                           d.nombre as departamento,
+                           a.clave,
+                           a.descripcion,
+                           msi.existenciaEjecucion,
+                           msi.existenciaRespuesta,
+                           sum(case when msi2.idInventario is null then 0 else 1 end) cantidadDeVueltas,
+                           round((msi.existenciaRespuesta-msi.existenciaEjecucion),2) as diferencia,
+                            round(sum(CASE
+                            WHEN msi.existenciaRespuesta!=msi.existenciaEjecucion
+                            THEN
+                            (a.precioCompra/a.factor)*(msi.existenciaRespuesta-msi.existenciaEjecucion)
+                            ELSE 0
+                            END),2) as costoActual,
+                            'EDICION' as edicion,
+                            msi.idInventario as aplicar,
+                            '1' as aplicarCheckBox
+                            from ms_inventario msi
+                                        inner join articulo a on (a.art_id = msi.art_id
+                                                                  and a.idSucursal=msi.idSucursal)
+                                        inner join categoria c on (c.cat_id = a.cat_id)
+									    inner join departamento d on (d.dep_id = c.dep_id)
+                                        left join ms_inventario msi2 on (msi2.art_id = msi.art_id
+                                                                         and msi2.idSucursal=msi.idSucursal
+                                                                         and msi.fechaSolicitud>msi2.fechaSolicitud)
+                            where msi.fechaSolicitud = (
+                                                         select max(msi3.fechaSolicitud)
+                                                         from ms_inventario msi3
+                                                         where msi3.art_id = msi.art_id
+                                                                and msi.idSucursal = msi3.idSucursal
+                                                       )
+                            and msi.idEstado='P'
+                            and msi.idInventario not in (select idInventario from ms_ajuste)
+                            and msi.idSucursal=:idSucursal
+                             AND msi.idSucursal = 2
+                             and msi.existenciaSolicitud!=msi.existenciaRespuesta
+                              AND msi.art_id NOT IN (
+                                                      SELECT
+                                                        a.art_id
+                                                        FROM
+                                                            articulo a
+                                                                INNER JOIN ms_ajuste msa ON (msa.clave = a.clave)
+                                                        WHERE
+                                                            msa.fecha > msi.fechaRespuesta
+									)
+                        GROUP BY a.art_id";
+        try {
+            $db = getConnection();
+            $db->query("SET NAMES 'utf8'");
+            $db->query("SET CHARACTER SET utf8");
+            $sentencia = $db->prepare($comando);
+            $sentencia->bindParam("idSucursal",$postrequest->idSucursal);
+            $sentencia->execute();
+            $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+
+            if ($resultado) {
+                $arreglo = [
+                    "estado" => 200,
+                    "success"=>"OK",
+                    "data" => $resultado
+                ];
+
+            } else {
+                $arreglo = [
+                    "estado" => 'warning',
+                    "success" => "Error al traer listado de Inventario Mas Conflictivos",
+                    "data" => $resultado
+                ];
+                $codigo=202;
+            }
+        } catch (PDOException $e) {
+            $arreglo = [
+                "estado" => 400,
+                "error" => general::traducirMensaje($e->getCode(),$e),
+                "datos" => $e->getMessage()
+            ];
+            $codigo=400;
+        }
+        finally{
+            $db=null;
+            return $response->withJson($arreglo, $codigo);
+        }
+    }
+
+
+
     /**
      * @param $request
      * @param $response
@@ -147,6 +284,8 @@ class ajuste
                     from ms_inventario msi
                     inner join articulo a on (a.art_id = msi.art_id
                                               and a.idSucursal=msi.idSucursal)
+                    inner join categoria c on (c.cat_id = a.cat_id)
+                    inner join departamento d on (d.dep_id = c.cat_id)
                     left join ms_inventario msi2 on (msi2.art_id = msi.art_id
                                                      and msi2.idSucursal=msi.idSucursal
                                                      and msi.fechaSolicitud>msi2.fechaSolicitud)

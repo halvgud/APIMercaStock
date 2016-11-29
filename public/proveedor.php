@@ -8,11 +8,11 @@ class proveedor
     public static function seleccionar($request, $response)
     {
         $postrequest = json_decode($request->getBody());
-        $comando = "SELECT pro_id,nombre,representante,telefono,rfc FROM proveedor WHERE idSucursal like :idSucursal and status='1'";
+        $comando = "SELECT pro_id,nombre,representante,telefono,rfc,'edicion' as 'edicion' FROM proveedor WHERE idSucursal like :idSucursal and status='1'";
         $arreglo=null;
         $codigo = 200;
         try {
-            $idSucursal=isset($postrequest->idSucursal)?$postrequest->idSucursal:(isset($postrequest->idGenerico)?$postrequest->idGenerico:0);
+            $idSucursal=isset($postrequest->idSucursal)?$postrequest->idSucursal:(isset($postrequest->idGenerico)?$postrequest->idGenerico:'%');
             $db = getConnection();
             $sentencia = $db->prepare($comando);
             $sentencia->bindParam('idSucursal',$idSucursal );
@@ -22,7 +22,7 @@ class proveedor
                 $arreglo = [
                     "estado" => 200,
                     "success"=>"OK",
-                    "data" => isset($postrequest->dt)?$resultado:[$resultado]
+                    "data" => isset($postrequest->dt)?$resultado:$resultado
                 ];
                 $codigo=200;
             } else {

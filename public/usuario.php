@@ -56,13 +56,14 @@ class usuario
             $db = getConnection();
             $db->beginTransaction();
             $stmt = $db->prepare($sql);
+            $contacto = (isset($postrequest->contacto)?$postrequest->contacto:'');
             $stmt->bindParam("idUsuario", $idUsuario, PDO::PARAM_INT);
             $stmt->bindParam(":usuario", $postrequest->usuario, PDO::PARAM_STR);
             $stmt->bindParam(":password", $password);
             $stmt->bindParam(":nombre", $postrequest->nombre, PDO::PARAM_STR);
             $stmt->bindParam(":apellido", $postrequest->apellido, PDO::PARAM_STR);
             $stmt->bindParam(":sexo", $postrequest->sexo, PDO::PARAM_STR);
-            $stmt->bindParam(":contacto", $postrequest->contacto, PDO::PARAM_INT);
+            $stmt->bindParam(":contacto", $contacto, PDO::PARAM_INT);
             $stmt->bindParam(":idSucursal", $postrequest->idSucursal, PDO::PARAM_INT);
             $stmt->bindParam(":claveAPI", $claveApi);
             $stmt->bindParam(":idEstado", $idEstado);

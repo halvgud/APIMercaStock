@@ -613,14 +613,68 @@ class importar
             $db=null;
         }
     }
-    public static function proveedor($request,$response){
-
-    }
-    public static function proveedorarticulo($request,$response){
+    public static function ProveedorArticulo($request,$response){
+        set_time_limit(0);
         $postrequest = json_decode($request->getBody());
         $db=null;
         $codigo=400;
         $arreglo=[];
+        $bandera=false;
+        $contador=0;
+        try {
+            $db = getConnection();
+            $db->beginTransaction();
+            $comando="INSERT INTO proveedorarticulo(pro_id, idSucursal, art_id, claveProveedor, precioCompra, fecha)
+                                        VALUES ( :pro_id,
+                                                 :idSucursal,
+                                                 :art_id,
+                                                 :claveProveedor,
+                                                 :precioCompra,
+                                                 :fecha) on duplicate key update
+                                                 claveProveedor=:claveProveedor,
+                                                 precioCompra=:precioCompra,
+                                                 fecha=:fecha";
+            foreach ($postrequest->data as $renglon ) {
+                $sentencia = $db->prepare($comando);
+                $sentencia->bindParam('pro_id',$renglon->pro_id);
+                $sentencia->bindParam('idSucursal',$renglon->idSucursal);
+                $sentencia->bindParam("art_id", $renglon->art_id);
+                $sentencia->bindParam("claveProveedor", $renglon->claveProveedor);
+                $sentencia->bindParam("precioCompra", $renglon->precioCompra);
+                $sentencia->bindParam("fecha", $renglon->fecha);
+                $sentencia->execute();
+                $comandoauto="ALTER TABLE proveedorarticulo AUTO_INCREMENT = 1";
+                $sentencia2=$db->prepare($comandoauto);
+                $sentencia2->execute();
+                $contador++;
+            }
+            $arreglo = [
+                "estado" => 200,
+                "success" => "Se a importado la informacion",
+                "datos" => $contador
+            ];
+            $db->commit();
+            $codigo=200;
+        } catch (PDOException $e) {
+            $db->rollBack();
+            $arreglo = [
+                "estado" => 400,
+                "error" => general::traducirMensaje($e->getCode(),$e),
+                "datos" => $e->getMessage()
+            ];
+
+        }
+        finally{
+            $db=null;
+            return $response->withJson($arreglo, $codigo);
+        }
+    }
+    public static function Proveedor($request,$response){
+        $postrequest = json_decode($request->getBody());
+        $db=null;
+        $codigo=400;
+        $arreglo=[];
+        $contador=0;
         try {
             $db = getConnection();
             $db->beginTransaction();
@@ -653,7 +707,7 @@ class importar
                                                  :limite,
                                                  :diasCredito,
                                                  :foto ) on duplicate key update
-                                                 pro_id=:pro_id,idSucursal=:idSucursal,nombre=:nombre,
+                                                nombre=:nombre,
                                                 representante=:representante,alias=:alias,domicilio=:domicilio,
                                                 noExt=:noExt,noInt=:noInt,localidad=:localidad,ciudad=:ciudad,
                                                 estado=:estado,pais=:pais,codigoPostal=:codigoPostal,
@@ -661,6 +715,7 @@ class importar
                                                 celular=:celular,mail=:mail,comentario=:comentario,
                                                 status=:status,limite=:limite,diasCredito=:diasCredito,foto=:foto";
             foreach ($postrequest->data as $renglon ) {
+
                 $sentencia = $db->prepare($comando);
                 $sentencia->bindParam('pro_id',$renglon->pro_id);
                 $sentencia->bindParam('idSucursal',$renglon->idSucursal);
@@ -690,14 +745,15 @@ class importar
                 $comandoauto="ALTER TABLE proveedor AUTO_INCREMENT = 1";
                 $sentencia2=$db->prepare($comandoauto);
                 $sentencia2->execute();
-            }   
+                $contador++;
+            }
             $arreglo = [
                 "estado" => 200,
                 "success" => "Se a importado la informacion",
-                "datos" => $db->rowCount()
+                "datos" => $contador
             ];
+            $codigo=200;
             $db->commit();
-            return $response->withJson($arreglo, 200);
         } catch (PDOException $e) {
             $db->rollBack();
             $arreglo = [
@@ -705,10 +761,11 @@ class importar
                 "error" => general::traducirMensaje($e->getCode(),$e),
                 "datos" => $e->getMessage()
             ];
-            return $response->withJson($arreglo, 400);
+
         }
         finally{
             $db=null;
+            return $response->withJson($arreglo, $codigo);
         }
     }
 }

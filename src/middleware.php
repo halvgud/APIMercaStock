@@ -20,6 +20,7 @@ $app->add(function ($request, $response, $next) {
     /////cambiar a getPath()!='sucursal/login'
     if($request->getUri()->getPath()!='usuario/login'
         &&$request->getUri()->getPath()!='sucursal/login'
+        &&$request->getUri()->getPath()!='sucursal/lista/conexion'
         &&$request->getUri()->getPath()!='usuario/seleccionarApi'){
         foreach ($headers as $header => $value) {
             if($header=='Auth'){

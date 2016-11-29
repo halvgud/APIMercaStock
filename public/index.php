@@ -35,8 +35,11 @@ require_once("concepto.php");
 require_once("tipo_pago.php");
 require_once("detalles_venta.php");
 require_once("general.php");
+require_once("perdidas.php");
+require_once("ajuste.php");
+require_once("proveedor.php");
 //require_once("tipo_pago.php");
-
+require_once("inventarioTemporal.php");
 $app->run();
 
 function getConnection1() {
@@ -49,7 +52,7 @@ function getConnection1() {
 	return $dbh;
 }
 function getConnection() {
-	$dbhost="50.62.209.162";
+	$dbhost="198.71.241.19";
 	$dbuser="mercattoadmin";
 	$dbpass="Sy5@dm1n1*";
 	$dbname="mercatto_mstock";
