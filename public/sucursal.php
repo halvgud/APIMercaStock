@@ -9,13 +9,13 @@ class sucursal
         $postrequest = json_decode($request->getBody());
         $codigo = 200;
         $arreglo=[];
-        $comando = "Select direccionIp,rutaRest,nombreAmistoso from ms_sucursal_servidor
+        $comando = "Select direccionIp,rutaRest,nombreAmistoso,idSucursal from ms_sucursal_servidor
                     where nombreServidor=:nombreServidor order by nombreAmistoso desc";
         try{
 
             $db=getConnection();
             $sentencia = $db->prepare($comando);
-            $sentencia->bindParam("nombreServidor", $postrequest->nombreServi0dor);
+            $sentencia->bindParam("nombreServidor", $postrequest->nombreServidor);
             $sentencia->execute();
             $resultado  =$sentencia->fetchAll(PDO::FETCH_ASSOC);
             if($resultado){

@@ -64,6 +64,7 @@ class ajuste
                            a.clave,
                            a.descripcion,
                            msi.existenciaEjecucion,
+                           a.existencia,
                            msi.existenciaRespuesta,
                            sum(case when msi2.idInventario is null then 0 else 1 end) cantidadDeVueltas,
                            round((msi.existenciaRespuesta-msi.existenciaEjecucion),2) as diferencia,
@@ -78,32 +79,24 @@ class ajuste
                             '1' as aplicarCheckBox
                             from ms_inventario msi
                                         inner join articulo a on (a.art_id = msi.art_id
-                                                                  and a.idSucursal=msi.idSucursal)
+                                                                  and a.idSucursal=msi.idSucursal
+                                                                  and a.status='1')
                                         inner join categoria c on (c.cat_id = a.cat_id)
 									    inner join departamento d on (d.dep_id = c.dep_id)
                                         left join ms_inventario msi2 on (msi2.art_id = msi.art_id
                                                                          and msi2.idSucursal=msi.idSucursal
                                                                          and msi.fechaSolicitud>msi2.fechaSolicitud)
-                            where msi.fechaSolicitud = (
-                                                         select max(msi3.fechaSolicitud)
+                            where msi.fechaRespuesta = (
+                                                         select max(msi3.fechaRespuesta)
                                                          from ms_inventario msi3
                                                          where msi3.art_id = msi.art_id
                                                                 and msi.idSucursal = msi3.idSucursal
                                                        )
-                            and msi.idEstado='P'
+                            and msi.idEstado in ('P','N')
                             and msi.idInventario not in (select idInventario from ms_ajuste)
                             and msi.idSucursal=:idSucursal
-                             AND msi.idSucursal = 2
-                             and msi.existenciaSolicitud!=msi.existenciaRespuesta
-                              AND msi.art_id NOT IN (
-                                                      SELECT
-                                                        a.art_id
-                                                        FROM
-                                                            articulo a
-                                                                INNER JOIN ms_ajuste msa ON (msa.clave = a.clave)
-                                                        WHERE
-                                                            msa.fecha > msi.fechaRespuesta
-									)
+                             and msi.existenciaEjecucion!=msi.existenciaRespuesta
+
                         GROUP BY a.art_id";
         try {
             $db = getConnection();
@@ -124,7 +117,7 @@ class ajuste
             } else {
                 $arreglo = [
                     "estado" => 'warning',
-                    "success" => "Error al traer listado de Inventario Mas Conflictivos",
+                    "success" => "Error al traer listado de ajustes",
                     "data" => $resultado
                 ];
                 $codigo=202;
@@ -200,14 +193,12 @@ class ajuste
             $sentencia->bindParam("fechaFin",$fechaFin);
             $sentencia->execute();
             $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
-
             if ($resultado) {
                 $arreglo = [
                     "estado" => 200,
                     "success"=>"OK",
                     "data" => $resultado
                 ];
-
             } else {
                 $arreglo = [
                     "estado" => 'warning',

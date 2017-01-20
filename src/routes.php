@@ -131,6 +131,9 @@ $app->post('/importar/venta/tipo/pago',function(ServerRequestInterface $request,
 $app->post('/inventario/insertar', function (ServerRequestInterface $request, ResponseInterface $response){
     return inventario::insertar($request,$response);
 });
+$app->post('/inventario/nuevo',function(ServerRequestInterface $request,ResponseInterface $response){
+    return inventario::insertarNuevo($request,$response);
+});
 $app->post('/inventario/reporte/actual',function(ServerRequestInterface $request,ResponseInterface $response){
     return inventario::reporteActual($request,$response);
 });
