@@ -112,7 +112,6 @@ class importar
     }
     public static function Articulo($request, $response)
     {
-        set_time_limit(0);
         $postrequest = json_decode($request->getBody());
         $db=null;
         $contador=0;

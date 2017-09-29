@@ -91,8 +91,44 @@ class sucursal
             return $response->withJson($arreglo, $codigo);
         }
     }
+    public static function seleccionarV2($request, $response)
+    {
+        $postrequest = json_decode($request->getBody());
+        $codigo=200;
+        $arreglo=[];
+        /*todas las sucursales activas*/
+            $comando = "SELECT idSucursal as Id, nombre as Nombre from ms_sucursal WHERE idEstado>0 and idSucursal>1";
 
-    public static function registrar($request, $response)
+        try {
+            $db = getConnection();
+            $sentencia = $db->prepare($comando);
+            $sentencia->execute();
+            $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+            if ($resultado) {
+                $arreglo =  $resultado;
+                $codigo=200;
+            } else {
+                $arreglo = [
+                    "estado" => 400,
+                    "error" => "Error al traer listado de Sucursal",
+                    "data" => $resultado
+                ];;
+                $codigo=400;
+            }
+        } catch (PDOException $e) {
+            $arreglo = [
+                "estado" => 400,
+                "error" => general::traducirMensaje($e->getCode(),$e),
+                "data" => $e
+            ];
+            $codigo=400;
+        }
+        finally{
+            $db=null;
+            return $response->withJson($arreglo, $codigo);
+        }
+    }
+        public static function registrar($request, $response)
     {
         $postrequest = json_decode($request->getBody());
         $db=null;

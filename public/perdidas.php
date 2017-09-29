@@ -87,10 +87,7 @@ class perdidas
                         categoria c ON (c.cat_id = a.cat_id)
                             INNER JOIN
                         departamento d ON (d.dep_id = c.dep_id)
-                    WHERE
-                        /*DATE(msi.fechaSolicitud) >= DATE(:fechaIni)
-                            AND DATE(msi.fechaSolicitud) <= DATE(:fechaFin)
-                            AND*/ msi.idEstado != 'I'
+                    WHERE msi.idEstado != 'I'
                     GROUP BY d.dep_id
                     ORDER BY fecha , a.art_id";
         try {
@@ -98,11 +95,7 @@ class perdidas
             $db->query("SET NAMES 'utf8'");
             $db->query("SET CHARACTER SET utf8");
             $sentencia = $db->prepare($comando);
-            /*$fechaIni=trim($postrequest->fechaInicio);
-            $fechaFin=trim($postrequest->fechaFin);*/
             $sentencia->bindParam("idSucursal",$postrequest->idSucursal);
-            /*$sentencia->bindParam("fechaIni",$fechaIni);
-            $sentencia->bindParam("fechaFin",$fechaFin);*/
             $sentencia->execute();
             $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
             if ($resultado) {
