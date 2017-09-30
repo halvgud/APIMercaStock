@@ -30,7 +30,6 @@ class ajuste
                     "success"=>"OK",
                     "data" => [$resultado]
                 ];
-
             } else {
                 $arreglo = [
                     "estado" => 'warning',
@@ -52,12 +51,15 @@ class ajuste
             return $response->withJson($arreglo, $codigo);
         }
     }
+    /*
+     * Función de momento default en la opción de Ajustes
+     * */
     public static function seleccionarTodo($request,$response){
         $postrequest = json_decode($request->getBody());
         $arreglo=null;
         $codigo=200;
         $db=null;
-        $comando = "select msi.fechaRespuesta as fechaSolicitud,
+        /*$comando = "select msi.fechaRespuesta as fechaSolicitud,
                            msi.idInventario,
                            d.dep_id as idDepartamento,
                            d.nombre as departamento,
@@ -97,7 +99,46 @@ class ajuste
                             and msi.idSucursal=:idSucursal
                              and msi.existenciaEjecucion!=msi.existenciaRespuesta
 
-                        GROUP BY a.art_id";
+                        GROUP BY a.art_id";*/
+        $comando = "select msi.fechaRespuesta as fechaSolicitud,
+                           msi.idInventario,
+                           d.dep_id as idDepartamento,
+                           d.nombre as departamento,
+                           a.clave,
+                           a.descripcion,
+                           msi.existenciaEjecucion,
+                           a.existencia,
+                           msi.existenciaRespuesta,
+                           qty cantidadDeVueltas,
+                           round((msi.existenciaRespuesta-msi.existenciaEjecucion),2) as diferencia,
+                            round(sum(CASE
+                            WHEN msi.existenciaRespuesta!=msi.existenciaEjecucion
+                            THEN
+                            (a.precioCompra/a.factor)*(msi.existenciaRespuesta-msi.existenciaEjecucion)
+                            ELSE 0
+                            END),2) as costoActual,
+                            'EDICION' as edicion,
+                            msi.idInventario as aplicar,
+                            '1' as aplicarCheckBox
+                            from ms_inventario msi
+                                        inner join articulo a on (a.art_id = msi.art_id
+                                                                  and a.idSucursal=msi.idSucursal
+                                                                  and a.status='1')
+                                        inner join categoria c on (c.cat_id = a.cat_id)
+									    inner join departamento d on (d.dep_id = c.dep_id)
+										inner join (select count(*)-1 qty, art_id,idSucursal from ms_inventario msi2 group by msi2.art_id ) msi2 on (msi2.art_id = msi.art_id and msi2.idSucursal=msi.idSucursal)
+										left join ms_inventario msi3 on (msi.art_id=msi3.art_id
+																		and msi.idInventario< msi3.idInventario
+																		and msi3.idInventario>15000 )
+
+                              where msi.idEstado in ('P','N')
+                            and msi3.idInventario is null
+                            and msi.idInventario>15000
+                             and msi.idInventario not in (select idInventario from ms_ajuste)
+                            and msi.idSucursal=:idSucursal
+                             and msi.existenciaEjecucion!=msi.existenciaRespuesta
+
+                         GROUP BY a.art_id";
         try {
             $db = getConnection();
             $db->query("SET NAMES 'utf8'");
@@ -113,7 +154,6 @@ class ajuste
                     "success"=>"OK",
                     "data" => $resultado
                 ];
-
             } else {
                 $arreglo = [
                     "estado" => 'warning',

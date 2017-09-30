@@ -631,6 +631,7 @@ class inventario
 
     public static function reporteCabecero($request, $response)
     {
+        set_time_limit(0);
         $postrequest = json_decode($request->getBody());
         $arreglo=null;
         $codigo = 200;
@@ -660,7 +661,7 @@ class inventario
                             and date(msi.fechaSolicitud)<=date(:fechaFin)
                             and msi.idEstado!='I'
                             group by msie.idInventarioExterno
-                            order by fecha,a.art_id";
+                            /*order by fecha,a.art_id*/";
                     break;
                 case 2:
                     $comando = "select d.dep_id as idSucursal,
@@ -686,7 +687,7 @@ class inventario
                                          and date(msi.fechaSolicitud)<=date(:fechaFin)
                                          and msi.idEstado!='I'
                                          group by d.dep_id
-                                         order by fecha,a.art_id";
+                                         /*order by fecha,a.art_id*/";
                             break;
                 case 3:
                     $comando = "SELECT
@@ -762,7 +763,7 @@ class inventario
                                     departamento d ON (d.dep_id = c.dep_id)
                                 WHERE msi.idEstado != 'I'
                                 GROUP BY d.dep_id
-                                ORDER BY fecha , a.art_id;";
+                                /*ORDER BY fecha , a.art_id;*/";
                 break;
                 default:
                     throw new Exception("Error al recibir los parametros");
@@ -826,6 +827,8 @@ class inventario
         $arreglo=null;
         $codigo=200;
         $comando="";
+       // var_dump($postrequest);
+
         if(isset($postrequest->idConcepto)) {
             switch ($postrequest->idConcepto) {
                 case 1:
@@ -1019,7 +1022,11 @@ class inventario
                     $sentencia->bindParam("busqueda", $postrequest->busqueda);
                     $sentencia->bindParam("fechaIni", $postrequest->fechaIni);
                     $sentencia->bindParam("fechaFin", $postrequest->fechaFin);
-                    $sentencia->bindParam("idSucursal",$postrequest->idSucursal);
+                    ///todo: HAY QUE ADAPTAR ESTE APARTADO PARA QUE PUEDA SER MULTI SUCURSAL
+
+                        $sentencia->bindParam("idSucursal",$postrequest->idSucursal);
+
+
                     break;
                 case 3:
                     $sentencia->bindParam("dep_id", $postrequest->busqueda);
@@ -1028,7 +1035,6 @@ class inventario
                 default:
 
             }
-
             $sentencia->execute();
             $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
             if ($resultado) {
@@ -1084,6 +1090,7 @@ class inventario
             $db = getConnection();
             $db->query("SET NAMES 'utf8'");
             $db->query("SET CHARACTER SET utf8");
+
             $sentencia = $db->prepare($comando);
             $sentencia->bindParam("idSucursal",$postrequest->idSucursal);
             $sentencia->execute();
@@ -1247,5 +1254,104 @@ class inventario
             return $response->withJson($arreglo, $codigo);
         }
     }
-
+    public static function reporteComparativoDeInventarios($request,$response){
+        date_default_timezone_set('GMT');
+        $postrequest = json_decode($request->getBody());
+        $arreglo=null;
+        $codigo=200;
+            $comando ="call reporte_ComparativoDeInventarios(:idSucursal,:fechaIni,:fechaFin);";
+        try {
+            $db = getConnection();
+            $db->query("SET NAMES 'utf8'");
+            $db->query("SET CHARACTER SET utf8");
+            $sentencia = $db->prepare($comando);
+            $sentencia->bindParam("idSucursal", $postrequest->idSucursal[0]);
+            $sentencia->bindParam("fechaIni", $postrequest->fechaIni);
+            $sentencia->bindParam("fechaFin",$postrequest->fechaFin);
+            $sentencia->execute();
+            $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+            $contadorheader=0;
+            foreach($resultado[0] as $key => $val)
+            {
+                $d = DateTime::createFromFormat('Y-m-d', $key);
+                if($d && $d->format('Y-m-d') == $key) {
+                    $contadorheader++;
+                }
+            }
+            $contadorheader2=$contadorheader*2;
+            $tabla=
+                    "<table id='tablaDinamica' class='pretty'>".
+                    "<thead>".
+                        "<tr>".
+                            "<th colspan='1'>_________Sucursal_________</th>".
+                            "<th colspan='$contadorheader'>Por Acertacion</th>".
+                            "<th rowspan='3'>Promedio <br>o<br> Acertacion</th>".
+                            "<th colspan='$contadorheader2'>Por Perdida<br>Ultimos Inventarios</th>".
+                            "<th rowspan='3'> Costo Total </th>".
+                        "</tr>".
+                        "<tr>".
+                            "<th rowspan='2' style='width:60px;'>Departamentos</th>";
+            $contador=0;
+            $th1="";
+            $th2="";
+            $th3="";
+            $th4="";
+            $tbody1="";
+            $columnas=
+            [
+                ["data"=>"Departamentos"],
+            ];
+            foreach($resultado[0] as $key => $val)
+            {
+                $d = DateTime::createFromFormat('Y-m-d', $key);
+                if($d && $d->format('Y-m-d') == $key){
+                    $contador++;
+                    $th1.="<th>".$contador."</th>";
+                    $th2.="<th colspan='2'>".$contador."</th>";
+                    $th3.="<th>".$key."</th>";
+                    $th4.="<th>".$key."</th><th>Detalle.$contador</th>";
+                    $tbody1.="";
+                    array_push($columnas,["data"=>$key]);
+                }
+            }
+            array_push($columnas,['data'=>'PROMEDIO']);
+            $contadorTituloDetalle=0;
+            foreach($resultado[0] as $key=>$val){
+                $d = DateTime::createFromFormat('Y-m-d', $key);
+                if($d && $d->format('Y-m-d') == $key){
+                    $contadorTituloDetalle++;
+                    array_push($columnas,["data"=>$key.' ']);
+                    array_push($columnas,["sTitle"=>'Detalle'.$contadorTituloDetalle,'defaultContent'=>"<button class='btn btn-info btn-xs' data-id='".$key."' data-departamento='' data-dep_id=''>Detalle</button>",'data'=>null]);
+                }
+            }
+            array_push($columnas,['data'=>'PROMEDIO ']);
+            $tabla.="".$th1."".$th2."</tr><tr>".$th3.$th4."</tr></thead><tbody></tbody></table>";
+            if ($resultado) {
+                $arreglo = [
+                    "estado" => 200,
+                    "data" => $resultado,
+                    "columnas"=>$columnas,
+                    "tabla"=> $tabla
+                ];
+            } else {
+                $arreglo = [
+                    "estado" => 'warning',
+                    "success" => "Error al traer listado de Inventarios  con los parámetros solicitados",
+                    "data" => $resultado
+                ];
+                $codigo=202;
+            }
+        } catch (PDOException $e) {
+            $arreglo = [
+                "estado" => 400,
+                "error" => general::traducirMensaje($e->getCode(),$e),
+                "datos" => $e->getMessage()
+            ];
+            $codigo=400;
+        }
+        finally{
+            $db=null;
+            return $response->withJson($arreglo, $codigo);
+        }
+    }
 }

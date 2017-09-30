@@ -46,6 +46,9 @@ $app->post('/concepto/seleccionar', function (ServerRequestInterface $request, R
 $app->post('/concepto/reporte',function(ServerRequestInterface $request,ResponseInterface $response){
     return concepto::seleccionarConceptoReporte($request,$response);
 });
+$app->post('/concepto/comparativo',function(ServerRequestInterface $request,ResponseInterface $response){
+    return concepto::seleccionarConceptoComparativo($request,$response);
+});
 /*DEPARTAMENTO*/
 $app->post('/departamento/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response){
     return departamento::seleccionar($request,$response);
@@ -164,9 +167,14 @@ $app->post('/inventario/temporal/agregar',function(ServerRequestInterface $reque
 $app->post('/inventario/temporal/seleccionar',function(ServerRequestInterface $request,ResponseInterface $response){
     return inventarioTemporal::seleccionar($request,$response);
 });
-    $app->post('/inventario/temporal/seleccionar/lista',function(ServerRequestInterface $request,ResponseInterface $response){
+$app->post('/inventario/temporal/seleccionar/lista',function(ServerRequestInterface $request,ResponseInterface $response){
     return inventarioTemporal::seleccionarLista($request,$response);
 });
+$app->post('/inventario/reporte/comparativo',function(ServerRequestInterface $request,ResponseInterface $response){
+    return inventario::reporteComparativoDeInventarios($request,$response);
+});
+
+
 /*NIVEL AUTORIZACION*/
 $app->post('/nivel_autorizacion/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response){
     return nivel_autorizacion::seleccionar($request,$response);
@@ -236,6 +244,9 @@ $app->post('/sucursal/login', function (ServerRequestInterface $request, Respons
 });
 $app->post('/sucursal/seleccionar', function (ServerRequestInterface $request, ResponseInterface $response){
     return sucursal::seleccionar($request,$response);
+});
+$app->post('/sucursal/seleccionar/v2', function (ServerRequestInterface $request, ResponseInterface $response){
+    return sucursal::seleccionarV2($request,$response);
 });
 /*USUARIO*/
 $app->post('/usuario/actualizar',function(ServerRequestInterface $request,ResponseInterface $response){

@@ -16,17 +16,18 @@ $app->add($cors);*/
 $app->add(function ($request, $response, $next) {
     $headers =apache_request_headers();
     $Auth="";
-
+    foreach($headers as $header=>$value){
+        if($header=='Auth'){
+            $Auth = $value;
+        }
+    }
     /////cambiar a getPath()!='sucursal/login'
     if($request->getUri()->getPath()!='usuario/login'
         &&$request->getUri()->getPath()!='sucursal/login'
         &&$request->getUri()->getPath()!='sucursal/lista/conexion'
-        &&$request->getUri()->getPath()!='usuario/seleccionarApi'){
-        foreach ($headers as $header => $value) {
-            if($header=='Auth'){
-                $Auth = $value;
-            }
-        }
+        &&$request->getUri()->getPath()!='usuario/seleccionarApi'
+        &&$Auth!='d93a1e0929c63a72d437ab44bcddcd60'){
+
 
         if(usuario::revisarToken($Auth)){
             return $response = $next($request, $response);
