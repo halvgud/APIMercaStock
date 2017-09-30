@@ -1,0 +1,821 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="d93c6a3d-238f-4ff4-b815-73cab11c1aea" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/APIMercaStock.iml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/compiler.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/dataSources.ids" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/dataSources.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/dbnavigator.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/dictionaries/Ryu.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/.name" afterPath="$PROJECT_DIR$/.idea/.name" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/deployment.xml" afterPath="$PROJECT_DIR$/.idea/deployment.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/webServers.xml" afterPath="$PROJECT_DIR$/.idea/webServers.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/ajuste.php" afterPath="$PROJECT_DIR$/public/ajuste.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/concepto.php" afterPath="$PROJECT_DIR$/public/concepto.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/importar.php" afterPath="$PROJECT_DIR$/public/importar.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/inventario.php" afterPath="$PROJECT_DIR$/public/inventario.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/perdidas.php" afterPath="$PROJECT_DIR$/public/perdidas.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/sucursal.php" afterPath="$PROJECT_DIR$/public/sucursal.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/middleware.php" afterPath="$PROJECT_DIR$/src/middleware.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/routes.php" afterPath="$PROJECT_DIR$/src/routes.php" />
+    </list>
+    <ignored path="MercaStock.iws" />
+    <ignored path=".idea/workspace.xml" />
+    <ignored path=".idea/dataSources.local.xml" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="FavoritesManager">
+    <favorites_list name="MercaStock" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="routes.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/routes.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="143" column="29" selection-start-line="143" selection-start-column="29" selection-end-line="143" selection-end-column="29" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="inventario.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/public/inventario.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.3139932">
+              <caret line="853" column="38" selection-start-line="853" selection-start-column="38" selection-end-line="853" selection-end-column="38" />
+              <folding>
+                <marker date="1506713117176" expanded="true" signature="431:2720" placeholder="SELECT art_i..articulo..." />
+                <marker date="1506713117176" expanded="true" signature="4532:6216" placeholder="SELECT art_i..articulo..." />
+                <marker date="1506713117176" expanded="true" signature="7937:10187" placeholder="select a.art..venta..." />
+                <marker date="1506713117176" expanded="true" signature="8757:8994" placeholder="SELECT art_i..ms_inventario..." />
+                <marker date="1506713117176" expanded="true" signature="9063:9181" placeholder="select art_i..ms_inventario..." />
+                <marker date="1506713117176" expanded="true" signature="9295:9952" placeholder="SELECT msp33..ms_parametro..." />
+                <marker date="1506713117176" expanded="true" signature="12204:12313" placeholder="insert into ms_inventario_etiqueta..." />
+                <marker date="1506713117176" expanded="true" signature="12659:13418" placeholder="INSERT INTO ms_inventario..." />
+                <marker date="1506713117176" expanded="true" signature="13349:13416" placeholder="select max(m..ms_inventario_etiqueta..." />
+                <marker date="1506713117176" expanded="true" signature="15313:16063" placeholder="insert into ms_inventario_etiqueta..." />
+                <marker date="1506713117176" expanded="true" signature="15442:15871" placeholder="select max(i..idInventarioExterno..." />
+                <marker date="1506713117176" expanded="true" signature="15480:15868" placeholder="select idInv..ms_inventario_etiqueta..." />
+                <marker date="1506713117176" expanded="true" signature="16064:16088" placeholder="update fecha..." />
+                <marker date="1506713117176" expanded="true" signature="16340:17632" placeholder="INSERT INTO ms_inventario..." />
+                <marker date="1506713117176" expanded="true" signature="16625:16641" placeholder="/*idInventar..." />
+                <marker date="1506713117176" expanded="true" signature="16681:16702" placeholder="/*idInventar..." />
+                <marker date="1506713117176" expanded="true" signature="16752:16766" placeholder="/*idSucursal..." />
+                <marker date="1506713117176" expanded="true" signature="16881:16904" placeholder="/*existencia..." />
+                <marker date="1506713117176" expanded="true" signature="16963:16986" placeholder="/*existencia..." />
+                <marker date="1506713117176" expanded="true" signature="17035:17048" placeholder="/*idUsuario*..." />
+                <marker date="1506713117176" expanded="true" signature="17092:17110" placeholder="/*fechaSolic..." />
+                <marker date="1506713117176" expanded="true" signature="17212:17235" placeholder="/*existencia..." />
+                <marker date="1506713117176" expanded="true" signature="19421:19551" placeholder="update ms_in..." />
+                <marker date="1506713117176" expanded="true" signature="20606:22956" placeholder="select a.art..ms_inventario..." />
+                <marker date="1506713117176" expanded="true" signature="24946:27334" placeholder="SELECT art_i..articulo..." />
+                <marker date="1506713117176" expanded="true" signature="28960:31202" placeholder="select msi.i..." />
+                <marker date="1506713117176" expanded="true" signature="31231:31258" placeholder="/*order by f..." />
+                <marker date="1506713117176" expanded="true" signature="31344:33800" placeholder="select d.dep..." />
+                <marker date="1506713117176" expanded="true" signature="31345:33800" placeholder="select d.dep..." />
+                <marker date="1506713117176" expanded="true" signature="33842:33869" placeholder="/*order by f..." />
+                <marker date="1506713117176" expanded="true" signature="33963:39241" placeholder="SELECT d.dep..." />
+                <marker date="1506713117176" expanded="true" signature="39262:39292" placeholder="/*ORDER BY f..." />
+                <marker date="1506713117176" expanded="true" signature="41663:44443" placeholder="SELECT a.art..ms_inventario..." />
+                <marker date="1506713117176" expanded="true" signature="42086:44443" placeholder="SELECT a.art..ms_inventario..." />
+                <marker date="1506713117176" expanded="true" signature="42241:42258" placeholder="/*cuantos ha..." />
+                <marker date="1506713117176" expanded="true" signature="42337:42353" placeholder="/*cuantos hu..." />
+                <marker date="1506713117176" expanded="true" signature="42464:42479" placeholder="/*cuantos ha..." />
+                <marker date="1506713117176" expanded="true" signature="44527:47480" placeholder="SELECT a.art..ms_inventario..." />
+                <marker date="1506713117176" expanded="true" signature="44692:45075" placeholder="..." />
+                <marker date="1506713117176" expanded="true" signature="45076:45093" placeholder="/*cuantos ha..." />
+                <marker date="1506713117176" expanded="true" signature="45172:45188" placeholder="/*cuantos hu..." />
+                <marker date="1506713117176" expanded="true" signature="45299:45314" placeholder="/*cuantos ha..." />
+                <marker date="1506713117176" expanded="true" signature="47593:49386" placeholder="SELECT disti..." />
+                <marker date="1506713117176" expanded="true" signature="47593:54503" placeholder="SELECT disti..ms_inventario..." />
+                <marker date="1506713117176" expanded="true" signature="48236:48253" placeholder="/*cuantos ha..." />
+                <marker date="1506713117176" expanded="true" signature="48332:48348" placeholder="/*cuantos hu..." />
+                <marker date="1506713117176" expanded="true" signature="48459:48474" placeholder="/*cuantos ha..." />
+                <marker date="1506713117176" expanded="true" signature="49612:50940" placeholder="SELECT msi.a..." />
+                <marker date="1506713117176" expanded="true" signature="49612:52504" placeholder="SELECT msi.a..ms_inventario..." />
+                <marker date="1506713117176" expanded="true" signature="50284:50301" placeholder="/*cuantos ha..." />
+                <marker date="1506713117176" expanded="true" signature="50381:50397" placeholder="/*cuantos hu..." />
+                <marker date="1506713117176" expanded="true" signature="50510:50525" placeholder="/*cuantos ha..." />
+                <marker date="1506713117176" expanded="true" signature="57125:57956" placeholder="SELECT date(..." />
+                <marker date="1506713117176" expanded="true" signature="59377:59472" placeholder="update ms_in..." />
+                <marker date="1506713117176" expanded="true" signature="61373:61634" placeholder="UPDATE ms_in..." />
+                <marker date="1506713117176" expanded="true" signature="61719:62208" placeholder="UPDATE ms_in..." />
+                <marker date="1506713117176" expanded="true" signature="61925:62071" placeholder="select art_i..articulo..." />
+                <marker date="1506713117176" expanded="true" signature="61995:62047" placeholder="select cat_i..departamento..." />
+                <marker date="1506713117176" expanded="true" signature="66084:66095" placeholder="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/src/routes.php" />
+        <option value="$PROJECT_DIR$/public/sucursal.php" />
+        <option value="$PROJECT_DIR$/public/inventario.php" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" />
+  <component name="JsBuildToolPackageJson" detection-done="true" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+  </component>
+  <component name="PhpServers">
+    <servers />
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="-7" />
+    <option name="y" value="3" />
+    <option name="width" value="1312" />
+    <option name="height" value="772" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+    <OptionsSetting value="true" id="Add" />
+    <OptionsSetting value="true" id="Remove" />
+    <OptionsSetting value="true" id="Checkout" />
+    <OptionsSetting value="true" id="Update" />
+    <OptionsSetting value="true" id="Status" />
+    <OptionsSetting value="true" id="Edit" />
+    <ConfirmationsSetting value="0" id="Add" />
+    <ConfirmationsSetting value="0" id="Remove" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scratches" />
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MercaStock" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MercaStock" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MercaStock" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="last_opened_file_path" value="Z:/" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="settings.editor.selected.configurable" value="web.server" />
+    <property name="settings.editor.splitter.proportion" value="0.2" />
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
+      <method />
+    </configuration>
+    <configuration default="true" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
+      <TestRunner />
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpBehatConfigurationType" factoryName="Behat">
+      <BehatRunner />
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpLocalRunConfigurationType" factoryName="PHP Console">
+      <method />
+    </configuration>
+    <configuration default="true" type="js.build_tools.gulp" factoryName="Gulp.js">
+      <node-options />
+      <gulpfile />
+      <tasks />
+      <arguments />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="js.build_tools.npm" factoryName="npm">
+      <command value="run-script" />
+      <scripts />
+      <envs />
+      <method />
+    </configuration>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d93c6a3d-238f-4ff4-b815-73cab11c1aea" name="Default" comment="" />
+      <created>1506452058635</created>
+      <option name="number" value="Default" />
+      <updated>1506452058635</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-7" y="3" width="1312" height="772" extended-state="0" />
+    <editor active="false" />
+    <layout>
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2539936" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+    </layout>
+    <layout-to-restore>
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+    </layout-to-restore>
+  </component>
+  <component name="Vcs.Log.UiProperties">
+    <option name="RECENTLY_FILTERED_USER_GROUPS">
+      <collection />
+    </option>
+    <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+      <collection />
+    </option>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/public/inventario.php</url>
+          <line>633</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+      <option name="time" value="3" />
+    </breakpoint-manager>
+    <watches-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/routes.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="143" column="29" selection-start-line="143" selection-start-column="29" selection-end-line="143" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/inventario.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1506713117176" expanded="true" signature="431:2720" placeholder="SELECT art_i..articulo..." />
+            <marker date="1506713117176" expanded="true" signature="4532:6216" placeholder="SELECT art_i..articulo..." />
+            <marker date="1506713117176" expanded="true" signature="7937:10187" placeholder="select a.art..venta..." />
+            <marker date="1506713117176" expanded="true" signature="8757:8994" placeholder="SELECT art_i..ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="9063:9181" placeholder="select art_i..ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="9295:9952" placeholder="SELECT msp33..ms_parametro..." />
+            <marker date="1506713117176" expanded="true" signature="12204:12313" placeholder="insert into ms_inventario_etiqueta..." />
+            <marker date="1506713117176" expanded="true" signature="12659:13418" placeholder="INSERT INTO ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="13349:13416" placeholder="select max(m..ms_inventario_etiqueta..." />
+            <marker date="1506713117176" expanded="true" signature="15313:16063" placeholder="insert into ms_inventario_etiqueta..." />
+            <marker date="1506713117176" expanded="true" signature="15442:15871" placeholder="select max(i..idInventarioExterno..." />
+            <marker date="1506713117176" expanded="true" signature="15480:15868" placeholder="select idInv..ms_inventario_etiqueta..." />
+            <marker date="1506713117176" expanded="true" signature="16064:16088" placeholder="update fecha..." />
+            <marker date="1506713117176" expanded="true" signature="16340:17632" placeholder="INSERT INTO ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="16625:16641" placeholder="/*idInventar..." />
+            <marker date="1506713117176" expanded="true" signature="16681:16702" placeholder="/*idInventar..." />
+            <marker date="1506713117176" expanded="true" signature="16752:16766" placeholder="/*idSucursal..." />
+            <marker date="1506713117176" expanded="true" signature="16881:16904" placeholder="/*existencia..." />
+            <marker date="1506713117176" expanded="true" signature="16963:16986" placeholder="/*existencia..." />
+            <marker date="1506713117176" expanded="true" signature="17035:17048" placeholder="/*idUsuario*..." />
+            <marker date="1506713117176" expanded="true" signature="17092:17110" placeholder="/*fechaSolic..." />
+            <marker date="1506713117176" expanded="true" signature="17212:17235" placeholder="/*existencia..." />
+            <marker date="1506713117176" expanded="true" signature="19421:19551" placeholder="update ms_in..." />
+            <marker date="1506713117176" expanded="true" signature="20606:22956" placeholder="select a.art..ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="24946:27334" placeholder="SELECT art_i..articulo..." />
+            <marker date="1506713117176" expanded="true" signature="28960:31202" placeholder="select msi.i..." />
+            <marker date="1506713117176" expanded="true" signature="31231:31258" placeholder="/*order by f..." />
+            <marker date="1506713117176" expanded="true" signature="31344:33800" placeholder="select d.dep..." />
+            <marker date="1506713117176" expanded="true" signature="31345:33800" placeholder="select d.dep..." />
+            <marker date="1506713117176" expanded="true" signature="33842:33869" placeholder="/*order by f..." />
+            <marker date="1506713117176" expanded="true" signature="33963:39241" placeholder="SELECT d.dep..." />
+            <marker date="1506713117176" expanded="true" signature="39262:39292" placeholder="/*ORDER BY f..." />
+            <marker date="1506713117176" expanded="true" signature="41663:44443" placeholder="SELECT a.art..ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="42086:44443" placeholder="SELECT a.art..ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="42241:42258" placeholder="/*cuantos ha..." />
+            <marker date="1506713117176" expanded="true" signature="42337:42353" placeholder="/*cuantos hu..." />
+            <marker date="1506713117176" expanded="true" signature="42464:42479" placeholder="/*cuantos ha..." />
+            <marker date="1506713117176" expanded="true" signature="44527:47480" placeholder="SELECT a.art..ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="44692:45075" placeholder="..." />
+            <marker date="1506713117176" expanded="true" signature="45076:45093" placeholder="/*cuantos ha..." />
+            <marker date="1506713117176" expanded="true" signature="45172:45188" placeholder="/*cuantos hu..." />
+            <marker date="1506713117176" expanded="true" signature="45299:45314" placeholder="/*cuantos ha..." />
+            <marker date="1506713117176" expanded="true" signature="47593:49386" placeholder="SELECT disti..." />
+            <marker date="1506713117176" expanded="true" signature="47593:54503" placeholder="SELECT disti..ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="48236:48253" placeholder="/*cuantos ha..." />
+            <marker date="1506713117176" expanded="true" signature="48332:48348" placeholder="/*cuantos hu..." />
+            <marker date="1506713117176" expanded="true" signature="48459:48474" placeholder="/*cuantos ha..." />
+            <marker date="1506713117176" expanded="true" signature="49612:50940" placeholder="SELECT msi.a..." />
+            <marker date="1506713117176" expanded="true" signature="49612:52504" placeholder="SELECT msi.a..ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="50284:50301" placeholder="/*cuantos ha..." />
+            <marker date="1506713117176" expanded="true" signature="50381:50397" placeholder="/*cuantos hu..." />
+            <marker date="1506713117176" expanded="true" signature="50510:50525" placeholder="/*cuantos ha..." />
+            <marker date="1506713117176" expanded="true" signature="57125:57956" placeholder="SELECT date(..." />
+            <marker date="1506713117176" expanded="true" signature="59377:59472" placeholder="update ms_in..." />
+            <marker date="1506713117176" expanded="true" signature="61373:61634" placeholder="UPDATE ms_in..." />
+            <marker date="1506713117176" expanded="true" signature="61719:62208" placeholder="UPDATE ms_in..." />
+            <marker date="1506713117176" expanded="true" signature="61925:62071" placeholder="select art_i..articulo..." />
+            <marker date="1506713117176" expanded="true" signature="61995:62047" placeholder="select cat_i..departamento..." />
+            <marker date="1506713117176" expanded="true" signature="66084:66095" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/routes.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="143" column="29" selection-start-line="143" selection-start-column="29" selection-end-line="143" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/inventario.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1506713117176" expanded="true" signature="431:2720" placeholder="SELECT art_i..articulo..." />
+            <marker date="1506713117176" expanded="true" signature="4532:6216" placeholder="SELECT art_i..articulo..." />
+            <marker date="1506713117176" expanded="true" signature="7937:10187" placeholder="select a.art..venta..." />
+            <marker date="1506713117176" expanded="true" signature="8757:8994" placeholder="SELECT art_i..ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="9063:9181" placeholder="select art_i..ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="9295:9952" placeholder="SELECT msp33..ms_parametro..." />
+            <marker date="1506713117176" expanded="true" signature="12204:12313" placeholder="insert into ms_inventario_etiqueta..." />
+            <marker date="1506713117176" expanded="true" signature="12659:13418" placeholder="INSERT INTO ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="13349:13416" placeholder="select max(m..ms_inventario_etiqueta..." />
+            <marker date="1506713117176" expanded="true" signature="15313:16063" placeholder="insert into ms_inventario_etiqueta..." />
+            <marker date="1506713117176" expanded="true" signature="15442:15871" placeholder="select max(i..idInventarioExterno..." />
+            <marker date="1506713117176" expanded="true" signature="15480:15868" placeholder="select idInv..ms_inventario_etiqueta..." />
+            <marker date="1506713117176" expanded="true" signature="16064:16088" placeholder="update fecha..." />
+            <marker date="1506713117176" expanded="true" signature="16340:17632" placeholder="INSERT INTO ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="16625:16641" placeholder="/*idInventar..." />
+            <marker date="1506713117176" expanded="true" signature="16681:16702" placeholder="/*idInventar..." />
+            <marker date="1506713117176" expanded="true" signature="16752:16766" placeholder="/*idSucursal..." />
+            <marker date="1506713117176" expanded="true" signature="16881:16904" placeholder="/*existencia..." />
+            <marker date="1506713117176" expanded="true" signature="16963:16986" placeholder="/*existencia..." />
+            <marker date="1506713117176" expanded="true" signature="17035:17048" placeholder="/*idUsuario*..." />
+            <marker date="1506713117176" expanded="true" signature="17092:17110" placeholder="/*fechaSolic..." />
+            <marker date="1506713117176" expanded="true" signature="17212:17235" placeholder="/*existencia..." />
+            <marker date="1506713117176" expanded="true" signature="19421:19551" placeholder="update ms_in..." />
+            <marker date="1506713117176" expanded="true" signature="20606:22956" placeholder="select a.art..ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="24946:27334" placeholder="SELECT art_i..articulo..." />
+            <marker date="1506713117176" expanded="true" signature="28960:31202" placeholder="select msi.i..." />
+            <marker date="1506713117176" expanded="true" signature="31231:31258" placeholder="/*order by f..." />
+            <marker date="1506713117176" expanded="true" signature="31344:33800" placeholder="select d.dep..." />
+            <marker date="1506713117176" expanded="true" signature="31345:33800" placeholder="select d.dep..." />
+            <marker date="1506713117176" expanded="true" signature="33842:33869" placeholder="/*order by f..." />
+            <marker date="1506713117176" expanded="true" signature="33963:39241" placeholder="SELECT d.dep..." />
+            <marker date="1506713117176" expanded="true" signature="39262:39292" placeholder="/*ORDER BY f..." />
+            <marker date="1506713117176" expanded="true" signature="41663:44443" placeholder="SELECT a.art..ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="42086:44443" placeholder="SELECT a.art..ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="42241:42258" placeholder="/*cuantos ha..." />
+            <marker date="1506713117176" expanded="true" signature="42337:42353" placeholder="/*cuantos hu..." />
+            <marker date="1506713117176" expanded="true" signature="42464:42479" placeholder="/*cuantos ha..." />
+            <marker date="1506713117176" expanded="true" signature="44527:47480" placeholder="SELECT a.art..ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="44692:45075" placeholder="..." />
+            <marker date="1506713117176" expanded="true" signature="45076:45093" placeholder="/*cuantos ha..." />
+            <marker date="1506713117176" expanded="true" signature="45172:45188" placeholder="/*cuantos hu..." />
+            <marker date="1506713117176" expanded="true" signature="45299:45314" placeholder="/*cuantos ha..." />
+            <marker date="1506713117176" expanded="true" signature="47593:49386" placeholder="SELECT disti..." />
+            <marker date="1506713117176" expanded="true" signature="47593:54503" placeholder="SELECT disti..ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="48236:48253" placeholder="/*cuantos ha..." />
+            <marker date="1506713117176" expanded="true" signature="48332:48348" placeholder="/*cuantos hu..." />
+            <marker date="1506713117176" expanded="true" signature="48459:48474" placeholder="/*cuantos ha..." />
+            <marker date="1506713117176" expanded="true" signature="49612:50940" placeholder="SELECT msi.a..." />
+            <marker date="1506713117176" expanded="true" signature="49612:52504" placeholder="SELECT msi.a..ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="50284:50301" placeholder="/*cuantos ha..." />
+            <marker date="1506713117176" expanded="true" signature="50381:50397" placeholder="/*cuantos hu..." />
+            <marker date="1506713117176" expanded="true" signature="50510:50525" placeholder="/*cuantos ha..." />
+            <marker date="1506713117176" expanded="true" signature="57125:57956" placeholder="SELECT date(..." />
+            <marker date="1506713117176" expanded="true" signature="59377:59472" placeholder="update ms_in..." />
+            <marker date="1506713117176" expanded="true" signature="61373:61634" placeholder="UPDATE ms_in..." />
+            <marker date="1506713117176" expanded="true" signature="61719:62208" placeholder="UPDATE ms_in..." />
+            <marker date="1506713117176" expanded="true" signature="61925:62071" placeholder="select art_i..articulo..." />
+            <marker date="1506713117176" expanded="true" signature="61995:62047" placeholder="select cat_i..departamento..." />
+            <marker date="1506713117176" expanded="true" signature="66084:66095" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/routes.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="143" column="29" selection-start-line="143" selection-start-column="29" selection-end-line="143" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/inventario.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1506713117176" expanded="true" signature="431:2720" placeholder="SELECT art_i..articulo..." />
+            <marker date="1506713117176" expanded="true" signature="4532:6216" placeholder="SELECT art_i..articulo..." />
+            <marker date="1506713117176" expanded="true" signature="7937:10187" placeholder="select a.art..venta..." />
+            <marker date="1506713117176" expanded="true" signature="8757:8994" placeholder="SELECT art_i..ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="9063:9181" placeholder="select art_i..ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="9295:9952" placeholder="SELECT msp33..ms_parametro..." />
+            <marker date="1506713117176" expanded="true" signature="12204:12313" placeholder="insert into ms_inventario_etiqueta..." />
+            <marker date="1506713117176" expanded="true" signature="12659:13418" placeholder="INSERT INTO ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="13349:13416" placeholder="select max(m..ms_inventario_etiqueta..." />
+            <marker date="1506713117176" expanded="true" signature="15313:16063" placeholder="insert into ms_inventario_etiqueta..." />
+            <marker date="1506713117176" expanded="true" signature="15442:15871" placeholder="select max(i..idInventarioExterno..." />
+            <marker date="1506713117176" expanded="true" signature="15480:15868" placeholder="select idInv..ms_inventario_etiqueta..." />
+            <marker date="1506713117176" expanded="true" signature="16064:16088" placeholder="update fecha..." />
+            <marker date="1506713117176" expanded="true" signature="16340:17632" placeholder="INSERT INTO ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="16625:16641" placeholder="/*idInventar..." />
+            <marker date="1506713117176" expanded="true" signature="16681:16702" placeholder="/*idInventar..." />
+            <marker date="1506713117176" expanded="true" signature="16752:16766" placeholder="/*idSucursal..." />
+            <marker date="1506713117176" expanded="true" signature="16881:16904" placeholder="/*existencia..." />
+            <marker date="1506713117176" expanded="true" signature="16963:16986" placeholder="/*existencia..." />
+            <marker date="1506713117176" expanded="true" signature="17035:17048" placeholder="/*idUsuario*..." />
+            <marker date="1506713117176" expanded="true" signature="17092:17110" placeholder="/*fechaSolic..." />
+            <marker date="1506713117176" expanded="true" signature="17212:17235" placeholder="/*existencia..." />
+            <marker date="1506713117176" expanded="true" signature="19421:19551" placeholder="update ms_in..." />
+            <marker date="1506713117176" expanded="true" signature="20606:22956" placeholder="select a.art..ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="24946:27334" placeholder="SELECT art_i..articulo..." />
+            <marker date="1506713117176" expanded="true" signature="28960:31202" placeholder="select msi.i..." />
+            <marker date="1506713117176" expanded="true" signature="31231:31258" placeholder="/*order by f..." />
+            <marker date="1506713117176" expanded="true" signature="31344:33800" placeholder="select d.dep..." />
+            <marker date="1506713117176" expanded="true" signature="31345:33800" placeholder="select d.dep..." />
+            <marker date="1506713117176" expanded="true" signature="33842:33869" placeholder="/*order by f..." />
+            <marker date="1506713117176" expanded="true" signature="33963:39241" placeholder="SELECT d.dep..." />
+            <marker date="1506713117176" expanded="true" signature="39262:39292" placeholder="/*ORDER BY f..." />
+            <marker date="1506713117176" expanded="true" signature="41663:44443" placeholder="SELECT a.art..ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="42086:44443" placeholder="SELECT a.art..ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="42241:42258" placeholder="/*cuantos ha..." />
+            <marker date="1506713117176" expanded="true" signature="42337:42353" placeholder="/*cuantos hu..." />
+            <marker date="1506713117176" expanded="true" signature="42464:42479" placeholder="/*cuantos ha..." />
+            <marker date="1506713117176" expanded="true" signature="44527:47480" placeholder="SELECT a.art..ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="44692:45075" placeholder="..." />
+            <marker date="1506713117176" expanded="true" signature="45076:45093" placeholder="/*cuantos ha..." />
+            <marker date="1506713117176" expanded="true" signature="45172:45188" placeholder="/*cuantos hu..." />
+            <marker date="1506713117176" expanded="true" signature="45299:45314" placeholder="/*cuantos ha..." />
+            <marker date="1506713117176" expanded="true" signature="47593:49386" placeholder="SELECT disti..." />
+            <marker date="1506713117176" expanded="true" signature="47593:54503" placeholder="SELECT disti..ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="48236:48253" placeholder="/*cuantos ha..." />
+            <marker date="1506713117176" expanded="true" signature="48332:48348" placeholder="/*cuantos hu..." />
+            <marker date="1506713117176" expanded="true" signature="48459:48474" placeholder="/*cuantos ha..." />
+            <marker date="1506713117176" expanded="true" signature="49612:50940" placeholder="SELECT msi.a..." />
+            <marker date="1506713117176" expanded="true" signature="49612:52504" placeholder="SELECT msi.a..ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="50284:50301" placeholder="/*cuantos ha..." />
+            <marker date="1506713117176" expanded="true" signature="50381:50397" placeholder="/*cuantos hu..." />
+            <marker date="1506713117176" expanded="true" signature="50510:50525" placeholder="/*cuantos ha..." />
+            <marker date="1506713117176" expanded="true" signature="57125:57956" placeholder="SELECT date(..." />
+            <marker date="1506713117176" expanded="true" signature="59377:59472" placeholder="update ms_in..." />
+            <marker date="1506713117176" expanded="true" signature="61373:61634" placeholder="UPDATE ms_in..." />
+            <marker date="1506713117176" expanded="true" signature="61719:62208" placeholder="UPDATE ms_in..." />
+            <marker date="1506713117176" expanded="true" signature="61925:62071" placeholder="select art_i..articulo..." />
+            <marker date="1506713117176" expanded="true" signature="61995:62047" placeholder="select cat_i..departamento..." />
+            <marker date="1506713117176" expanded="true" signature="66084:66095" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/routes.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="146" column="29" selection-start-line="146" selection-start-column="29" selection-end-line="146" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/index.phtml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/sucursal.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="71" column="15" selection-start-line="71" selection-start-column="15" selection-end-line="71" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/middleware.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="27" column="22" selection-start-line="27" selection-start-column="22" selection-end-line="27" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/settings.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/web.config">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/usuario.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/nivel_autorizacion.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/MercaStock.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/logs/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/routes.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/sucursal.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="50" column="56" selection-start-line="50" selection-start-column="56" selection-end-line="50" selection-end-column="56" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/routes.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/sucursal.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="50" column="56" selection-start-line="50" selection-start-column="56" selection-end-line="50" selection-end-column="56" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/inventarioTemporal.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/dependencies.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/logs/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/settings.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/web.config">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/usuario.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/nivel_autorizacion.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/MercaStock.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.8092105">
+          <caret line="15" column="64" selection-start-line="15" selection-start-column="64" selection-end-line="15" selection-end-column="64" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/middleware.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.44078946">
+          <caret line="27" column="22" selection-start-line="27" selection-start-column="22" selection-end-line="27" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/sucursal.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-7.337171">
+          <caret line="71" column="15" selection-start-line="71" selection-start-column="15" selection-end-line="71" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/index.phtml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/routes.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="143" column="29" selection-start-line="143" selection-start-column="29" selection-end-line="143" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/inventario.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3139932">
+          <caret line="853" column="38" selection-start-line="853" selection-start-column="38" selection-end-line="853" selection-end-column="38" />
+          <folding>
+            <marker date="1506713117176" expanded="true" signature="431:2720" placeholder="SELECT art_i..articulo..." />
+            <marker date="1506713117176" expanded="true" signature="4532:6216" placeholder="SELECT art_i..articulo..." />
+            <marker date="1506713117176" expanded="true" signature="7937:10187" placeholder="select a.art..venta..." />
+            <marker date="1506713117176" expanded="true" signature="8757:8994" placeholder="SELECT art_i..ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="9063:9181" placeholder="select art_i..ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="9295:9952" placeholder="SELECT msp33..ms_parametro..." />
+            <marker date="1506713117176" expanded="true" signature="12204:12313" placeholder="insert into ms_inventario_etiqueta..." />
+            <marker date="1506713117176" expanded="true" signature="12659:13418" placeholder="INSERT INTO ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="13349:13416" placeholder="select max(m..ms_inventario_etiqueta..." />
+            <marker date="1506713117176" expanded="true" signature="15313:16063" placeholder="insert into ms_inventario_etiqueta..." />
+            <marker date="1506713117176" expanded="true" signature="15442:15871" placeholder="select max(i..idInventarioExterno..." />
+            <marker date="1506713117176" expanded="true" signature="15480:15868" placeholder="select idInv..ms_inventario_etiqueta..." />
+            <marker date="1506713117176" expanded="true" signature="16064:16088" placeholder="update fecha..." />
+            <marker date="1506713117176" expanded="true" signature="16340:17632" placeholder="INSERT INTO ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="16625:16641" placeholder="/*idInventar..." />
+            <marker date="1506713117176" expanded="true" signature="16681:16702" placeholder="/*idInventar..." />
+            <marker date="1506713117176" expanded="true" signature="16752:16766" placeholder="/*idSucursal..." />
+            <marker date="1506713117176" expanded="true" signature="16881:16904" placeholder="/*existencia..." />
+            <marker date="1506713117176" expanded="true" signature="16963:16986" placeholder="/*existencia..." />
+            <marker date="1506713117176" expanded="true" signature="17035:17048" placeholder="/*idUsuario*..." />
+            <marker date="1506713117176" expanded="true" signature="17092:17110" placeholder="/*fechaSolic..." />
+            <marker date="1506713117176" expanded="true" signature="17212:17235" placeholder="/*existencia..." />
+            <marker date="1506713117176" expanded="true" signature="19421:19551" placeholder="update ms_in..." />
+            <marker date="1506713117176" expanded="true" signature="20606:22956" placeholder="select a.art..ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="24946:27334" placeholder="SELECT art_i..articulo..." />
+            <marker date="1506713117176" expanded="true" signature="28960:31202" placeholder="select msi.i..." />
+            <marker date="1506713117176" expanded="true" signature="31231:31258" placeholder="/*order by f..." />
+            <marker date="1506713117176" expanded="true" signature="31344:33800" placeholder="select d.dep..." />
+            <marker date="1506713117176" expanded="true" signature="31345:33800" placeholder="select d.dep..." />
+            <marker date="1506713117176" expanded="true" signature="33842:33869" placeholder="/*order by f..." />
+            <marker date="1506713117176" expanded="true" signature="33963:39241" placeholder="SELECT d.dep..." />
+            <marker date="1506713117176" expanded="true" signature="39262:39292" placeholder="/*ORDER BY f..." />
+            <marker date="1506713117176" expanded="true" signature="41663:44443" placeholder="SELECT a.art..ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="42086:44443" placeholder="SELECT a.art..ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="42241:42258" placeholder="/*cuantos ha..." />
+            <marker date="1506713117176" expanded="true" signature="42337:42353" placeholder="/*cuantos hu..." />
+            <marker date="1506713117176" expanded="true" signature="42464:42479" placeholder="/*cuantos ha..." />
+            <marker date="1506713117176" expanded="true" signature="44527:47480" placeholder="SELECT a.art..ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="44692:45075" placeholder="..." />
+            <marker date="1506713117176" expanded="true" signature="45076:45093" placeholder="/*cuantos ha..." />
+            <marker date="1506713117176" expanded="true" signature="45172:45188" placeholder="/*cuantos hu..." />
+            <marker date="1506713117176" expanded="true" signature="45299:45314" placeholder="/*cuantos ha..." />
+            <marker date="1506713117176" expanded="true" signature="47593:49386" placeholder="SELECT disti..." />
+            <marker date="1506713117176" expanded="true" signature="47593:54503" placeholder="SELECT disti..ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="48236:48253" placeholder="/*cuantos ha..." />
+            <marker date="1506713117176" expanded="true" signature="48332:48348" placeholder="/*cuantos hu..." />
+            <marker date="1506713117176" expanded="true" signature="48459:48474" placeholder="/*cuantos ha..." />
+            <marker date="1506713117176" expanded="true" signature="49612:50940" placeholder="SELECT msi.a..." />
+            <marker date="1506713117176" expanded="true" signature="49612:52504" placeholder="SELECT msi.a..ms_inventario..." />
+            <marker date="1506713117176" expanded="true" signature="50284:50301" placeholder="/*cuantos ha..." />
+            <marker date="1506713117176" expanded="true" signature="50381:50397" placeholder="/*cuantos hu..." />
+            <marker date="1506713117176" expanded="true" signature="50510:50525" placeholder="/*cuantos ha..." />
+            <marker date="1506713117176" expanded="true" signature="57125:57956" placeholder="SELECT date(..." />
+            <marker date="1506713117176" expanded="true" signature="59377:59472" placeholder="update ms_in..." />
+            <marker date="1506713117176" expanded="true" signature="61373:61634" placeholder="UPDATE ms_in..." />
+            <marker date="1506713117176" expanded="true" signature="61719:62208" placeholder="UPDATE ms_in..." />
+            <marker date="1506713117176" expanded="true" signature="61925:62071" placeholder="select art_i..articulo..." />
+            <marker date="1506713117176" expanded="true" signature="61995:62047" placeholder="select cat_i..departamento..." />
+            <marker date="1506713117176" expanded="true" signature="66084:66095" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ScopeChooserConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>

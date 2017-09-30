@@ -31,8 +31,7 @@ class inventario
                             (SELECT art_id
                              FROM ms_inventario
                              WHERE fechaSolicitud>curdate()-7
-                               AND idEstado NOT IN ('E',
-                                                    'A')
+                               AND idEstado NOT IN ('E', 'A')
                              union all
                              select art_id
                              from ms_inventario
@@ -639,22 +638,23 @@ class inventario
             switch($postrequest->concepto){
                 case 1:
                     $comando = "select msi.idSucursal,
-                             msie.nombre nombre,msie.idInventarioExterno, date(msi.fechaSolicitud) as fecha, count(1) total,
-							 sum(case when existenciaRespuesta=existenciaEjecucion and msi.idEstado not in ('E','A')
-                                then '1' ELSE 0 end) as totalAcertado,
+                             msie.nombre as Departamento,msie.idInventarioExterno, date(msi.fechaSolicitud) as fecha, count(1) totaldeProductoInventariado,
+							 count(msi.idInventario!=msa.idInventario) as TotalArticulosSinAjuste,sum(case when existenciaRespuesta=existenciaEjecucion and msi.idEstado not in ('E','A')
+                                then '1' ELSE 0 end) as Acertado,
                                 sum(case when existenciaRespuesta!=existenciaEjecucion and msi.idEstado!='E'
-                                then '1' else 0 end) as totalFallado,
-                                sum(case when msi.idEstado in ('E','A') then 1 else 0 end) as totalRestante,
+                                then '1' else 0 end) as Fallado,
+                                sum(case when msi.idEstado in ('E','A') then 1 else 0 end) as Restante,
                             round(sum(case when existenciaRespuesta < existenciaEjecucion then
-                                    (precioCompra/factor)*(existenciaRespuesta-existenciaEjecucion) else 0 end),2) as costo,
+                                    (a.precioCompra/a.factor)*(existenciaRespuesta-existenciaEjecucion) else 0 end),2) as Perdida,
 							round((sum(case when existenciaEjecucion>=existenciaRespuesta then existenciaRespuesta/existenciaEjecucion
-            else existenciaEjecucion/existenciaRespuesta end)/count(*)),2) as bandera,1 as detalle,1 as cancelar
+            else existenciaEjecucion/existenciaRespuesta end)/count(*)),2) as InventarioAcertado,1 as detalle,1 as cancelar
             	             from
                             ms_inventario msi
                             left join ms_inventario_etiqueta msie on (msie.idInventarioExterno=msi.idInventarioExterno)
                             inner join ms_sucursal mss on (mss.idSucursal = msi.idSucursal and mss.idSucursal=:idSucursal)
                             INNER JOIN articulo a ON (a.art_id = msi.art_id
                                               AND a.idSucursal = msi.idSucursal and a.status=1)
+                                              left join ms_ajuste msa on (msa.idInventario=msi.idInventario)
                             LEFT JOIN ms_parametro msp on (msp.accion='TITULO_INVENTARIO' and date(msp.parametro)=date(msi.fechaSolicitud)
                                                            and msp.valor=msi.idSucursal)
                             where date(msi.fechaSolicitud)>=date(:fechaIni)
@@ -664,17 +664,19 @@ class inventario
                             /*order by fecha,a.art_id*/";
                     break;
                 case 2:
-                    $comando = "select d.dep_id as idSucursal,
-                                        d.nombre nombre,msie.idInventarioExterno,date(msi.fechaSolicitud) as fecha,count(1) as total,
+                    $comando = "
+select d.dep_id as idDepartamento, d.nombre as Departamento,msie.idInventarioExterno,date(msi.fechaSolicitud) as fecha,
+count(1) as TotaldeProductosInventariados,
+count(msi.idInventario!=msa.idInventario) as TotalArticulosSinAjuste,
                                          sum(case when existenciaRespuesta=existenciaEjecucion and msi.idEstado not in ('E','A')
-                                        then '1' ELSE 0 end) as totalAcertado,
+                                        then '1' ELSE 0 end) as Acertado,
                                         sum(case when existenciaRespuesta!=existenciaEjecucion and msi.idEstado!='E'
-                                        then '1' else 0 end) as totalFallado,
-                                        sum(case when msi.idEstado in ('E','A') then 1 else 0 end) as totalRestante,
+                                        then '1' else 0 end) as Fallado,
+                                        sum(case when msi.idEstado in ('E','A') then 1 else 0 end) as Restante,
                                         round(sum(case when existenciaRespuesta < existenciaEjecucion then
-                                                  (precioCompra/factor)*(existenciaRespuesta-existenciaEjecucion) else 0 end),2) as costo,
+                                                  (a.precioCompra/a.factor)*(existenciaRespuesta-existenciaEjecucion) else 0 end),2) as Perdida,
                                         round((sum(case when existenciaEjecucion>=existenciaRespuesta then existenciaRespuesta/existenciaEjecucion
-                                         else existenciaEjecucion/existenciaRespuesta end)/count(*)),2) as bandera,1 as detalle,1 as cancelar
+                                         else existenciaEjecucion/existenciaRespuesta end)/count(*)),2) as InventarioAcertado,1 as detalle,1 as cancelar
                                          from
                                          ms_inventario msi
                                          left join ms_inventario_etiqueta msie on (msie.idInventarioExterno = msi.idInventarioExterno)
@@ -683,6 +685,7 @@ class inventario
                                                                     and a.idSucursal=msi.idSucursal and a.status=1)
                                          inner join categoria c on (c.cat_id = a.cat_id)
                                          inner join departamento d on (d.dep_id = c.dep_id)
+                                          left join ms_ajuste msa on (msa.idInventario=msi.idInventario)
                                          where date(msi.fechaSolicitud)>=date(:fechaIni)
                                          and date(msi.fechaSolicitud)<=date(:fechaFin)
                                          and msi.idEstado!='I'
@@ -692,32 +695,33 @@ class inventario
                 case 3:
                     $comando = "SELECT
                                     d.dep_id AS idSucursal,
-                                    d.nombre nombre,
+                                    d.nombre as Departamento,
                                     msie.idInventarioExterno,
                                     DATE(max(msi.fechaRespuesta)) AS fecha,
-                                    COUNT(1) AS total,
+                                    COUNT(1) AS TotaldeProductoInventariado,
+                                    count(msi.idInventario!=msa.idInventario) as TotalArticulosSinAjuste,
                                     SUM(CASE
                                             WHEN
                                                 msi.existenciaRespuesta = msi.existenciaEjecucion
                                                 AND msi.idEstado NOT IN ('E' , 'A')
                                             THEN '1'
                                             ELSE 0
-                                        END) AS totalAcertado,
+                                        END) AS Acertado,
                                     SUM(CASE
                                             WHEN
                                                 msi.existenciaRespuesta != msi.existenciaEjecucion
                                                 AND msi.idEstado != 'E'
                                             THEN '1'
                                             ELSE 0
-                                        END) AS totalFallado,
+                                        END) AS Fallado,
                                     SUM(CASE
                                             WHEN msi.idEstado IN ('E' , 'A')
                                             THEN 1
                                             ELSE 0
-                                        END) AS totalRestante,
+                                        END) AS Restante,
                                     ROUND(SUM(CASE
                                                 WHEN msi2.existenciaRespuesta < msi2.existenciaEjecucion
-                                                THEN (precioCompra / factor) * (msi2.existenciaRespuesta - msi2.existenciaEjecucion)
+                                                THEN (a.precioCompra / a.factor) * (msi2.existenciaRespuesta - msi2.existenciaEjecucion)
                                                 ELSE 0
                                             END),
                                             2) AS costo2,
@@ -732,13 +736,13 @@ class inventario
                                                 THEN (precioCompra / factor) * (msi.existenciaRespuesta - msi.existenciaEjecucion)
                                                 ELSE 0
                                             END),
-                                            2) AS costo,
+                                            2) AS Perdida,
                                         ROUND((SUM(CASE
                                                 WHEN msi.existenciaEjecucion >= msi.existenciaRespuesta
                                                 THEN msi.existenciaRespuesta / msi.existenciaEjecucion
                                                 ELSE msi.existenciaEjecucion / msi.existenciaRespuesta
                                             END) / COUNT(*)),
-                                            2) AS bandera,
+                                            2) AS InventarioAcertado,
 
 
                                     1 AS detalle,
@@ -761,9 +765,14 @@ class inventario
                                     categoria c ON (c.cat_id = a.cat_id)
                                         INNER JOIN
                                     departamento d ON (d.dep_id = c.dep_id)
+                                    left join ms_ajuste msa. on (msa.idInventario=msi.idInventario)
                                 WHERE msi.idEstado != 'I'
                                 GROUP BY d.dep_id
+<<<<<<< HEAD
                                 /*ORDER BY fecha , a.art_id;*/";
+=======
+                    /*ORDER BY fecha , a.art_id;*/";
+>>>>>>> origin/master
                 break;
                 default:
                     throw new Exception("Error al recibir los parametros");
@@ -834,27 +843,30 @@ class inventario
                 case 1:
                     $comando = "SELECT a.art_id,
                            msi.fechaRespuesta as fechaSolicitud,
+                           (CASE
+                              WHEN msa.clave=a.clave THEN date(max(msa.fecha))
+                                          ELSE 0 END)  as FechaUltimoAjuste,
                            d.dep_id as idDepartamento,
-                           d.nombre as departamento,
-                           a.clave,
-                           a.descripcion,
-                           msi.existenciaSolicitud,/*cuantos habia*/
-                           msi.existenciaEjecucion,/*cuantos hubo*/
+                           d.nombre as Departamento,
+                           a.clave as Clave,
+                            a.descripcion as DescripcionProducto,
+                           msi.existenciaSolicitud as CantidadSisalMomentodelInventario,/*cuantos habia*/
+                           msi.existenciaEjecucion as CantidadActualenSistema,/*cuantos hubo*/
                            a.existencia,
-                           msi.existenciaRespuesta,/*cuantos hay*/
-                           round((msi.existenciaRespuesta-msi.existenciaEjecucion),2) AS diferencia,
+                           msi.existenciaRespuesta as CantidadFisica,/*cuantos hay*/
+                           round((msi.existenciaRespuesta-msi.existenciaEjecucion),2) AS Diferencia,
                            round((CASE
                               WHEN msi.existenciaEjecucion>=msi.existenciaRespuesta THEN
                               msi.existenciaRespuesta/msi.existenciaEjecucion ELSE
                               msi.existenciaEjecucion/msi.existenciaRespuesta
-                            END),2) AS bandera,
-                           round((precioCompra/factor)*(msi.existenciaRespuesta-msi.existenciaEjecucion),2) as costo,
+                            END),2) AS InventarioAcertado,
+                           round((a.precioCompra/a.factor)*(msi.existenciaRespuesta-msi.existenciaEjecucion),2) as Perdida,
                            CASE WHEN msit.art_id is not null
                                  then 'YA ESTA EN LISTA DE ESPERA'
                                  WHEN msi2.art_id is not null
                                  then 'ACTUALMENTE EN ESPERA'
                                    else 'edicion'
-                                  end as edicion
+                                  end as edicion,0 as alerta
                     FROM ms_inventario msi
                     INNER JOIN articulo a ON (a.art_id = msi.art_id
                                               AND a.idSucursal = msi.idSucursal and a.status=1)
@@ -863,6 +875,7 @@ class inventario
                     LEFT JOIN ms_inventarioTemporal msit on (a.art_id = msit.art_id and msit.idSucursal = msi.idSucursal
                     and msit.idEstado='A')
                     left join ms_inventario msi2 on (msi2.art_id = msi.art_id and msi2.idSucursal=msi.idSucursal and msi2.idEstado in ('E','A'))
+                    left join ms_ajuste msa on (msa.idInventario=msi.idInventario) and msa.idEstado='P'
                     WHERE msi.idSucursal =:idSucursal
                       AND date(msi.fechaSolicitud)=:fecha
                       and d.dep_id like :busqueda
@@ -872,28 +885,30 @@ class inventario
                     break;
                 case 2:
                     $comando="SELECT a.art_id,
-                           msi.fechaRespuesta as fechaSolicitud,
+                           msi.fechaRespuesta as fechaSolicitud,(CASE
+                              WHEN msa.clave=a.clave THEN date(max(msa.fecha))
+                                          ELSE 0 END)  as FechaUltimoAjuste,
                            c.cat_id as idDepartamento,
-                           c.nombre as departamento,
-                           a.clave,
-                           a.descripcion,
-                           msi.existenciaSolicitud,/*cuantos habia*/
-                           msi.existenciaEjecucion,/*cuantos hubo*/
+                           c.nombre as Departamento,
+                           a.clave as Clave,
+                           a.descripcion as DescripcionProducto,
+                           msi.existenciaSolicitud as CantidadSisalMomentodelInventario,/*cuantos habia*/
+                           msi.existenciaEjecucion as CantidadActualenSistema,/*cuantos hubo*/
                            a.existencia,
-                           msi.existenciaRespuesta,/*cuantos hay*/
-                           round((msi.existenciaRespuesta-msi.existenciaEjecucion),2) AS diferencia,
+                           msi.existenciaRespuesta as CantidadFisica,/*cuantos hay*/
+                           round((msi.existenciaRespuesta-msi.existenciaEjecucion),2) AS Diferencia,
                            round((CASE
                               WHEN msi.existenciaEjecucion>=msi.existenciaRespuesta THEN
                               msi.existenciaRespuesta/msi.existenciaEjecucion ELSE
                               msi.existenciaEjecucion/msi.existenciaRespuesta
-                            END),2) AS bandera,
-                           round((precioCompra/factor)*(msi.existenciaRespuesta-msi.existenciaEjecucion),2) as costo,
+                            END),2) AS InventarioAcertado,
+                           round((a.precioCompra/a.factor)*(msi.existenciaRespuesta-msi.existenciaEjecucion),2) as Perdida,
                            CASE WHEN msit.art_id is not null
                                  then 'YA ESTA EN LISTA DE ESPERA'
                                  WHEN msi2.art_id is not null
                                  then 'ACTUALMENTE EN ESPERA'
                                    else 'edicion'
-                                  end as edicion
+                                  end as edicion,0 as alerta
                     FROM ms_inventario msi
                     INNER JOIN articulo a ON (a.art_id = msi.art_id
                                               AND a.idSucursal = msi.idSucursal and a.status=1)
@@ -902,6 +917,7 @@ class inventario
                     LEFT JOIN ms_inventarioTemporal msit on (a.art_id = msit.art_id and msit.idSucursal = msi.idSucursal
                     and msit.idEstado='A')
                     left join ms_inventario msi2 on (msi2.art_id = msi.art_id and msi2.idSucursal=msi.idSucursal and msi2.idEstado in ('E','A'))
+                    left join ms_ajuste msa on (msa.idInventario=msi.idInventario) and msa.idEstado='P'
                     WHERE msi.idSucursal =:idSucursal
                      and date(msi.fechaSolicitud)>=date(:fechaIni)
                             and date(msi.fechaSolicitud)<=date(:fechaFin)
@@ -916,44 +932,49 @@ class inventario
                     $comando="
                             SELECT distinct a.art_id,
                                    msi.fechaRespuesta AS fechaSolicitud,
+                                    (CASE
+                              WHEN msa.clave=a.clave THEN date(max(msa.fecha))
+                                          ELSE 0 END)  as FechaUltimoAjuste,
                                    c.cat_id AS idDepartamento,
-                                   c.nombre AS departamento,
-                                   a.clave,
-                                   a.descripcion,
-                                   msi.existenciaSolicitud,
-                                   msi.existenciaEjecucion,
-                                   a.existencia,
-                                   msi.existenciaRespuesta,
-                                   ROUND((msi.existenciaRespuesta - msi.existenciaEjecucion), 2) AS diferencia,
+                                   c.nombre AS Departamento,
+                                   a.clave as Clave,
+                                   a.descripcion as DescripcionProducto,
+                                   msi.existenciaSolicitud as CantidadSisalMomentodelInventario,/*cuantos habia*/
+                           msi.existenciaEjecucion as CantidadActualenSistema,/*cuantos hubo*/
+                           a.existencia,
+                           msi.existenciaRespuesta as CantidadFisica,/*cuantos hay*/
+                           round((msi.existenciaRespuesta-msi.existenciaEjecucion),2) AS Diferencia,
                                    ROUND((CASE
                                               WHEN msi.existenciaEjecucion >= msi.existenciaRespuesta THEN msi.existenciaRespuesta / msi.existenciaEjecucion
                                               ELSE msi.existenciaEjecucion / msi.existenciaRespuesta
-                                          END), 2) AS bandera,
-                                   ROUND((precioCompra / factor) * (msi.existenciaRespuesta - msi.existenciaEjecucion), 2) AS costo,
+                                          END), 2) AS InventarioAcertado,
+                                   ROUND((a.precioCompra / a.factor) * (msi.existenciaRespuesta - msi.existenciaEjecucion), 2) AS Perdida,
                                    CASE
                                        WHEN msit.art_id IS NOT NULL THEN 'YA ESTA EN LISTA DE ESPERA'
                                        WHEN msi2.art_id IS NOT NULL THEN 'ACTUALMENTE EN ESPERA'
                                        ELSE 'edicion'
-                                   END AS edicion,
+                                   END AS edicion,0 as alerta
                                    tabla.*
                             FROM ms_inventario msi
                             LEFT JOIN
                               (SELECT msi.art_id AS art_id2,
                                       msi.fechaRespuesta AS fechaRespuesta2,
+                                      (CASE
+                              WHEN msa.clave=a.clave THEN date(max(msa.fecha))
+                                          ELSE 0 END)  as FechaUltimoAjuste2,
                                       c.cat_id AS idDepartamento2,
-                                      c.nombre AS departamento2,
-                                      a.clave AS clave2,
-                                      a.descripcion AS descripcion2,
-                                      msi.existenciaSolicitud AS existenciaSolicitud2,
-                                      msi.existenciaEjecucion AS existenciaEjecucion2,
-                                      a.existencia AS existencia2,
-                                      msi.existenciaRespuesta AS existenciaRespuesta2,
-                                      ROUND((msi.existenciaRespuesta - msi.existenciaEjecucion), 2) AS diferencia2,
-                                      ROUND((CASE
+                                      c.nombre AS Departamento2,
+                                      a.clave AS Clave2,
+                                      a.descripcion AS DescripcionProducto2,
+                                    msi.existenciaSolicitud as CantidadSisalMomentodelInventario2,/*cuantos habia*/
+                           msi.existenciaEjecucion as CantidadActualenSistema2,/*cuantos hubo*/
+                           a.existencia2,
+                           msi.existenciaRespuesta as CantidadFisica2,/*cuantos hay*/
+                           round((msi.existenciaRespuesta-msi.existenciaEjecucion),2) AS Diferencia2,
                                                  WHEN msi.existenciaEjecucion >= msi.existenciaRespuesta THEN msi.existenciaRespuesta / msi.existenciaEjecucion
                                                  ELSE msi.existenciaEjecucion / msi.existenciaRespuesta
-                                             END), 2) AS bandera2,
-                                      ROUND((precioCompra / factor) * (msi.existenciaRespuesta - msi.existenciaEjecucion), 2) AS costo2
+                                             END), 2) AS InventarioAcertado2,
+                                      ROUND((a.precioCompra / a.factor) * (msi.existenciaRespuesta - msi.existenciaEjecucion), 2) AS Perdida2
                                FROM ms_inventario msi
                                INNER JOIN articulo a ON (a.art_id = msi.art_id
                                                          AND a.idSucursal = msi.idSucursal
@@ -989,6 +1010,7 @@ class inventario
                                                              AND msi2.idEstado IN ('E',
                                                                                    'P'))
                             AND msi.idEstado != 'I'
+                             left join ms_ajuste msa on (msa.idInventario=msi.idInventario) and msa.idEstado='P'
                             WHERE msi.idSucursal = :idSucursal
                               AND d.dep_id LIKE :dep_id
                               AND msi.idEstado != 'I'
@@ -1023,7 +1045,10 @@ class inventario
                     $sentencia->bindParam("fechaIni", $postrequest->fechaIni);
                     $sentencia->bindParam("fechaFin", $postrequest->fechaFin);
                     ///todo: HAY QUE ADAPTAR ESTE APARTADO PARA QUE PUEDA SER MULTI SUCURSAL
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/master
                         $sentencia->bindParam("idSucursal",$postrequest->idSucursal);
 
 

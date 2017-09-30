@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="f128036f-607f-48ce-b170-6951a62240dc" name="apimercastock" url="http://mercatto.mx">
+        <fileTransfer host="mercatto.mx" port="21" username="api3@mercatto.mx">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
