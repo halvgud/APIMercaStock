@@ -768,11 +768,8 @@ count(msi.idInventario!=msa.idInventario) as TotalArticulosSinAjuste,
                                     left join ms_ajuste msa. on (msa.idInventario=msi.idInventario)
                                 WHERE msi.idEstado != 'I'
                                 GROUP BY d.dep_id
-<<<<<<< HEAD
-                                /*ORDER BY fecha , a.art_id;*/";
-=======
                     /*ORDER BY fecha , a.art_id;*/";
->>>>>>> origin/master
+
                 break;
                 default:
                     throw new Exception("Error al recibir los parametros");
@@ -1045,13 +1042,7 @@ count(msi.idInventario!=msa.idInventario) as TotalArticulosSinAjuste,
                     $sentencia->bindParam("fechaIni", $postrequest->fechaIni);
                     $sentencia->bindParam("fechaFin", $postrequest->fechaFin);
                     ///todo: HAY QUE ADAPTAR ESTE APARTADO PARA QUE PUEDA SER MULTI SUCURSAL
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/master
                         $sentencia->bindParam("idSucursal",$postrequest->idSucursal);
-
-
                     break;
                 case 3:
                     $sentencia->bindParam("dep_id", $postrequest->busqueda);
